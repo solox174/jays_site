@@ -10,16 +10,25 @@
 		"prepare": "svelte-kit sync || echo ''"
 	},
 	"devDependencies": {
-		"@fontsource/fira-mono": "^5.2.7",
+		"@aws-amplify/backend-cli": "^1.8.2",
 		"@neoconfetti/svelte": "^2.2.2",
 		"@sveltejs/adapter-auto": "^7.0.0",
 		"@sveltejs/kit": "^2.49.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
+		"aws-cdk-lib": "^2.234.1",
+		"constructs": "^10.4.5",
+		"esbuild": "^0.27.2",
 		"svelte": "^5.45.6",
+		"tsx": "^4.21.0",
+		"typescript": "^5.9.3",
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"@aws-amplify/backend": "^1.20.0",
+		"@aws-sdk/client-dynamodb": "^3.974.0",
+		"@aws-sdk/lib-dynamodb": "^3.974.0",
 		"amplify-adapter": "^1.2.3",
+		"aws-amplify": "^6.16.0",
 		"fontawesome-free": "^1.0.4"
 	}
 }
