@@ -1,7 +1,8 @@
+@import "@fortawesome/fontawesome-free/css/all.min.css";
 :root {
 	--font-body:
-		Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-		'Open Sans', 'Helvetica Neue', sans-serif;
+			Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+			'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--color-bg-0: rgb(202, 216, 228);
 	--color-bg-1: hsl(209, 36%, 86%);
@@ -12,7 +13,34 @@
 	--color-text: rgba(0, 0, 0, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
-	font-family: var(--font-body);
+
+	--color-surface: #f9fafb;
+	--color-surface-hover: #f3f4f6;
+	--color-surface-muted: #f3f4f6;
+	--color-surface-empty: #fafafa;
+	--color-surface-inverse: #ffffff;
+
+	--color-text-strong: #111827;
+	--color-text-muted: #6b7280;
+	--color-text-soft: #4b5563;
+	--color-text-disabled: #6b7280;
+
+	--color-border-strong: #9ca3af;
+	--color-border-soft: #e5e7eb;
+
+	--color-button-active: #1f2937;
+	--color-button-disabled: #d1d5db;
+	--color-button-disabled-text: #6b7280;
+
+	--color-input-bg: #f9fafb;
+	--color-input-disabled-bg: #f3f4f6;
+	--color-input-disabled-text: #9ca3af;
+	--color-overlay-background: rgb(15 23 42 / 0.28);
+
+	--color-border: var(--color-border-strong);
+	--border-radius: 0.25rem;
+
+	font-family: var(--font-body), serif;
 	color: var(--color-text);
 }
 
@@ -21,6 +49,7 @@ body {
 	margin: 0;
 	font-size: 12px;
 }
+
 h1,
 h2,
 p {
@@ -51,7 +80,7 @@ h2 {
 
 pre {
 	font-size: 16px;
-	font-family: var(--font-mono);
+	font-family: var(--font-mono), serif;
 	background-color: rgba(255, 255, 255, 0.45);
 	border-radius: 3px;
 	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
@@ -69,10 +98,70 @@ pre {
 	margin: 0 auto;
 }
 
-input,
 button {
-	font-size: inherit;
-	font-family: inherit;
+	padding: 0.55rem 0.75rem;
+	font: inherit;
+	color: #ffffff;
+	background-color: var(--color-button-active);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+	cursor: pointer;
+	outline: none;
+	transition:
+			background-color 180ms ease,
+			border-color 180ms ease,
+			box-shadow 180ms ease,
+			opacity 180ms ease;
+}
+
+input {
+	height: 14px;
+}
+select, input:not([type='checkbox']):not([type='radio']) {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	font: inherit;
+	color: var(--color-text-strong);
+	background-color: var(--color-input-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	box-shadow:
+			0 1px 2px rgb(0 0 0 / 0.08),
+			inset 0 1px 0 rgb(255 255 255 / 0.6);
+	outline: none;
+	cursor: pointer;
+	padding: 7px !important;
+}
+
+select {
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 0.65rem center;
+	background-size: 0.9rem;
+}
+
+select:disabled,
+button:disabled {
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+select:disabled {
+	color: var(--color-input-disabled-text);
+	background-color: var(--color-input-disabled-bg);
+	border-color: var(--color-button-disabled);
+}
+
+button {
+	border-radius: var(--border-radius);
+	background: var(--color-button-disabled);
+}
+button:disabled {
+	background-color: var(--color-button-disabled);
+	border-color: var(--color-button-disabled);
+	color: var(--color-button-disabled-text);
 }
 
 button:focus:not(:focus-visible) {
