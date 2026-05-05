@@ -31,6 +31,7 @@
 		"@fortawesome/fontawesome-free": "^7.2.0",
 		"air-datepicker": "^3.6.0",
 		"amplify-adapter": "^1.2.3",
-		"aws-amplify": "^6.16.3"
+		"aws-amplify": "^6.16.3",
+		"worse-select": "^0.5.0"
 	}
 }

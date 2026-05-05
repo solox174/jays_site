@@ -2,6 +2,7 @@
 	import './layout.css';
 	import { page } from '$app/state';
 	import { isBusy } from '$lib/stores/ui';
+	import { theme } from '$lib/stores/colorScheme.svelte';
 
 	let { children } = $props();
 	let mouseX = $state(0);
@@ -11,14 +12,27 @@
 		mouseX = event.clientX;
 		mouseY = event.clientY;
 	}
+
+	function toggleTheme(e: MouseEvent) {
+		e.preventDefault();
+		theme.toggle();
+		document.documentElement.setAttribute('data-theme', theme.current);
+	}
 </script>
 
 <svelte:window onmousemove={handleMouseMove} />
 
 <div>
 	<div style="margin-bottom: 50px">
-		<div style="display: flex; justify-content: center; margin: 40px 0">
+		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
 			<img src="/logo.png" alt="logo" style="aspect-ratio: 1392/876; height: 150px"/>
+			<i title="light/dark mode"
+			   id="toggle-color-scheme"
+			   onclick={toggleTheme}
+			   onkeydown="{void(0)}" tabindex="0" role="button"
+			   data-dark-mode={theme.current === 'dark'}
+			   class="fa-solid fa-cloud-sun"
+			   style="position: absolute; margin-top: 40px; top: 0; right: 0; font-size: 1.3rem"></i>
 		</div>
 		<div>
 			<div style="display: flex; justify-content: space-between; margin: 0 auto; width: 400px; font-size: 1.5rem">
@@ -49,6 +63,12 @@
 {/if}
 
 <style>
+	#toggle-color-scheme[data-dark-mode="false"] {
+		color: black!important;
+	}
+	#toggle-color-scheme[data-dark-mode="true"] {
+		color: white;
+	}
 	.cursor-spinner {
 		position: fixed;
 		z-index: 9999;
@@ -83,10 +103,10 @@
 		padding: 0;
 		width: 0;
 		height: 0;
-		left: calc(50% - var(--size));
+		left: calc(50% - (var(--size)/2));
 		bottom: -10px;
 		position: absolute;
 		border: var(--size) solid transparent;
-		border-bottom: var(--size) solid var(--color-theme-3);
+		border-bottom: var(--size) solid var(--color-active-nav-indicator)
 	}
 </style>

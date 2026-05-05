@@ -4,9 +4,10 @@
 	<meta charset="utf-8" />
 	<link rel="icon" href="%sveltekit.assets%/favicon.svg" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')}catch(e){}</script>
 	%sveltekit.head%
 </head>
-<body data-sveltekit-preload-data="hover">
+<body data-sveltekit-preload-data="hover" style="width: 600px; margin: 0 auto; padding: 0 20px">
 <div style="display: contents">%sveltekit.body%</div>
 </body>
 </html>

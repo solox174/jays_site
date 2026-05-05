@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {Appointment} from "$lib/types/UITypes";
+    import type {Schema} from "../../../amplify/data/resource";
 
     type TimeSlot = {
         value: string;
@@ -12,7 +12,7 @@
         businessStartTime: string;
         businessCloseTime: string;
         appointmentDurationHours: number;
-        existingAppointments: Appointment[];
+        existingAppointments: Schema['Appointment']['createType'][];
         selectedTime?: string | null;
         onClose?: () => void;
         onSelect?: (time: string) => void;
@@ -183,10 +183,6 @@
     >
         <div class="time-modal__header">
             <div>
-                <div style="display: flex; align-items: center; margin-bottom: 10px">
-                    <span class="time-modal__eyebrow">Appointment time</span>
-                    <span style="margin-left: 5px; font-size: 1rem">{formattedDate}</span>
-                </div>
                 <h2 id="time-modal-title" class="time-modal__title">Select a time</h2>
             </div>
 
@@ -271,76 +267,67 @@
     }
 
     .time-modal {
-        width: min(720px, 100%);
-        max-height: min(88vh, 900px);
+        width: min(500px, 100%);
+        max-height: min(70vh, 720px);
         overflow: hidden;
         display: flex;
         flex-direction: column;
         border-radius: var(--border-radius);
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 24px 64px rgba(15, 23, 42, 0.16);
+        background: var(--color-modal-bg);
+        border: 1px solid var(--color-border-soft);
+        box-shadow: var(--shadow-modal);
     }
 
     .time-modal__header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 16px;
-        padding: 24px 24px 18px;
-        border-bottom: 1px solid #e5e7eb;
-        background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+        gap: 1rem;
+        padding: 1rem;
+        border-bottom: 1px solid var(--color-border-soft);
+        background: var(--color-modal-bg);
     }
 
     .time-modal__eyebrow {
-        display: inline-flex;
-        align-items: center;
-        min-height: 30px;
-        padding: 0 12px;
-        border-radius: var(--border-radius);
-        background: #f3f4f6;
-        color: #4b5563;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        margin: 0 0 0.25rem;
+        color: var(--color-text-muted);
+        font-size: 0.875rem;
+        font-weight: 400;
     }
 
     .time-modal__title {
-        margin: 0;
-        color: #111827;
-        font-size: 28px;
-        line-height: 1.1;
-        font-weight: 800;
-        letter-spacing: -0.02em;
+        margin: 0.25rem 0 0;
+        color: var(--color-text-strong);
+        font-size: 1.125rem;
+        font-weight: 600;
     }
 
     .time-modal__subtitle {
-        margin: 10px 0 0;
-        color: #6b7280;
-        font-size: 15px;
+        margin: 0.25rem 0 0;
+        color: var(--color-text-muted);
+        font-size: 0.875rem;
         line-height: 1.5;
     }
 
     .time-modal__close {
         flex: 0 0 auto;
-        width: 42px;
-        height: 42px;
+        width: 2.25rem;
+        height: 2.25rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--color-button-disabled);
         border-radius: var(--border-radius);
-        background: #ffffff;
-        color: #6b7280;
+        background: var(--color-modal-bg);
+        color: var(--color-text-strong);
         cursor: pointer;
         transition: all 160ms ease;
     }
 
     .time-modal__close:hover {
-        color: #111827;
-        background: #f9fafb;
-        border-color: #d1d5db;
+        color: var(--color-text-strong);
+        background: var(--color-surface);
+        border-color: var(--color-button-disabled);
     }
 
     .time-modal__close svg {
@@ -349,7 +336,7 @@
     }
 
     .time-modal__body {
-        padding: 20px 24px 24px;
+        padding: 1rem;
         overflow: auto;
     }
 
@@ -359,19 +346,19 @@
         justify-content: space-between;
         margin-bottom: 18px;
         padding: 14px 16px;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--color-border-soft);
         border-radius: var(--border-radius);
-        background: #fafafa;
+        background: var(--color-surface-empty);
     }
 
     .time-modal__summary-label {
-        color: #6b7280;
+        color: var(--color-text-muted);
         font-size: 13px;
         font-weight: 700;
     }
 
     .time-modal__summary-value {
-        color: #111827;
+        color: var(--color-text-strong);
         font-size: 16px;
         font-weight: 800;
     }
@@ -379,96 +366,89 @@
     .time-modal__rows {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 0.5rem;
     }
 
     .time-row {
         width: 100%;
-        min-height: 68px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        padding: 16px 18px;
+        gap: 1rem;
+        padding: 0.9rem;
         text-align: left;
-        border: 1px solid #e5e7eb;
+        border: 1px solid var(--color-border-soft);
         border-radius: var(--border-radius);
-        background: #ffffff;
-        color: #111827;
+        background: var(--color-surface);
+        color: var(--color-text-strong);
         cursor: pointer;
         transition:
                 border-color 160ms ease,
                 background 160ms ease,
-                box-shadow 160ms ease,
-                transform 160ms ease;
+                box-shadow 160ms ease;
     }
 
     .time-row:hover {
-        transform: translateY(-1px);
-        border-color: #d1d5db;
-        background: #fcfcfc;
-        box-shadow: 0 10px 24px rgba(17, 24, 39, 0.05);
+        border-color: var(--color-button-disabled);
+        background: var(--color-surface-hover);
     }
 
     .time-row.selected {
-        border-color: #111827;
-        background: #f9fafb;
-        box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
+        border-color: var(--color-text-strong);
+        background: var(--color-surface-hover);
+        box-shadow: var(--shadow-row-selected);
     }
 
     .time-row.disabled {
         cursor: not-allowed;
-        background: #f9fafb;
-        color: #9ca3af;
-        border-color: #eceff3;
+        color: var(--color-input-disabled-text);
+        border-color: var(--color-border-subtle);
         box-shadow: none;
     }
 
     .time-row.disabled:hover {
-        transform: none;
-        background: #f9fafb;
-        border-color: #eceff3;
+        border-color: var(--color-border-subtle);
+        background: var(--color-surface);
     }
 
     .time-row__label {
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: -0.01em;
+        font-size: 1rem;
+        font-weight: 600;
     }
 
     .time-row__status {
         flex: 0 0 auto;
-        color: #9ca3af;
+        color: var(--color-input-disabled-text);
         font-size: 13px;
         font-weight: 700;
     }
 
     .time-row__status--selected {
-        color: #111827;
+        color: var(--color-text-strong);
     }
 
     .time-modal__empty {
         padding: 20px;
-        border: 1px dashed #d1d5db;
+        border: 1px dashed var(--color-button-disabled);
         border-radius: var(--border-radius);
-        background: #fafafa;
-        color: #6b7280;
+        background: var(--color-surface-empty);
+        color: var(--color-text-muted);
         font-size: 14px;
         line-height: 1.6;
     }
 
     .time-modal__footer {
         display: flex;
-        align-items: center;;
-        justify-content: end;
-        --gap: 16px;
-        padding: 18px 24px 24px;
-        border-top: 1px solid #e5e7eb;
-        background: #ffffff;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-top: 1px solid var(--color-border-soft);
+        background: var(--color-modal-bg);
     }
 
     .time-modal__selection-label {
-        color: #6b7280;
+        color: var(--color-text-muted);
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -477,51 +457,44 @@
 
     .time-modal__selection-value {
         margin-top: 4px;
-        color: #111827;
+        color: var(--color-text-strong);
         font-size: 16px;
         font-weight: 700;
     }
 
     .btn {
-        min-width: 120px;
-        height: 46px;
-        padding: 0 18px;
         border-radius: var(--border-radius);
-        font-size: 14px;
-        font-weight: 700;
+        padding: 0.55rem 0.8rem;
+        font: inherit;
+        font-weight: 600;
         cursor: pointer;
         transition:
-                transform 160ms ease,
                 background 160ms ease,
                 border-color 160ms ease,
                 color 160ms ease,
                 opacity 160ms ease;
     }
 
-    .btn:hover {
-        transform: translateY(-1px);
-    }
-
     .btn--secondary {
-        border: 1px solid #e5e7eb;
-        background: #ffffff;
-        color: #111827;
+        border: 1px solid var(--color-border-soft);
+        background: var(--color-modal-bg);
+        color: var(--color-text-strong);
     }
 
     .btn--secondary:hover {
-        border-color: #d1d5db;
-        background: #f9fafb;
+        border-color: var(--color-button-disabled);
+        background: var(--color-surface);
     }
 
     .btn--primary {
-        border: 1px solid #111827;
-        background: #111827;
-        color: #ffffff;
+        border: 1px solid var(--color-button-primary-bg);
+        background: var(--color-button-primary-bg);
+        color: var(--color-text-inverse);
     }
 
     .btn--primary:hover {
-        background: #000000;
-        border-color: #000000;
+        background: var(--color-button-primary-hover-bg);
+        border-color: var(--color-button-primary-hover-bg);
     }
 
     .btn--primary:disabled {
@@ -538,27 +511,14 @@
 
         .time-modal {
             width: 100%;
-            max-height: 92vh;
+            max-height: 74vh;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
-        }
-
-        .time-modal__header {
-            padding: 20px 18px 16px;
-        }
-
-        .time-modal__title {
-            font-size: 24px;
-        }
-
-        .time-modal__body {
-            padding: 18px;
         }
 
         .time-modal__footer {
             flex-direction: column;
             align-items: stretch;
-            padding: 16px 18px 20px;
         }
 
         .time-modal__actions {

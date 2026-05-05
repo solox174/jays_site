@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { worseSelect } from 'worse-select'
     import { onMount } from 'svelte';
     import { nhtsaApi } from '$lib/api/nhtsaApi';
     import type { Schema } from '$lib/../../amplify/data/resource';
@@ -11,6 +12,7 @@
     import {amplifyClient} from '$lib/api/amplifyClient';
     import type { PageProps } from './$types';
     import { isBusy } from '$lib/stores/ui';
+    import { theme } from '$lib/stores/colorScheme.svelte'
 
     let { data }: PageProps = $props();
     const deferredDataPromise = data.deferred.data;
@@ -51,10 +53,8 @@
     let showTimePicker = $state(false);
     let selectedTime = $state('');
 
-
-
-
     onMount(async () => {
+        worseSelect();
         const BUSINESS_DAY_CAPACITY = 8;
         const appointmentCounts = new Map<string, number>();
 
@@ -67,7 +67,7 @@
 
         new AirDatepicker('#calendar', {
             locale: localeEn,
-
+            classes: theme.current === 'dark' ? 'dark' : '',
             onRenderCell({date, cellType}) {
                 if (cellType == 'day' && appointments) {
                     const calendarYMD = `${date.getFullYear()}${date.getMonth()}${date.getDate()}`;
@@ -257,7 +257,7 @@
 <svelte:window onkeydown={handleWindowKeydown} />
 
 <form onsubmit={handleSubmit}>
-    <div style="display: flex; flex-direction: column; margin: 0 auto; width: 550px">
+    <div style="display: flex; flex-direction: column; margin: 0 auto;">
         <fieldset class="form-section">
             <legend class="section-title">Vehicle</legend>
 
@@ -277,6 +277,7 @@
                     <select id="make"
                             name="make"
                             bind:value={selectedMake}
+                            data-searchable
                             onchange={handleMakeChange}
                             disabled={!selectedYear} >
                         <option value="">
@@ -333,7 +334,7 @@
                     <input
                             id="calendar"
                             bind:value={appointmentDateString}
-                            autocomplete="one-time-code"
+                            autocomplete="bday"
                             type="text"
                             style="width: 62px"
                     />
@@ -414,14 +415,17 @@
 
     #service, #calendar {
         cursor: pointer;
-        text-align: center;
         flex: 1;
         width: 100px;
     }
 
+    #calendar {
+        text-align: center;
+    }
+
     label {
         text-align: center;
-        margin-right: 5px;
+        margin-right: 10px;
     }
 
     .schedule-button:disabled {
