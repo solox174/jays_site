@@ -39,7 +39,6 @@
 				<a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
 				<a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling">Scheduling</a>
 				<a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
-				<a class:active-nav="{page.url.pathname === '/about'}" href="/about">About</a>
 			</div>
 		</div>
 		<div></div>

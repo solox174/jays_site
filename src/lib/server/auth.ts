@@ -9,10 +9,12 @@ import {
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import type { Cookies } from '@sveltejs/kit';
 import type { Schema } from '../../../amplify/data/resource';
+import { env } from '$env/dynamic/private';
+import { AWS_REGION, COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID } from '$env/static/private';
 
-const region = process.env.AWS_REGION!;
-const userPoolId = process.env.COGNITO_USER_POOL_ID!;
-const clientId = process.env.COGNITO_CLIENT_ID!;
+const region = env.AWS_REGION || AWS_REGION;
+const userPoolId = env.COGNITO_USER_POOL_ID || COGNITO_USER_POOL_ID;
+const clientId = env.COGNITO_CLIENT_ID || COGNITO_CLIENT_ID;
 
 const auth = new CognitoIdentityProviderClient({ region });
 
