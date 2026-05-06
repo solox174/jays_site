@@ -274,6 +274,28 @@ button:focus:not(:focus-visible) {
 	}
 }
 
+.section-title {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 0;
+	margin-bottom: 20px;
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+	color: var(--color-text-muted);
+	text-transform: uppercase;
+	text-align: left;
+}
+
+.section-title::after {
+	content: '';
+	flex: 1;
+	height: 1px;
+	margin-left: 12px;
+	background: var(--color-border-soft);
+}
+
 .visually-hidden {
 	border: 0;
 	clip: rect(0 0 0 0);

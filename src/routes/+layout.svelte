@@ -21,7 +21,7 @@
 </script>
 
 <svelte:window onmousemove={handleMouseMove} />
-
+<!-- fa-cloud-sun -->
 <div>
 	<div style="margin-bottom: 50px">
 		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
@@ -31,7 +31,7 @@
 			   onclick={toggleTheme}
 			   onkeydown="{void(0)}" tabindex="0" role="button"
 			   data-dark-mode={theme.current === 'dark'}
-			   class="fa-solid fa-cloud-sun"
+			   class="fa-solid fa-lightbulb"
 			   style="position: absolute; margin-top: 40px; top: 0; right: 0; font-size: 1.3rem"></i>
 		</div>
 		<div>
