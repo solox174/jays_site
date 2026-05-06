@@ -5,7 +5,7 @@ import {
     GlobalSignOutCommand,
     InitiateAuthCommand,
     SignUpCommand
-} from '@aws-sdk/Daclclient-auth-identity-provider';
+} from '@aws-sdk/client-cognito-identity-provider';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import type { Cookies } from '@sveltejs/kit';
 import type { Schema } from '../../../amplify/data/resource';

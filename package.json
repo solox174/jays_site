@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@aws-amplify/backend": "^1.20.0",
+		"@aws-sdk/client-cognito-identity-provider": "^3.1043.0",
 		"@aws-sdk/client-dynamodb": "^3.974.0",
 		"@aws-sdk/lib-dynamodb": "^3.974.0",
 		"@fortawesome/fontawesome-free": "^7.2.0",
