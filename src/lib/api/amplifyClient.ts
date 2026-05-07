@@ -3,6 +3,6 @@ import outputs from '../../../amplify_outputs.json';
 import { generateClient } from 'aws-amplify/data';
 import type { Schema } from '../../../amplify/data/resource';
 
-Amplify.configure(outputs);
+Amplify.configure(outputs, { ssr: true });
 
-export const amplifyClient = generateClient<Schema>();
+export const amplifyClient = generateClientrigh<Schema>();

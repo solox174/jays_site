@@ -15,6 +15,6 @@ export const actions: Actions = {
             return fail(400, { message: 'Login failed', challengeName: result.challengeName });
         }
 
-        throw redirect(303, '/app');
+        redirect(303, '/scheduling');
     }
 };

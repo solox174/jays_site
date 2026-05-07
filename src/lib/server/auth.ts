@@ -2,7 +2,6 @@ import {
     AuthFlowType,
     CognitoIdentityProviderClient,
     ConfirmSignUpCommand,
-    GlobalSignOutCommand,
     InitiateAuthCommand,
     SignUpCommand
 } from '@aws-sdk/client-cognito-identity-provider';
@@ -11,31 +10,18 @@ import type { Cookies } from '@sveltejs/kit';
 import type { Schema } from '../../../amplify/data/resource';
 import { env } from '$env/dynamic/private';
 import { AWS_REGION, COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID } from '$env/static/private';
+import { amplifyClient } from '../api/amplifyClient';
 
 const region = env.AWS_REGION || AWS_REGION;
 const userPoolId = env.COGNITO_USER_POOL_ID || COGNITO_USER_POOL_ID;
 const clientId = env.COGNITO_CLIENT_ID || COGNITO_CLIENT_ID;
 
-const auth = new CognitoIdentityProviderClient({ region });
+const cognitoClient = new CognitoIdentityProviderClient({ region });
 
-const accessVerifier = CognitoJwtVerifier.create({
-    userPoolId,
-    tokenUse: 'access',
-    clientId
-});
+const accessVerifier = CognitoJwtVerifier.create({ userPoolId, tokenUse: 'access', clientId });
+const idVerifier = CognitoJwtVerifier.create({ userPoolId, tokenUse: 'id', clientId });
 
-const idVerifier = CognitoJwtVerifier.create({
-    userPoolId,
-    tokenUse: 'id',
-    clientId
-});
-
-type SessionUser = {
-    sub: string;
-    email?: string;
-};
-
-const inMemorySessions = new Map<string, SessionUser>();
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
 function setSessionCookie(cookies: Cookies, sessionId: string) {
     cookies.set('session', sessionId, {
@@ -43,7 +29,7 @@ function setSessionCookie(cookies: Cookies, sessionId: string) {
         httpOnly: true,
         secure: true,
         sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 7
+        maxAge: SESSION_TTL_MS / 1000
     });
 }
 
@@ -51,19 +37,27 @@ function clearSessionCookie(cookies: Cookies) {
     cookies.delete('session', { path: '/' });
 }
 
-async function createSession(user: SessionUser) {
-    const sessionId = crypto.randomUUID();
-    inMemorySessions.set(sessionId, user);
-    return sessionId;
+async function createSession(sub: string, email?: string): Promise<string> {
+    const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
+    const { data } = await amplifyClient.models.Session.create({ sub, email, expiresAt });
+    return data!.id;
 }
 
-export async function getSession(sessionId?: string | null) {
+export async function verifySession(sessionId?: string | null): Promise<{ sub: string; email?: string } | null> {
     if (!sessionId) return null;
-    return inMemorySessions.get(sessionId) ?? null;
+    const { data } = await amplifyClient.models.Session.get({ id: sessionId });
+    if (!data) return null;
+
+    if (new Date(data.expiresAt) < new Date()) {
+        await amplifyClient.models.Session.delete({ id: sessionId });
+        return null;
+    }
+
+    return { sub: data.sub, email: data.email ?? undefined };
 }
 
 export async function signup(user: Schema['Customer']['createType']) {
-    const response = await auth.send(new SignUpCommand({
+    const response = await cognitoClient.send(new SignUpCommand({
         ClientId: clientId,
         Username: user.email!,
         Password: user.password!,
@@ -83,7 +77,7 @@ export async function signup(user: Schema['Customer']['createType']) {
 }
 
 export async function confirmSignup(username: string, code: string) {
-    await auth.send(new ConfirmSignUpCommand({
+    await cognitoClient.send(new ConfirmSignUpCommand({
         ClientId: clientId,
         Username: username,
         ConfirmationCode: code
@@ -93,60 +87,33 @@ export async function confirmSignup(username: string, code: string) {
 }
 
 export async function login(username: string, password: string, cookies: Cookies) {
-    const response = await auth.send(new InitiateAuthCommand({
+    const response = await cognitoClient.send(new InitiateAuthCommand({
         AuthFlow: AuthFlowType.USER_PASSWORD_AUTH,
         ClientId: clientId,
-        AuthParameters: {
-            USERNAME: username,
-            PASSWORD: password
-        }
+        AuthParameters: { USERNAME: username, PASSWORD: password }
     }));
 
     if (!response.AuthenticationResult?.AccessToken || !response.AuthenticationResult?.IdToken) {
-        return {
-            ok: false as const,
-            challengeName: response.ChallengeName
-        };
+        return { ok: false as const, challengeName: response.ChallengeName };
     }
-
-    const accessToken = response.AuthenticationResult.AccessToken;
-    const idToken = response.AuthenticationResult.IdToken;
 
     const [accessPayload, idPayload] = await Promise.all([
-        accessVerifier.verify(accessToken),
-        idVerifier.verify(idToken)
+        accessVerifier.verify(response.AuthenticationResult.AccessToken),
+        idVerifier.verify(response.AuthenticationResult.IdToken)
     ]);
 
-    const sessionId = await createSession({
-        sub: accessPayload.sub,
-        email: typeof idPayload.email === 'string' ? idPayload.email : undefined
-    });
-
+    const email = typeof idPayload.email === 'string' ? idPayload.email : undefined;
+    const sessionId = await createSession(accessPayload.sub, email);
     setSessionCookie(cookies, sessionId);
 
-    return {
-        ok: true as const,
-        user: {
-            sub: accessPayload.sub,
-            email: typeof idPayload.email === 'string' ? idPayload.email : undefined
-        },
-        accessToken
-    };
+    return { ok: true as const, user: { sub: accessPayload.sub, email } };
 }
 
-export async function logout(cookies: Cookies, accessToken?: string) {
-    if (accessToken) {
-        await auth.send(new GlobalSignOutCommand({
-            AccessToken: accessToken
-        }));
-    }
-
+export async function logout(cookies: Cookies) {
     const sessionId = cookies.get('session');
     if (sessionId) {
-        inMemorySessions.delete(sessionId);
+        await amplifyClient.models.Session.delete({ id: sessionId });
     }
-
     clearSessionCookie(cookies);
-
     return { ok: true as const };
 }

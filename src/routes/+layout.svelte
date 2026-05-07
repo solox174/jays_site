@@ -26,14 +26,15 @@
 	<div style="margin-bottom: 50px">
 		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
 			<img src="/logo.png" alt="logo" style="aspect-ratio: 1392/876; height: 150px"/>
-			<i title="light/dark mode"
+			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
 			   id="toggle-color-scheme"
 			   onclick={toggleTheme}
 			   onkeydown="{void(0)}" tabindex="0" role="button"
 			   data-dark-mode={theme.current === 'dark'}
-			   class="fa-solid fa-lightbulb"
+			   class="fa-solid {theme.current === 'dark' ? 'fa-sun' : 'fa-moon'}"
 			   style="position: absolute; margin-top: 40px; top: 0; right: 0; font-size: 1.3rem"></i>
 		</div>
+		{#if page.url.pathname !== '/login'}
 		<div>
 			<div style="display: flex; justify-content: space-between; margin: 0 auto; width: 400px; font-size: 1.5rem">
 				<a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
@@ -41,6 +42,7 @@
 				<a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
 			</div>
 		</div>
+		{/if}
 		<div></div>
 	</div>
 

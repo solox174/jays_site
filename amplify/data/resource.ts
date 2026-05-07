@@ -49,6 +49,14 @@ const schema = a.schema({
             serviceId: a.id().required(),
             service: a.belongsTo('Service', 'serviceId')
         })
+        .authorization((allow) => [allow.guest()]),
+
+    Session: a
+        .model({
+            sub: a.string().required(),
+            email: a.string(),
+            expiresAt: a.datetime().required(),
+        })
         .authorization((allow) => [allow.guest()])
 });
 

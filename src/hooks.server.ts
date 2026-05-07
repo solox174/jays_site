@@ -1,17 +1,16 @@
-
 import type { Handle } from '@sveltejs/kit';
-import { getSession } from '$lib/server/auth';
+import { redirect } from '@sveltejs/kit';
+import { verifySession } from '$lib/server/auth';
+
+const PROTECTED = ['/scheduling', '/account', '/admin'];
 
 export const handle: Handle = async ({ event, resolve }) => {
     const sessionId = event.cookies.get('session');
-    const session = await getSession(sessionId);
+    event.locals.user = await verifySession(sessionId);
 
-    event.locals.user = session
-        ? {
-            sub: session.sub,
-            email: session.email
-        }
-        : null;
+    if (!event.locals.user && PROTECTED.some(p => event.url.pathname.startsWith(p))) {
+        redirect(303, '/login');
+    }
 
     return resolve(event);
 };
