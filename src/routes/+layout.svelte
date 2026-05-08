@@ -7,6 +7,8 @@
 	let { children } = $props();
 	let mouseX = $state(0);
 	let mouseY = $state(0);
+	let menuOpen = $state(false);
+	let navEl: HTMLElement | null = null;
 
 	function handleMouseMove(event: MouseEvent) {
 		mouseX = event.clientX;
@@ -18,12 +20,17 @@
 		theme.toggle();
 		document.documentElement.setAttribute('data-theme', theme.current);
 	}
+
+	function handleWindowClick(e: MouseEvent) {
+		if (menuOpen && navEl && !navEl.contains(e.target as Node)) {
+			menuOpen = false;
+		}
+	}
 </script>
 
-<svelte:window onmousemove={handleMouseMove} />
-<!-- fa-cloud-sun -->
+<svelte:window onmousemove={handleMouseMove} onclick={handleWindowClick} />
 <div>
-	<div style="margin-bottom: 50px">
+	<div style="margin-bottom: 20px">
 		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
 			<img src="/logo.png" alt="logo" style="aspect-ratio: 1392/876; height: 150px"/>
 			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
@@ -35,13 +42,26 @@
 			   style="position: absolute; margin-top: 40px; top: 0; right: 0; font-size: 1.3rem"></i>
 		</div>
 		{#if page.url.pathname !== '/login'}
-		<div>
-			<div style="display: flex; justify-content: space-between; margin: 0 auto; width: 400px; font-size: 1.5rem">
+		<nav class="site-nav" bind:this={navEl}>
+			<div class="nav-desktop">
 				<a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
 				<a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling">Scheduling</a>
 				<a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
 			</div>
-		</div>
+
+			<div class="nav-mobile">
+				<button class="hamburger" onclick={() => menuOpen = !menuOpen} aria-label="Menu" aria-expanded={menuOpen}>
+					<i class="fa-solid {menuOpen ? 'fa-xmark' : 'fa-bars'}"></i>
+				</button>
+				{#if menuOpen}
+				<div class="nav-dropdown">
+					<a class:active-nav="{page.url.pathname === '/'}" href="/" onclick={() => menuOpen = false}>Home</a>
+					<a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling" onclick={() => menuOpen = false}>Scheduling</a>
+					<a class:active-nav="{page.url.pathname === '/services'}" href="/services" onclick={() => menuOpen = false}>Services</a>
+				</div>
+				{/if}
+			</div>
+		</nav>
 		{/if}
 		<div></div>
 	</div>
@@ -92,6 +112,60 @@
 		backdrop-filter: blur(2px);
 		pointer-events: auto;
 		cursor: none;
+	}
+
+	.nav-desktop {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 auto;
+		width: 400px;
+		font-size: 1.5rem;
+	}
+
+	.nav-mobile {
+		display: none;
+		position: relative;
+		text-align: center;
+	}
+
+	.hamburger {
+		background: none;
+		border: none;
+		box-shadow: none;
+		font-size: 1.5rem;
+		color: var(--color-text-strong);
+		cursor: pointer;
+		padding: 0.25rem 0.75rem;
+	}
+
+	.nav-dropdown {
+		position: absolute;
+		top: calc(100% + 0.5rem);
+		left: 50%;
+		transform: translateX(-50%);
+		width: 200px;
+		background: var(--color-modal-bg);
+		border: 1px solid var(--color-border-soft);
+		border-radius: var(--border-radius);
+		box-shadow: var(--shadow-modal);
+		z-index: 100;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.nav-dropdown a {
+		padding: 0.75rem 1.25rem;
+		font-size: 1.2rem;
+		border-bottom: 1px solid var(--color-border-soft);
+	}
+
+	.nav-dropdown a:last-child {
+		border-bottom: none;
+	}
+
+	@media (max-width: 640px) {
+		.nav-desktop { display: none; }
+		.nav-mobile { display: block; }
 	}
 
 	.active-nav {

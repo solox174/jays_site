@@ -5,4 +5,4 @@ import type { Schema } from '../../../amplify/data/resource';
 
 Amplify.configure(outputs, { ssr: true });
 
-export const amplifyClient = generateClientrigh<Schema>();
+export const amplifyClient = generateClient<Schema>();

@@ -5,7 +5,7 @@
 <div style="display: flex; justify-content: center; margin: 0 auto;">
     <form method="post">
         <legend class="section-title">Create Account</legend>
-        <div style="display: flex; justify-content: space-between; width: 400px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; width: min(400px, 100%); margin: 0 auto;">
             <fieldset
                     style="display: flex; justify-content: space-between; border: none;  width: 100px; padding: 0; flex-direction: column; row-gap: 20px; ">
                 <div>

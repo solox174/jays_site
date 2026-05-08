@@ -6,6 +6,7 @@
     let view = $state<View>('choice');
 </script>
 
+<!-- TODO: add a svelte:head block -->
 {#if view === 'choice'}
     <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem">
         <button onclick={() => view = 'login'}>Log in</button>

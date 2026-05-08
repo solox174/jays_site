@@ -1,11 +1,7 @@
-<script>
-</script>
-
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+    <title>Home</title>
 </svelte:head>
 
-<style>
+<svelte:window onkeydown={onKeydown} />
 
-</style>
+<a href="/portfolio">See my work</a>

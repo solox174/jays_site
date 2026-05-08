@@ -6,4 +6,10 @@
     let { data } = $props();
 </script>
 
+<svelte:head>
+    <title>Schedule</title>
+    <meta name="description" content="Svelte demo app" />
+</svelte:head>
+
+<!-- TODO: move this components code back inline -->
 <AppointmentForm deferredDataPromise={data.deferred.data} />
