@@ -348,9 +348,9 @@
             {/if}
         </fieldset>
 
-        <button class="schedule-button" disabled={!selectedTime || !appointmentDateString || !selectedModel} style="color: black; display: flex; align-items: center; justify-content: center; align-self: center; padding: 3px; border: 1px solid black; margin-top: 1.5rem">
-            <i class="fa-solid fa-calendar-plus" style="font-size: 1.5rem; color: var(--brand-color)"></i>
-            <span id="submit-label" style="text-decoration: underline; font-weight: bold; margin-right: 10px">Schedule Appointment</span>
+        <button disabled={!selectedTime || !appointmentDateString || !selectedModel}
+                style="margin-top: 1.5rem; align-self: center">
+            Schedule Appointment
         </button>
     </div>
     </div>
@@ -416,22 +416,5 @@
     label {
         text-align: center;
         margin-right: 5px;
-    }
-
-    .schedule-button:disabled {
-        background: #e5e7eb;
-        color: #6b7280;
-        border-color: #9ca3af;
-        opacity: 0.72;
-        cursor: not-allowed;
-        box-shadow: none;
-        transform: none;
-    }
-
-    #submit-label {
-        font-size: 12px;
-        font-weight: 500;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
     }
 </style>

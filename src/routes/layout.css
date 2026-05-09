@@ -18,9 +18,9 @@
 	/* general */
 	--border-radius: 0.25rem;
 	--overlay-bg: rgb(15 23 42 / 0.28);
+	--glass-color: rgb(255, 255, 255, 0.3);
 	--color-active-nav-indicator: black;
-	--label-color: #aeaeae;
-	--glass-color: rgba(60, 60, 60, 0.3);
+	--label-color: #323232;
 	--brand-color: #bd101a;
 
 	/* buttons */
@@ -54,8 +54,8 @@
 	--color-active-nav-indicator: white;
 	color-scheme: dark;
 	--overlay-bg: rgb(0 0 0 / 0.75);
-	--glass-color: rgb(255, 255, 255, 0.3);
-	--label-color: #535353;
+	--glass-color: rgba(60, 60, 60, 0.3);
+	--label-color: #aaaaaa;
 
 	/* button */
 	/*--btn-bg: #404040;
@@ -205,7 +205,6 @@ button {
 
 button:disabled {
 	background: var(--btn-bg-disabled);
-	border: none;
 	cursor: not-allowed;
 	box-shadow: none;
 	color: #aeaeae;
@@ -300,7 +299,7 @@ button:focus:not(:focus-visible) {
 	text-transform: uppercase;
 	text-align: left;
 
-	color: rgba(58, 58, 58, 0.92);
+	color: var(--label-color);
 	font-size: clamp(1rem, 0.9rem + 0.6vw, 1.35rem);
 	line-height: 1;
 	letter-spacing: 0.035em;
