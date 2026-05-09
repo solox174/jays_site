@@ -1,10 +1,16 @@
-@import "@fortawesome/fontawesome-free/css/all.min.css";
+@import '@fortawesome/fontawesome-free/css/all.min.css';
+
+@font-face {
+	font-family: 'Switzer';
+	src: url('$lib/assets/fonts/switzer/Switzer-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
 
 :root {
-	--font-body:
-			Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-			'Open Sans', 'Helvetica Neue', sans-serif;
-	font-family: var(--font-body), serif;
+	--font-family: 'Switzer', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+	Cantarell, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
@@ -108,6 +114,7 @@
 }
 
 body {
+	font-family: var(--font-body), serif;
 	min-height: 100vh;
 	margin: 0;
 	font-size: 16px;
@@ -260,6 +267,10 @@ button:focus:not(:focus-visible) {
 	position: relative;
 }
 
+.nav-dropdown .active-nav::before {
+	display: none;
+}
+
 .active-nav::before {
 	--size: 6px;
 	content: '';
@@ -280,17 +291,20 @@ button:focus:not(:focus-visible) {
 }
 
 .section-title {
-	color: var(--label-color);
 	display: flex;
 	align-items: center;
 	width: 100%;
 	padding: 0;
 	margin-bottom: 20px;
-	font-size: 1.3rem;
 	font-weight: 500;
-	letter-spacing: 0.04em;
 	text-transform: uppercase;
 	text-align: left;
+
+	color: rgba(58, 58, 58, 0.92);
+	font-size: clamp(1rem, 0.9rem + 0.6vw, 1.35rem);
+	line-height: 1;
+	letter-spacing: 0.035em;
+	white-space: nowrap;
 }
 
 .section-title::after {

@@ -17,7 +17,12 @@
     let { data }: PageProps = $props();
     let services = $state<Schema['Service']['createType'][]>([]);
     let appointments = $state<Schema['Appointment']['createType'][]>([]);
-    let selectedServiceSummary: string;
+    let selectedServiceSummary = $derived(
+        services
+            .filter((service) => selectedServiceIds.includes(service.id ?? ''))
+            .map((service) => service.name)
+            .join(', ')
+    );
 
     // TODO: get from session
     let customerId = $state('');
@@ -45,12 +50,6 @@
         await data.deferred.data.then((data) => {
             services = data.services;
             appointments = data.appointments;
-            selectedServiceSummary =
-                services
-                    .filter((service) => selectedServiceIds.includes(service.id ?? ''))
-                    .map((service) => service.name)
-                    .join(', ');
-
             $isBusy = false;
         });
         for (const appointment of appointments) {
@@ -303,8 +302,8 @@
             </div>
         </fieldset>
 
-        <legend class="section-title">Services & Date</legend>
-        <fieldset class="form-section scheduling-section" style="margin-top: 30px; padding-bottom: 10px">
+        <legend class="section-title" style="margin-top: 40px;">Services & Date</legend>
+        <fieldset class="form-section scheduling-section">
             <div class="dropdown">
                 <label for="service">Services</label>
                 <input id="service"
@@ -331,7 +330,7 @@
                         bind:value={appointmentDateString}
                         autocomplete="one-time-code"
                         type="text"
-                        style="width: 62px"
+                        style="width: 62px; font-size: .8rem"
                 />
             </div>
             {#if showTimePicker}
@@ -349,7 +348,7 @@
             {/if}
         </fieldset>
 
-        <button class="schedule-button" disabled={!selectedTime || !appointmentDateString || !selectedModel} style="color: black; display: flex; align-items: center; justify-content: center; align-self: center; padding: 3px; border: 1px solid black; margin-top: 40px">
+        <button class="schedule-button" disabled={!selectedTime || !appointmentDateString || !selectedModel} style="color: black; display: flex; align-items: center; justify-content: center; align-self: center; padding: 3px; border: 1px solid black; margin-top: 1.5rem">
             <i class="fa-solid fa-calendar-plus" style="font-size: 1.5rem; color: var(--brand-color)"></i>
             <span id="submit-label" style="text-decoration: underline; font-weight: bold; margin-right: 10px">Schedule Appointment</span>
         </button>
