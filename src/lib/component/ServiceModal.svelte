@@ -335,6 +335,10 @@
         border-color: var(--modal-border);
     }
 
+    .service-item:has(.service-control input[type="radio"]:checked) {
+        border-color: var(--brand-color);
+    }
+
     .service-control {
         padding-top: 0.15rem;
     }

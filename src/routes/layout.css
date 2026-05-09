@@ -38,7 +38,7 @@
 	--btn-bg: var(--brand-color);
 	--btn-bg-disabled: #818181FF;
 	--btn-border: #717171;
-	--btn-border-disabled: #d1d5db;
+	--btn-border-disabled: #cccccc;
 
 	/* input */
 	--input-bg: #f9fafb;
@@ -69,8 +69,8 @@
 	/*--btn-bg: #404040;
 	--btn-bg-disabled: #444444;
 	--btn-border: #818181;
-	--btn-border: white;
-	--btn-border-disabled: #444444;*/
+	--btn-border: white;*/
+	--btn-border-disabled: #a6a6a6;
 
 	/* input */
 	--input-bg: #2a2a2a;
@@ -217,7 +217,8 @@ button:disabled {
 	background: var(--btn-bg-disabled);
 	cursor: not-allowed;
 	box-shadow: none;
-	color: #aeaeae;
+	color: #a6a6a6;
+	border: 1px solid var(--btn-border-disabled);
 }
 
 button:focus:not(:focus-visible) {

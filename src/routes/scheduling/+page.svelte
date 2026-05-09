@@ -33,6 +33,11 @@
     let selectedYear = $state('');
     let selectedServiceIds = $state<(string | undefined)[]>([]);
     let appointmentDateString = $state('');
+    let displayDate = $derived(
+        appointmentDateString
+            ? new Date(appointmentDateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            : ''
+    );
 
     let makes = $state<string[]>([]);
     let models = $state<string[]>([]);
@@ -77,6 +82,7 @@
                 if (date instanceof Date) {
                     showTimePicker = true;
                     appointmentDateString = date.toISOString();
+                    datepicker.hide();
                 }
             }
         });
@@ -308,29 +314,21 @@
                 <label for="service">Services</label>
                 <input id="service"
                        type="text"
-                       style="width:170px"
+                       autocomplete="off"
+                       style="width:200px"
                        readonly
                        value={selectedServiceSummary}
                        onclick={openServiceModal} />
             </div>
 
-            {#if isServiceModalOpen}
-            <ServiceModal
-                    {services}
-                    selectedIds={selectedServiceIds}
-                    onSave={handleServicesSave}
-                    onClose={closeServiceModal}
-            />
-            {/if}
-
             <div class="dropdown">
                 <label for="calendar">Date</label>
                 <input
                         id="calendar"
-                        bind:value={appointmentDateString}
-                        autocomplete="one-time-code"
+                        value={displayDate}
+                        autocomplete="off"
                         type="text"
-                        style="width: 62px; font-size: .8rem"
+                        style="width: 95px; text-align: center"
                 />
             </div>
             {#if showTimePicker}
@@ -349,12 +347,21 @@
         </fieldset>
 
         <button disabled={!selectedTime || !appointmentDateString || !selectedModel}
-                style="margin-top: 1.5rem; align-self: center">
+                style="margin-top: 5px; align-self: center">
             Schedule Appointment
         </button>
     </div>
     </div>
 </form>
+
+{#if isServiceModalOpen}
+<ServiceModal
+        {services}
+        selectedIds={selectedServiceIds}
+        onSave={handleServicesSave}
+        onClose={closeServiceModal}
+/>
+{/if}
 
 <style>
     select {
@@ -406,15 +413,12 @@
         text-overflow: ellipsis;
     }
 
-    #service, #calendar {
-        cursor: pointer;
-        text-align: center;
-        flex: 1;
-        width: 100px;
-    }
-
     label {
         text-align: center;
         margin-right: 5px;
+    }
+
+    input {
+        font-size: .8rem!important;
     }
 </style>
