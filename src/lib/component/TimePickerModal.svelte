@@ -262,7 +262,7 @@
         align-items: center;
         justify-content: center;
         padding: 24px;
-        background: var(--color-overlay-background);
+        background: var(--overlay-bg);
         backdrop-filter: blur(6px);
     }
 
@@ -273,8 +273,8 @@
         display: flex;
         flex-direction: column;
         border-radius: var(--border-radius);
-        background: var(--color-modal-bg);
-        border: 1px solid var(--color-border-soft);
+        background: var(--modal-bg);
+        border: 1px solid var(--modal-border);
         box-shadow: var(--shadow-modal);
     }
 
@@ -284,27 +284,24 @@
         justify-content: space-between;
         gap: 1rem;
         padding: 1rem;
-        border-bottom: 1px solid var(--color-border-soft);
-        background: var(--color-modal-bg);
+        border-bottom: 1px solid var(--modal-border);
+        background: var(--modal-bg);
     }
 
     .time-modal__eyebrow {
         margin: 0 0 0.25rem;
-        color: var(--color-text-muted);
         font-size: 0.875rem;
         font-weight: 400;
     }
 
     .time-modal__title {
         margin: 0.25rem 0 0;
-        color: var(--color-text-strong);
         font-size: 1.125rem;
         font-weight: 600;
     }
 
     .time-modal__subtitle {
         margin: 0.25rem 0 0;
-        color: var(--color-text-muted);
         font-size: 0.875rem;
         line-height: 1.5;
     }
@@ -316,18 +313,16 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--color-button-disabled);
+        border: 1px solid var(--btn-border);
         border-radius: var(--border-radius);
-        background: var(--color-modal-bg);
-        color: var(--color-text-strong);
+        background: var(--modal-bg);
         cursor: pointer;
         transition: all 160ms ease;
     }
 
     .time-modal__close:hover {
-        color: var(--color-text-strong);
-        background: var(--color-surface);
-        border-color: var(--color-button-disabled);
+        background: var(--modal-item-bg);
+        border-color: var(--btn-border);
     }
 
     .time-modal__close svg {
@@ -346,19 +341,17 @@
         justify-content: space-between;
         margin-bottom: 18px;
         padding: 14px 16px;
-        border: 1px solid var(--color-border-soft);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
-        background: var(--color-surface-empty);
+        background: var(--modal-item-bg);
     }
 
     .time-modal__summary-label {
-        color: var(--color-text-muted);
         font-size: 13px;
         font-weight: 700;
     }
 
     .time-modal__summary-value {
-        color: var(--color-text-strong);
         font-size: 16px;
         font-weight: 800;
     }
@@ -377,10 +370,9 @@
         gap: 1rem;
         padding: 0.9rem;
         text-align: left;
-        border: 1px solid var(--color-border-soft);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
-        background: var(--color-surface);
-        color: var(--color-text-strong);
+        background: var(--modal-item-bg);
         cursor: pointer;
         transition:
                 border-color 160ms ease,
@@ -389,26 +381,25 @@
     }
 
     .time-row:hover {
-        border-color: var(--color-button-disabled);
-        background: var(--color-surface-hover);
+        border-color: var(--modal-border);
+        background: var(--modal-item-bg-hover);
     }
 
     .time-row.selected {
-        border-color: var(--color-text-strong);
-        background: var(--color-surface-hover);
+        border-color: var(--btn-bg);
+        background: var(--modal-item-bg-hover);
         box-shadow: var(--shadow-row-selected);
     }
 
     .time-row.disabled {
         cursor: not-allowed;
-        color: var(--color-input-disabled-text);
-        border-color: var(--color-border-subtle);
+        border-color: var(--modal-border);
         box-shadow: none;
     }
 
     .time-row.disabled:hover {
-        border-color: var(--color-border-subtle);
-        background: var(--color-surface);
+        border-color: var(--modal-border);
+        background: var(--modal-item-bg);
     }
 
     .time-row__label {
@@ -418,21 +409,15 @@
 
     .time-row__status {
         flex: 0 0 auto;
-        color: var(--color-input-disabled-text);
         font-size: 13px;
         font-weight: 700;
     }
 
-    .time-row__status--selected {
-        color: var(--color-text-strong);
-    }
-
     .time-modal__empty {
         padding: 20px;
-        border: 1px dashed var(--color-button-disabled);
+        border: 1px dashed var(--modal-border);
         border-radius: var(--border-radius);
-        background: var(--color-surface-empty);
-        color: var(--color-text-muted);
+        background: var(--modal-item-bg);
         font-size: 14px;
         line-height: 1.6;
     }
@@ -443,12 +428,11 @@
         justify-content: flex-end;
         gap: 0.5rem;
         padding: 1rem;
-        border-top: 1px solid var(--color-border-soft);
-        background: var(--color-modal-bg);
+        border-top: 1px solid var(--modal-border);
+        background: var(--modal-bg);
     }
 
     .time-modal__selection-label {
-        color: var(--color-text-muted);
         font-size: 12px;
         font-weight: 700;
         letter-spacing: 0.08em;
@@ -457,7 +441,6 @@
 
     .time-modal__selection-value {
         margin-top: 4px;
-        color: var(--color-text-strong);
         font-size: 16px;
         font-weight: 700;
     }
@@ -476,25 +459,22 @@
     }
 
     .btn--secondary {
-        border: 1px solid var(--color-border-soft);
-        background: var(--color-modal-bg);
-        color: var(--color-text-strong);
+        border: 1px solid var(--modal-border);
+        background: var(--modal-bg);
     }
 
     .btn--secondary:hover {
-        border-color: var(--color-button-disabled);
-        background: var(--color-surface);
+        border-color: var(--modal-border);
+        background: var(--modal-item-bg);
     }
 
     .btn--primary {
-        border: 1px solid var(--color-button-primary-bg);
-        background: var(--color-button-primary-bg);
-        color: var(--color-text-inverse);
+        border: 1px solid var(--btn-bg);
+        background: var(--btn-bg);
     }
 
     .btn--primary:hover {
-        background: var(--color-button-primary-hover-bg);
-        border-color: var(--color-button-primary-hover-bg);
+        opacity: 0.85;
     }
 
     .btn--primary:disabled {

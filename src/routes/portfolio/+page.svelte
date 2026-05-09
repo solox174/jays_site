@@ -155,10 +155,10 @@
     .video-wrap {
         position: relative;
         height: 100%;
-        border: 1px solid var(--color-border-soft);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
         overflow: hidden;
-        background: var(--color-surface);
+        background: var(--modal-item-bg);
     }
 
     video {
@@ -202,9 +202,8 @@
         font-weight: 600;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        color: var(--color-text-strong);
-        background: color-mix(in srgb, var(--color-modal-bg) 70%, transparent);
-        border: 1px solid var(--color-border-soft);
+        background: color-mix(in srgb, var(--modal-bg) 70%, transparent);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
     }
 
@@ -265,8 +264,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--color-button-primary-bg);
-        color: var(--color-text-inverse);
+        background: var(--btn-bg);
         border: none;
         border-radius: 50%;
         box-shadow: none;
@@ -291,12 +289,12 @@
         border: none;
         border-radius: 50%;
         box-shadow: none;
-        background: var(--color-border-strong);
+        background: var(--modal-border);
         cursor: pointer;
         transition: background 160ms ease;
     }
 
     .dot.active {
-        background: var(--color-button-primary-bg);
+        background: var(--btn-bg);
     }
 </style>

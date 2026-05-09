@@ -30,6 +30,7 @@
 		"@aws-sdk/client-dynamodb": "^3.974.0",
 		"@aws-sdk/lib-dynamodb": "^3.974.0",
 		"@fortawesome/fontawesome-free": "^7.2.0",
+		"@sveltejs/enhanced-img": "^0.10.4",
 		"air-datepicker": "^3.6.0",
 		"amplify-adapter": "^1.2.3",
 		"aws-amplify": "^6.16.3",

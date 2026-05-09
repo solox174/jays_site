@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { isBusy } from '$lib/stores/ui';
 	import { theme } from '$lib/stores/colorScheme.svelte';
+	import logo from '$lib/images/jays_auto.webp';
 
 	let { children } = $props();
 	let mouseX = $state(0);
@@ -30,9 +31,9 @@
 
 <svelte:window onmousemove={handleMouseMove} onclick={handleWindowClick} />
 <div>
-	<div style="margin-bottom: 20px">
+	<div>
 		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
-			<img src="/logo.png" alt="logo" style="aspect-ratio: 1392/876; height: 150px"/>
+			<img src="{logo}" alt="logo" style="height: 200px; width: auto;" />
 			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
 			   id="toggle-color-scheme"
 			   onclick={toggleTheme}
@@ -108,7 +109,7 @@
 		position: fixed;
 		inset: 0;
 		z-index: 9998;
-		background: var(--color-overlay-background);
+		background: var(--overlay-bg);
 		backdrop-filter: blur(2px);
 		pointer-events: auto;
 		cursor: none;
@@ -133,7 +134,6 @@
 		border: none;
 		box-shadow: none;
 		font-size: 1.5rem;
-		color: var(--color-text-strong);
 		cursor: pointer;
 		padding: 0.25rem 0.75rem;
 	}
@@ -144,8 +144,8 @@
 		left: 50%;
 		transform: translateX(-50%);
 		width: 200px;
-		background: var(--color-modal-bg);
-		border: 1px solid var(--color-border-soft);
+		background: var(--modal-bg);
+		border: 1px solid var(--modal-border);
 		border-radius: var(--border-radius);
 		box-shadow: var(--shadow-modal);
 		z-index: 100;
@@ -156,7 +156,7 @@
 	.nav-dropdown a {
 		padding: 0.75rem 1.25rem;
 		font-size: 1.2rem;
-		border-bottom: 1px solid var(--color-border-soft);
+		border-bottom: 1px solid var(--modal-border);
 	}
 
 	.nav-dropdown a:last-child {

@@ -5,51 +5,33 @@
 			Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
 			'Open Sans', 'Helvetica Neue', sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-	--color-bg-0: rgb(202, 216, 228);
-	--color-bg-1: hsl(209, 36%, 86%);
-	--color-bg-2: hsl(224, 44%, 95%);
-	--color-theme-1: #de3d3a;
-	--color-theme-2: #4075a6;
-	--color-theme-3: black;
-	--color-text: rgba(0, 0, 0, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
-
-	--color-surface: #f9fafb;
-	--color-surface-hover: #f3f4f6;
-	--color-surface-muted: #f3f4f6;
-	--color-surface-empty: #fafafa;
-	--color-surface-inverse: #ffffff;
-
-	--color-text-strong: #111827;
-	--color-text-muted: #6b7280;
-	--color-text-soft: #4b5563;
-	--color-text-disabled: #6b7280;
-
-	--color-border-strong: #9ca3af;
-	--color-border-soft: #e5e7eb;
-
-	--color-button-active: #1f2937;
-	--color-button-disabled: #d1d5db;
-	--color-button-disabled-text: #6b7280;
-
-	--color-input-bg: #f9fafb;
-	--color-input-disabled-bg: #f3f4f6;
-	--color-input-disabled-text: #9ca3af;
-	--color-overlay-background: rgb(15 23 42 / 0.28);
-
-	--color-border: var(--color-border-strong);
-
-	--color-active-nav-indicator: black;
 	--border-radius: 0.25rem;
 
-	--color-modal-bg: #ffffff;
-	--color-border-subtle: #eceff3;
-	--color-button-primary-bg: #111827;
-	--color-button-primary-hover-bg: #000000;
-	--color-text-inverse: #ffffff;
-	--color-text-label: #374151;
+	/*--btn-bg: #b5b5b5;*/
+	--btn-bg: var(--color-brand);
+	--btn-bg-disabled: #d1d5db;
+	/*--btn-border: #393939;*/
+	--btn-border: #717171;
+	--btn-border-disabled: #d1d5db;
 
+	--input-bg: #f9fafb;
+	--input-bg-disabled: #f3f4f6;
+	--input-border: #9ca3af;
+
+	--modal-bg: #ffffff;
+	--modal-item-bg: #f3f4f6;
+	--modal-item-bg-hover: #e5e7eb;
+	--modal-border: #e5e7eb;
+
+	--overlay-bg: rgb(15 23 42 / 0.28);
+	--color-active-nav-indicator: black;
+	--label-color: #aeaeae;
+	--glass-color: rgba(60, 60, 60, 0.3);
+	--color-brand: #bd101a;
+
+	/* shadows */
 	--shadow-modal: 0 24px 64px rgba(15, 23, 42, 0.16);
 	--shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.3);
 	--shadow-row-hover: 0 10px 24px rgba(17, 24, 39, 0.05);
@@ -62,34 +44,25 @@
 	--color-active-nav-indicator: white;
 	color-scheme: dark;
 
-	/* page body goes black via color-scheme: dark */
-	--color-surface: #252525;
-	--color-surface-hover: #2f2f2f;
-	--color-surface-muted: #1c1c1c;
-	--color-surface-empty: #111111;
-	--color-surface-inverse: #f5f5f5;
+	/*--btn-bg: #404040;*/
+	--btn-bg: var(--color-brand);
+	--btn-bg-disabled: #444444;
+	/*--btn-border: #818181;*/
+	--btn-border: white;
+	--btn-border-disabled: #444444;
 
-	--color-text-strong: #ffffff;
-	--color-text-muted: #999999;
-	--color-text-soft: #888888;
-	--color-text-disabled: #666666;
-	--color-text-label: #cccccc;
+	--input-bg: #2a2a2a;
+	--input-bg-disabled: #1e1e1e;
+	--input-border: #777777;
 
-	--color-border-strong: #555555;
-	--color-border-soft: #333333;
-	--color-border-subtle: #1c1c1c;
+	--modal-bg: #1c1c1c;
+	--modal-item-bg: #252525;
+	--modal-item-bg-hover: #2f2f2f;
+	--modal-border: #333333;
 
-	--color-button-disabled: #444444;
-	--color-input-disabled-text: #666666;
-	--color-input-bg: #2a2a2a;
-	--color-input-disabled-bg: #1e1e1e;
-
-	--color-overlay-background: rgb(0 0 0 / 0.75);
-
-	--color-modal-bg: #1c1c1c;
-	--color-button-primary-bg: #ffffff;
-	--color-button-primary-hover-bg: #e5e5e5;
-	--color-text-inverse: #111111;
+	--overlay-bg: rgb(0 0 0 / 0.75);
+	--glass-color: rgb(255, 255, 255, 0.3);
+	--label-color: #535353;
 
 	--shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.8);
 	--shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.7);
@@ -99,58 +72,39 @@
 
 :root[data-theme="dark"] select,
 :root[data-theme="dark"] input:not([type='checkbox']):not([type='radio']) {
-	border: 1px solid #777777;
+	border: 1px solid var(--input-border);
 	box-shadow: none;
 }
 
 .air-datepicker.dark {
-	/* Main container and text */
-	--adp-background-color: var(--color-surface);
-	--adp-color: var(--color-text-strong);
-	--adp-color-secondary: var(--color-text-muted);
-	--adp-border-color: var(--color-border-soft);
-	--adp-border-radius: 8px; /* Standardizing with modal feel */
+	--adp-background-color: var(--modal-item-bg);
+	--adp-border-color: var(--modal-border);
+	--adp-border-radius: 8px;
 
-	/* Grid and Cells */
-	--adp-cell-background-color-hover: var(--color-surface-hover);
-	--adp-cell-background-color-selected: var(--color-button-primary-bg);
-	--adp-cell-color-selected: var(--color-text-inverse);
+	--adp-cell-background-color-hover: var(--modal-item-bg-hover);
+	--adp-cell-background-color-selected: var(--btn-bg);
+	--adp-cell-color-current: var(--btn-bg);
+	--adp-cell-background-color-current-hover: var(--modal-item-bg-hover);
+	--adp-cell-background-color-current: var(--modal-item-bg);
 
-	/* Current Day (Today) */
-	--adp-cell-color-current: var(--color-button-primary-bg);
-	--adp-cell-background-color-current-hover: var(--color-surface-hover);
+	--adp-accent-color: var(--btn-bg);
+	--adp-button-background-color-hover: var(--modal-item-bg-hover);
 
-	/* Headers and Buttons */
-	--adp-accent-color: var(--color-button-primary-bg);
-	--adp-nav-color-secondary: var(--color-text-soft);
-	--adp-button-color: var(--color-text-strong);
-	--adp-button-background-color-hover: var(--color-surface-hover);
+	--adp-pointer-bg-color: var(--btn-border);
+	--adp-pointer-color: var(--btn-border);
 
-	/* Navigation Arrows */
-	--adp-pointer-bg-color: var(--color-border-strong);
-	--adp-pointer-color: var(--color-border-strong);
-
-	/* Optional: Give it a subtle background so it stands out from other days */
-	--adp-cell-background-color-current: var(--color-surface-muted);
-
-	/* Shadow to match your dialogs */
 	box-shadow: var(--shadow-dialog);
 }
 
-/* Subtle fix for days from other months */
-.air-datepicker.dark .air-datepicker-cell.-other-month- {
-	color: var(--color-text-disabled);
-}
-
 :root[data-theme="dark"] .air-datepicker--pointer:after {
-	background: var(--color-surface);
-	border-color: var(--color-border-soft);
+	background: var(--modal-item-bg);
+	border-color: var(--modal-border);
 }
 
 body {
 	min-height: 100vh;
 	margin: 0;
-	font-size: 12px;
+	font-size: 16px;
 }
 
 h1,
@@ -164,7 +118,7 @@ p {
 }
 
 a {
-	color: var(--color-theme-1);
+	color: var(--color-brand);
 	text-decoration: none;
 }
 
@@ -203,15 +157,14 @@ pre {
 button {
 	padding: 0.55rem 0.75rem;
 	font: inherit;
-	color: #ffffff;
-	background-color: var(--color-button-active);
-	border: 1px solid var(--color-border);
+	background: var(--btn-bg);
+	border: 1px solid var(--btn-border);
 	border-radius: var(--border-radius);
 	box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
 	cursor: pointer;
 	outline: none;
 	transition:
-			background-color 180ms ease,
+			background 180ms ease,
 			border-color 180ms ease,
 			box-shadow 180ms ease,
 			opacity 180ms ease;
@@ -220,13 +173,14 @@ button {
 input {
 	height: 14px;
 }
+
 select, input:not([type='checkbox']):not([type='radio']) {
 	appearance: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	font: inherit;
 	border-radius: var(--border-radius);
-	border: 1px solid var(--color-border);
+	border: 1px solid var(--input-border);
 	outline: none;
 	cursor: pointer;
 	padding: 7px !important;
@@ -249,19 +203,13 @@ button:disabled {
 }
 
 select:disabled {
-	color: var(--color-input-disabled-text);
-	background-color: var(--color-input-disabled-bg);
-	border-color: var(--color-button-disabled);
+	background-color: var(--input-bg-disabled);
+	border-color: var(--btn-border-disabled);
 }
 
-button {
-	border-radius: var(--border-radius);
-	background: var(--color-button-disabled);
-}
 button:disabled {
-	background-color: var(--color-button-disabled);
-	border-color: var(--color-button-disabled);
-	color: var(--color-button-disabled-text);
+	background: var(--btn-bg-disabled);
+	border-color: var(--btn-border-disabled);
 }
 
 button:focus:not(:focus-visible) {
@@ -275,15 +223,15 @@ button:focus:not(:focus-visible) {
 }
 
 .section-title {
+	color: var(--label-color);
 	display: flex;
 	align-items: center;
 	width: 100%;
 	padding: 0;
 	margin-bottom: 20px;
-	font-size: 12px;
+	font-size: 1.3rem;
 	font-weight: 500;
 	letter-spacing: 0.04em;
-	color: var(--color-text-muted);
 	text-transform: uppercase;
 	text-align: left;
 }
@@ -293,7 +241,7 @@ button:focus:not(:focus-visible) {
 	flex: 1;
 	height: 1px;
 	margin-left: 12px;
-	background: var(--color-border-soft);
+	background: var(--modal-border);
 }
 
 .visually-hidden {

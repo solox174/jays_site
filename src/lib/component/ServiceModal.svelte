@@ -242,7 +242,7 @@
         position: fixed;
         inset: 0;
         z-index: 1000;
-        background: var(--color-overlay-background);
+        background: var(--overlay-bg);
         display: grid;
         place-items: center;
         padding: 1rem;
@@ -251,8 +251,7 @@
     .modal {
         width: min(500px, 100%);
         max-height: min(70vh, 720px);
-        background: var(--color-modal-bg);
-        color: var(--color-text-strong);
+        background: var(--modal-bg);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-dialog);
         display: flex;
@@ -271,12 +270,12 @@
 
     .header {
         align-items: flex-start;
-        border-bottom: 1px solid var(--color-border-soft);
+        border-bottom: 1px solid var(--modal-border);
     }
 
     .footer {
         align-items: center;
-        border-top: 1px solid var(--color-border-soft);
+        border-top: 1px solid var(--modal-border);
         margin-top: auto;
     }
 
@@ -292,7 +291,6 @@
 
     p {
         margin: 0;
-        color: var(--color-text-muted);
     }
 
     .body {
@@ -312,7 +310,6 @@
         margin-bottom: 0.5rem;
         font-size: 0.875rem;
         font-weight: 700;
-        color: var(--color-text-label);
     }
 
     .service-list {
@@ -327,15 +324,15 @@
         gap: 0.75rem;
         align-items: start;
         padding: 0.9rem;
-        border: 1px solid var(--color-border-soft);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
-        background: var(--color-surface);
+        background: var(--modal-item-bg);
         cursor: pointer;
     }
 
     .service-item:hover {
-        background: var(--color-surface-hover);
-        border-color: var(--color-button-disabled);
+        background: var(--modal-item-bg-hover);
+        border-color: var(--modal-border);
     }
 
     .service-control {
@@ -362,61 +359,52 @@
 
     .service-top strong {
         font-size: 1rem;
-        color: var(--color-text-strong);
     }
 
     .service-top span {
         white-space: nowrap;
-        color: var(--color-text-strong);
         font-variant-numeric: tabular-nums;
         font-weight: 600;
     }
 
     .service-description {
         display: block;
-        color: var(--color-text-soft);
         line-height: 1.45;
     }
 
     .empty-state {
-        border: 1px dashed var(--color-button-disabled);
+        border: 1px dashed var(--modal-border);
         border-radius: var(--border-radius);
         padding: 1rem;
-        background: var(--color-surface-empty);
-        color: var(--color-text-muted);
+        background: var(--modal-item-bg);
     }
 
     .empty-state h3 {
         margin: 0 0 0.25rem 0;
-        color: var(--color-text-strong);
         font-size: 1rem;
     }
 
     .selection-count {
-        color: var(--color-text-soft);
         font-size: 0.95rem;
     }
 
     .secondary,
-    .primary,
     .icon-button {
-        border: 1px solid var(--color-button-disabled);
+        border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
         padding: 0.55rem 0.8rem;
         cursor: pointer;
         font: inherit;
-    }
-
-    .secondary,
-    .icon-button {
-        background: var(--color-modal-bg);
-        color: var(--color-text-strong);
+        background: var(--modal-bg);
     }
 
     .primary {
-        background: var(--color-button-primary-bg);
-        color: var(--color-text-inverse);
-        border-color: var(--color-button-primary-bg);
+        border: 1px solid var(--btn-bg);
+        border-radius: var(--border-radius);
+        padding: 0.55rem 0.8rem;
+        cursor: pointer;
+        font: inherit;
+        background: var(--btn-bg);
     }
 
     .icon-button {

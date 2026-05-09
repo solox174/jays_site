@@ -346,7 +346,7 @@
         </fieldset>
 
         <button class="schedule-button" disabled={!selectedTime || !appointmentDateString || !selectedModel} style="color: black; display: flex; align-items: center; justify-content: center; align-self: center; padding: 3px; border: 1px solid black; margin-top: 40px">
-            <i class="fa-solid fa-calendar-plus" style="font-size: 1.5rem; color: var(--color-theme-1)"></i>
+            <i class="fa-solid fa-calendar-plus" style="font-size: 1.5rem; color: var(--color-brand)"></i>
             <span id="submit-label" style="text-decoration: underline; font-weight: bold; margin-right: 10px">Schedule Appointment</span>
         </button>
     </div>
