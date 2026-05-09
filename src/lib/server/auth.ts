@@ -8,13 +8,12 @@ import {
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import type { Cookies } from '@sveltejs/kit';
 import type { Schema } from '../../../amplify/data/resource';
-import { env } from '$env/dynamic/private';
-import { AWS_REGION, COGNITO_USER_POOL_ID, COGNITO_CLIENT_ID } from '$env/static/private';
 import { amplifyClient } from '../api/amplifyClient';
+import outputs from '../../../amplify_outputs.json';
 
-const region = env.AWS_REGION || AWS_REGION;
-const userPoolId = env.COGNITO_USER_POOL_ID || COGNITO_USER_POOL_ID;
-const clientId = env.COGNITO_CLIENT_ID || COGNITO_CLIENT_ID;
+const region = outputs.auth.aws_region;
+const userPoolId = outputs.auth.user_pool_id;
+const clientId = outputs.auth.user_pool_client_id;
 
 const cognitoClient = new CognitoIdentityProviderClient({ region });
 
