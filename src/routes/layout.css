@@ -1,15 +1,23 @@
 @import '@fortawesome/fontawesome-free/css/all.min.css';
 
 @font-face {
-	font-family: 'Switzer';
-	src: url('$lib/assets/fonts/switzer/Switzer-Regular.woff2') format('woff2');
+	font-family: 'Geist';
+	src: url('$lib/assets/fonts/geist/geist-sans-latin-400-normal.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
+@font-face {
+	font-family: 'Geist';
+	src: url('$lib/assets/fonts/geist/geist-sans-latin-500-normal.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
-	--font-family: 'Switzer', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+	--font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 	Cantarell, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
 	--font-mono: 'Fira Mono', monospace;
 	--column-width: 42rem;
@@ -114,7 +122,7 @@
 }
 
 body {
-	font-family: var(--font-body), serif;
+	font-family: var(--font-family), serif;
 	min-height: 100vh;
 	margin: 0;
 	font-size: 16px;
@@ -186,9 +194,11 @@ input:not([type='checkbox']):not([type='radio']) {
 			inset 0 1px 0 rgb(255 255 255 / 0.6);
 }
 
+button:not(.worse-select-header) {
+	text-transform: uppercase;
+}
 button {
 	padding: 0.55rem 0.75rem;
-	font: inherit;
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
 	/* TODO: talk about global radius */
