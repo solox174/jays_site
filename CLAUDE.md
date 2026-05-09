@@ -1,0 +1,1 @@
+- Always summarize intended changes before making them.

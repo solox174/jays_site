@@ -115,6 +115,10 @@
 </section>
 
 <style>
+    :global(.section-title) {
+        color: rgba(220, 220, 220, 0.85);
+    }
+
     .showcase {
         max-width: 820px;
         height: calc(100dvh - 340px);
