@@ -8,19 +8,7 @@
 	<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'dark')}catch(e){}</script>
 	%sveltekit.head%
 </head>
-<style>
-	html {
-		background-image:
-				linear-gradient(rgba(150, 150, 150, 0.5),rgba(150, 150, 150, 0.5)),
-				url('/src/lib/images/background-2.jpeg');
 
-		background-repeat: no-repeat;
-		background-size: cover;
-		background-position: center center;
-		background-attachment: fixed;
-		min-height: 100%;
-	}
-</style>
 <body data-sveltekit-preload-data="hover"
 	  style="max-width: 600px; margin: 0 auto; padding: 0 20px; box-sizing: border-box">
 <div style="display: contents">%sveltekit.body%</div>

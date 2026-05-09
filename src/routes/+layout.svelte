@@ -85,6 +85,17 @@
 {/if}
 
 <style>
+	:global(html) {
+		background-image:
+				linear-gradient(rgba(150, 150, 150, 0.5),rgba(150, 150, 150, 0.5)),
+				url('$lib/images/background-2.jpeg');
+
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center center;
+		background-attachment: fixed;
+		min-height: 100%;
+	}
 	#toggle-color-scheme[data-dark-mode="false"] {
 		color: black!important;
 	}
