@@ -10,6 +10,8 @@
 	let mouseY = $state(0);
 	let menuOpen = $state(false);
 	let navEl: HTMLElement | null = null;
+	let phone: HTMLSpanElement;
+	let email: HTMLSpanElement;
 
 	function handleMouseMove(event: MouseEvent) {
 		mouseX = event.clientX;
@@ -30,16 +32,16 @@
 </script>
 
 <svelte:window onmousemove={handleMouseMove} onclick={handleWindowClick} />
-<div>
+<div style="display: flex; flex-direction: column; height: 100dvh">
 	<div>
-		<div style="position: relative; display: flex; justify-content:  center; padding: 40px 0">
+		<div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
 			<img src="{logo}" alt="logo" style="height: 200px; width: auto;" />
 			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
 			   id="toggle-color-scheme"
 			   onclick={toggleTheme}
 			   onkeydown="{void(0)}" tabindex="0" role="button"
 			   data-dark-mode={theme.current === 'dark'}
-			   class="fa-solid {theme.current === 'dark' ? 'fa-sun' : 'fa-moon'}"
+			   class="fa-solid fa-gear"
 			   style="position: absolute; margin-top: 40px; top: 0; right: 0; font-size: 1.3rem"></i>
 		</div>
 		{#if page.url.pathname !== '/login'}
@@ -67,9 +69,17 @@
 		<div></div>
 	</div>
 
-	<main style="padding-top: 30px">
+	<main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 30px 0 45px; box-sizing: border-box">
 		{@render children()}
 	</main>
+
+	<div style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--overlay-bg); backdrop-filter: blur(4px); padding: 5px 0; text-align: center; font-weight: 500">
+		<i class="fa-solid fa-phone"></i>
+		<a id="phone" title="phone" href="." onclick="{(e) => e.preventDefault()}" style="color: #aeaeae;"></a>
+		<i class="fa-solid fa-envelope" style="margin-left: 10px"></i>
+		<a id="email" title="email" href="." onclick="{(e) => e.preventDefault()}" style="color: #aeaeae;"></a>
+		<span style="position: absolute; right: 16px; color: #aeaeae; font-size: 0.75rem">© 2026 Fasthold Inc.</span>
+	</div>
 </div>
 
 <div class="cursor-spinner"
@@ -124,6 +134,13 @@
 		backdrop-filter: blur(2px);
 		pointer-events: auto;
 		cursor: none;
+	}
+	#phone::before {
+		content: '(480) 819-5443';
+	}
+
+	#email::before {
+		content: 'jaysautocarcare@gmail.com';
 	}
 
 </style>

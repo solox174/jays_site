@@ -5,6 +5,7 @@
     type Props = {
         services?: Schema['Service']['createType'][];
         selectedIds?: (string | undefined)[];
+        priceMap?: Map<string, number>;
         onSave?: (detail: { ids: (string | undefined)[] }) => void;
         onClose?: () => void;
     };
@@ -12,21 +13,19 @@
     let {
         services = [],
         selectedIds = [],
+        priceMap,
         onSave,
         onClose
     }: Props = $props();
+
+    function formatPrice(price: number) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
+    }
 
     let modalEl = $state<HTMLDivElement | null>(null);
     let filter = $state('');
     let selectedBaseServiceId = $state('');
     let selectedAddonIds = $state<(string | undefined)[]>([]);
-
-    function formatPrice(price: number) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        }).format(price);
-    }
 
     const filteredServices = $derived.by(() => {
         const q = filter.trim().toLowerCase();
@@ -35,18 +34,17 @@
         return services.filter((service) => {
             return (
                 service.name.toLowerCase().includes(q) ||
-                service.description.toLowerCase().includes(q) ||
-                formatPrice(service.price).toLowerCase().includes(q)
+                service.description.toLowerCase().includes(q)
             );
         });
     });
 
     const visibleBaseServices = $derived.by((): typeof services => {
-        return filteredServices.filter((service) => !service.addon);
+        return filteredServices.filter((service) => service.isPackage);
     });
 
     const visibleAddonServices = $derived.by(() => {
-        return filteredServices.filter((service) => service.addon);
+        return filteredServices.filter((service) => !service.isPackage);
     });
 
     const draftSelectedIds = $derived.by(() => {
@@ -60,13 +58,13 @@
         const selectedBase = services.find(
             (service) => {
                 const serviceId = service.id ?? '';
-                selectedIds.includes(serviceId) && !service.addon
+                selectedIds.includes(serviceId) && service.isPackage
             }
         );
         const selectedAddons = services.filter(
             (service) => {
                 const serviceId = service.id ?? '';
-                selectedIds.includes(serviceId) && service.addon
+                selectedIds.includes(serviceId) && !service.isPackage
             }
         );
 
@@ -133,7 +131,7 @@
             <div>
                 <h2 id="service-modal-title">Select services</h2>
                 <p id="service-modal-description">
-                    Choose a base service and any add-ons for this appointment.
+                    Choose a wash package and any individual services.
                 </p>
             </div>
 
@@ -180,7 +178,9 @@
                                         <span class="service-content">
                                             <span class="service-top">
                                                 <strong>{service.name}</strong>
-                                                <span>{formatPrice(service.price)}</span>
+                                                {#if priceMap?.has(service.id ?? '')}
+                                                    <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
+                                                {/if}
                                             </span>
 
                                             <span class="service-description">{service.description}</span>
@@ -193,7 +193,7 @@
 
                     {#if visibleAddonServices.length > 0}
                         <fieldset class="service-group">
-                            <legend>Add-ons</legend>
+                            <legend>Individual services</legend>
 
                             <div class="service-list" role="list">
                                 {#each visibleAddonServices as service (service.id)}
@@ -210,7 +210,9 @@
                                         <span class="service-content">
                                             <span class="service-top">
                                                 <strong>{service.name}</strong>
-                                                <span>{formatPrice(service.price)}</span>
+                                                {#if priceMap?.has(service.id ?? '')}
+                                                    <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
+                                                {/if}
                                             </span>
 
                                             <span class="service-description">{service.description}</span>
@@ -231,7 +233,7 @@
 
             <div class="footer-actions">
                 <button type="button" class="secondary" onclick={close}>Cancel</button>
-                <button type="button" class="primary" onclick={save}>Apply</button>
+                <button type="button" class="primary" onclick={save} disabled={draftSelectedIds.length === 0}>Confirm</button>
             </div>
         </div>
     </div>
@@ -409,6 +411,11 @@
         cursor: pointer;
         font: inherit;
         background: var(--btn-bg);
+    }
+
+    .primary:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
     }
 
     .icon-button {

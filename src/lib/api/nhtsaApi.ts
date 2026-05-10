@@ -1,3 +1,6 @@
+// VPIC API docs: https://vpic.nhtsa.dot.gov/api/
+// Safety Ratings API docs: https://api.nhtsa.gov/
+
 type VpicResponse<T> = {
     Count: number;
     Message: string;
@@ -5,9 +8,10 @@ type VpicResponse<T> = {
     Results: T[];
 };
 
-type MakeResult = {
-    Make_ID: number;
-    Make_Name: string;
+type SafetyRatingsResponse<T> = {
+    Count: number;
+    Message: string;
+    Results: T[];
 };
 
 type VehicleTypeMakeResult = {
@@ -22,46 +26,51 @@ type ModelResult = {
     Make_Name?: string;
     Model_ID?: number;
     Model_Name: string;
+    VehicleTypeId?: number;
+    VehicleTypeName?: string;
 };
 
-type DecodeVinResult = {
-    Make?: string;
-    Model?: string;
-    ModelYear?: string;
-    BodyClass?: string;
-    VehicleType?: string;
-    Trim?: string;
-    Series?: string;
-    ErrorCode?: string;
-    ErrorText?: string;
+type SafetyRatingsModel = {
+    ModelYear: number;
+    Make: string;
+    Model: string;
+    VehicleId: number;
 };
+
+type SafetyRatingsVariant = {
+    VehicleId: number;
+    VehicleDescription: string;
+};
+
+export type VehicleCategory = 'van' | 'sedan' | 'coupe' | 'jeep' | 'truck' | 'suv';
 
 const VPIC_BASE_URL = 'https://vpic.nhtsa.dot.gov/api/vehicles';
+const API_BASE_URL = 'https://api.nhtsa.gov';
 
-/*
-  These are the vehicle categories most relevant to an auto detailing business:
-  - Passenger Car
-  - Multipurpose Passenger Vehicle (SUVs, crossovers, many vans)
-  - Truck
-*/
 const DETAILING_VEHICLE_TYPES = [
     'Passenger Car',
     'Multipurpose Passenger Vehicle',
     'Truck'
 ];
 
+function parseDescriptionToCategory(description: string): VehicleCategory | null {
+    const d = ' ' + description.toUpperCase() + ' ';
+    if (d.includes(' PU') || d.includes('PICKUP')) return 'truck';
+    if (d.includes(' SUV ') || d.includes('SPORT UTILITY') || d.includes(' MPV ')) return 'suv';
+    if (d.includes('MINIVAN') || d.includes(' VAN ')) return 'van';
+    if (d.includes(' CONV ') || d.includes(' 2 DR ') || d.includes(' C ') || d.includes('COUPE') || d.includes('CONVERTIBLE')) return 'coupe';
+    if (d.includes(' 4 DR ') || d.includes('SEDAN') || d.includes(' HB ')) return 'sedan';
+    return null;
+}
+
+function mapVehicleTypeNameToCategory(vehicleTypeName: string): VehicleCategory {
+    const vt = vehicleTypeName.toLowerCase();
+    if (vt.includes('truck')) return 'truck';
+    if (vt.includes('multipurpose') || vt.includes('mpv')) return 'suv';
+    return 'sedan';
+}
+
 export const nhtsaApi = {
-    async getAllMakes(): Promise<MakeResult[]> {
-        const response = await fetch(`${VPIC_BASE_URL}/GetAllMakes?format=json`);
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch makes: ${response.status}`);
-        }
-
-        const data: VpicResponse<MakeResult> = await response.json();
-        return data.Results;
-    },
-
     async getMakesForVehicleType(vehicleType: string): Promise<VehicleTypeMakeResult[]> {
         const response = await fetch(
             `${VPIC_BASE_URL}/GetMakesForVehicleType/${encodeURIComponent(vehicleType)}?format=json`
@@ -74,19 +83,6 @@ export const nhtsaApi = {
         }
 
         const data: VpicResponse<VehicleTypeMakeResult> = await response.json();
-        return data.Results;
-    },
-
-    async getModelsForMake(make: string): Promise<ModelResult[]> {
-        const response = await fetch(
-            `${VPIC_BASE_URL}/GetModelsForMake/${encodeURIComponent(make)}?format=json`
-        );
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch models for make "${make}": ${response.status}`);
-        }
-
-        const data: VpicResponse<ModelResult> = await response.json();
         return data.Results;
     },
 
@@ -105,23 +101,68 @@ export const nhtsaApi = {
         return data.Results;
     },
 
-    async decodeVin(vin: string, modelYear?: string | number): Promise<DecodeVinResult | null> {
-        const params = new URLSearchParams({ format: 'json' });
-
-        if (modelYear) {
-            params.set('modelyear', String(modelYear));
-        }
-
+    async getSafetyRatingsModelsForMakeYear(year: string, make: string): Promise<SafetyRatingsModel[]> {
         const response = await fetch(
-            `${VPIC_BASE_URL}/DecodeVinValuesExtended/${encodeURIComponent(vin)}?${params.toString()}`
+            `${API_BASE_URL}/SafetyRatings/modelyear/${encodeURIComponent(year)}/make/${encodeURIComponent(make)}?format=json`
         );
 
-        if (!response.ok) {
-            throw new Error(`Failed to decode VIN: ${response.status}`);
+        if (!response.ok) throw new Error(`Safety ratings models fetch failed: ${response.status}`);
+
+        const data: SafetyRatingsResponse<SafetyRatingsModel> = await response.json();
+        return data.Results;
+    },
+
+    async getSafetyRatingsVariants(year: string, make: string, model: string): Promise<SafetyRatingsVariant[]> {
+        const response = await fetch(
+            `${API_BASE_URL}/SafetyRatings/modelyear/${encodeURIComponent(year)}/make/${encodeURIComponent(make)}/model/${encodeURIComponent(model)}?format=json`
+        );
+
+        if (!response.ok) throw new Error(`Safety ratings variants fetch failed: ${response.status}`);
+
+        const data: SafetyRatingsResponse<SafetyRatingsVariant> = await response.json();
+        return data.Results;
+    },
+
+    async getBodyClass(make: string, model: string, year: string): Promise<VehicleCategory | null> {
+        const srModels = await this.getSafetyRatingsModelsForMakeYear(year, make);
+        const vpicModelLower = model.toLowerCase();
+
+        const candidates = srModels.filter(m => {
+            const srModelLower = m.Model.toLowerCase();
+            return srModelLower.includes(vpicModelLower) || vpicModelLower.includes(srModelLower);
+        });
+
+        if (candidates.length === 0) return null;
+
+        const best = candidates.sort((a, b) => a.Model.length - b.Model.length)[0];
+        const variants = await this.getSafetyRatingsVariants(year, make, best.Model);
+
+        if (variants.length === 0) return null;
+
+        return parseDescriptionToCategory(variants[0].VehicleDescription);
+    },
+
+    async getVehicleCategory(make: string, model: string, year: string): Promise<VehicleCategory | null> {
+        if (make.toUpperCase() === 'JEEP') return 'jeep';
+
+        try {
+            const category = await this.getBodyClass(make, model, year);
+            if (category) return category;
+        } catch {
+            // fall through to VPIC fallback
         }
 
-        const data: VpicResponse<DecodeVinResult> = await response.json();
-        return data.Results[0] ?? null;
+        try {
+            const vpicModels = await this.getModelsForMakeYear(make, year);
+            const match = vpicModels.find(m => m.Model_Name.toLowerCase() === model.toLowerCase());
+            if (match?.VehicleTypeName) {
+                return mapVehicleTypeNameToCategory(match.VehicleTypeName);
+            }
+        } catch {
+            // give up
+        }
+
+        return null;
     },
 
     async getMakeOptions(): Promise<string[]> {

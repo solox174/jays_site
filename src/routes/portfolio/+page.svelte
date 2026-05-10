@@ -121,7 +121,8 @@
 
     .showcase {
         max-width: 820px;
-        height: calc(100dvh - 340px);
+        flex: 1;
+        min-height: 0;
         margin: 0 auto;
         padding: 0 1rem;
         display: flex;

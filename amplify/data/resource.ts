@@ -1,6 +1,9 @@
 import { a, type ClientSchema, defineData } from '@aws-amplify/backend';
 
 const schema = a.schema({
+    VehicleCategory: a.enum(['coupe', 'sedan', 'van', 'suv', 'jeep', 'truck']),
+
+
     Customer: a
         .model({
             firstName: a.string(),
@@ -36,9 +39,18 @@ const schema = a.schema({
         .model({
             name: a.string().required(),
             description: a.string().required(),
-            price: a.float().required(),
-            addon: a.boolean().required(),
+            isPackage: a.boolean().required(),
+            prices: a.hasMany('ServicePrice', 'serviceId'),
             appointmentServices: a.hasMany('AppointmentService', 'serviceId')
+        })
+        .authorization((allow) => [allow.guest()]),
+
+    ServicePrice: a
+        .model({
+            serviceId: a.id().required(),
+            service: a.belongsTo('Service', 'serviceId'),
+            vehicleCategory: a.ref('VehicleCategory').required(),
+            price: a.float().required()
         })
         .authorization((allow) => [allow.guest()]),
 

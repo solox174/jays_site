@@ -1,9 +1,9 @@
 {
   "auth": {
-    "user_pool_id": "us-east-1_6UIBW707s",
+    "user_pool_id": "us-east-1_rcdPA83cE",
     "aws_region": "us-east-1",
-    "user_pool_client_id": "up6gb6lruun74m120hjcchijm",
-    "identity_pool_id": "us-east-1:1de9933d-c666-496c-aec9-7ae0c62031ff",
+    "user_pool_client_id": "nqoam4e9d4p2lfgsg0dkq8s8t",
+    "identity_pool_id": "us-east-1:3d9b993a-13b5-4a8b-a0d0-41c9167bb830",
     "mfa_methods": [],
     "standard_required_attributes": [
       "email"
@@ -26,7 +26,7 @@
     "unauthenticated_identities_enabled": true
   },
   "data": {
-    "url": "https://qlmoufvukjfvnftadjyahrr65a.appsync-api.us-east-1.amazonaws.com/graphql",
+    "url": "https://ho4wotujojaoni6bfdot6mcpkm.appsync-api.us-east-1.amazonaws.com/graphql",
     "aws_region": "us-east-1",
     "default_authorization_type": "AWS_IAM",
     "authorization_types": [
@@ -388,19 +388,28 @@
               "isRequired": true,
               "attributes": []
             },
-            "price": {
-              "name": "price",
-              "isArray": false,
-              "type": "Float",
-              "isRequired": true,
-              "attributes": []
-            },
-            "addon": {
-              "name": "addon",
+            "isPackage": {
+              "name": "isPackage",
               "isArray": false,
               "type": "Boolean",
               "isRequired": true,
               "attributes": []
+            },
+            "prices": {
+              "name": "prices",
+              "isArray": true,
+              "type": {
+                "model": "ServicePrice"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "isArrayNullable": true,
+              "association": {
+                "connectionType": "HAS_MANY",
+                "associatedWith": [
+                  "serviceId"
+                ]
+              }
             },
             "appointmentServices": {
               "name": "appointmentServices",
@@ -437,6 +446,102 @@
           },
           "syncable": true,
           "pluralName": "Services",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
+            "sortKeyFieldNames": []
+          }
+        },
+        "ServicePrice": {
+          "name": "ServicePrice",
+          "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "serviceId": {
+              "name": "serviceId",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "service": {
+              "name": "service",
+              "isArray": false,
+              "type": {
+                "model": "Service"
+              },
+              "isRequired": false,
+              "attributes": [],
+              "association": {
+                "connectionType": "BELONGS_TO",
+                "targetNames": [
+                  "serviceId"
+                ]
+              }
+            },
+            "vehicleCategory": {
+              "name": "vehicleCategory",
+              "isArray": false,
+              "type": {
+                "enum": "VehicleCategory"
+              },
+              "isRequired": true,
+              "attributes": []
+            },
+            "price": {
+              "name": "price",
+              "isArray": false,
+              "type": "Float",
+              "isRequired": true,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "ServicePrices",
           "attributes": [
             {
               "type": "model",
@@ -567,9 +672,100 @@
             "primaryKeyFieldName": "id",
             "sortKeyFieldNames": []
           }
+        },
+        "Session": {
+          "name": "Session",
+          "fields": {
+            "id": {
+              "name": "id",
+              "isArray": false,
+              "type": "ID",
+              "isRequired": true,
+              "attributes": []
+            },
+            "sub": {
+              "name": "sub",
+              "isArray": false,
+              "type": "String",
+              "isRequired": true,
+              "attributes": []
+            },
+            "email": {
+              "name": "email",
+              "isArray": false,
+              "type": "String",
+              "isRequired": false,
+              "attributes": []
+            },
+            "expiresAt": {
+              "name": "expiresAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": true,
+              "attributes": []
+            },
+            "createdAt": {
+              "name": "createdAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            },
+            "updatedAt": {
+              "name": "updatedAt",
+              "isArray": false,
+              "type": "AWSDateTime",
+              "isRequired": false,
+              "attributes": [],
+              "isReadOnly": true
+            }
+          },
+          "syncable": true,
+          "pluralName": "Sessions",
+          "attributes": [
+            {
+              "type": "model",
+              "properties": {}
+            },
+            {
+              "type": "auth",
+              "properties": {
+                "rules": [
+                  {
+                    "allow": "public",
+                    "provider": "iam",
+                    "operations": [
+                      "create",
+                      "update",
+                      "delete",
+                      "read"
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "primaryKeyInfo": {
+            "isCustomPrimaryKey": false,
+            "primaryKeyFieldName": "id",
+            "sortKeyFieldNames": []
+          }
         }
       },
-      "enums": {},
+      "enums": {
+        "VehicleCategory": {
+          "name": "VehicleCategory",
+          "values": [
+            "coupe",
+            "sedan",
+            "van",
+            "suv",
+            "jeep",
+            "truck"
+          ]
+        }
+      },
       "nonModels": {}
     }
   },

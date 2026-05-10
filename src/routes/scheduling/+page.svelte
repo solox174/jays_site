@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { nhtsaApi } from '$lib/api/nhtsaApi';
+    import { nhtsaApi, type VehicleCategory } from '$lib/api/nhtsaApi';
     import type { Schema } from '$lib/../../amplify/data/resource';
     import AirDatepicker from 'air-datepicker';
     import { worseSelect } from 'worse-select';
@@ -17,6 +17,7 @@
     let { data }: PageProps = $props();
     let services = $state<Schema['Service']['createType'][]>([]);
     let appointments = $state<Schema['Appointment']['createType'][]>([]);
+    let servicePrices = $state<Schema['ServicePrice']['createType'][]>([]);
     let selectedServiceSummary = $derived(
         services
             .filter((service) => selectedServiceIds.includes(service.id ?? ''))
@@ -41,6 +42,43 @@
 
     let makes = $state<string[]>([]);
     let models = $state<string[]>([]);
+    let bodyClass = $state<VehicleCategory | null>(null);
+    let bodyClassLoading = $state(false);
+    let safetyKey = $derived(selectedYear && selectedMake && selectedModel ? `${selectedYear}|${selectedMake}|${selectedModel}` : '');
+    let priceMap = $derived(
+        bodyClass
+            ? new Map(
+                servicePrices
+                    .filter(sp => sp.vehicleCategory === bodyClass)
+                    .map(sp => [sp.serviceId, sp.price] as [string, number])
+              )
+            : undefined
+    );
+    let selectedServicesSummary = $derived(
+        services
+            .filter(s => selectedServiceIds.includes(s.id ?? ''))
+            .map(s => ({ name: s.name, price: priceMap?.get(s.id ?? '') }))
+    );
+    let totalPrice = $derived(
+        selectedServiceIds.reduce((sum, id) => sum + (priceMap?.get(id ?? '') ?? 0), 0)
+    );
+
+    function formatPrice(price: number) {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
+    }
+
+    $effect(() => {
+        if (!safetyKey) {
+            bodyClass = null;
+            bodyClassLoading = false;
+            return;
+        }
+        bodyClassLoading = true;
+        (async () => {
+            bodyClass = await nhtsaApi.getBodyClass(selectedMake, selectedModel, selectedYear);
+            bodyClassLoading = false;
+        })();
+    });
     const currentYear = new Date().getFullYear();
     let years = Array.from({ length: 35 }, (_, index) => String(currentYear - index));
 
@@ -55,6 +93,7 @@
         await data.deferred.data.then((data) => {
             services = data.services;
             appointments = data.appointments;
+            servicePrices = data.servicePrices;
             $isBusy = false;
         });
         for (const appointment of appointments) {
@@ -346,6 +385,26 @@
             {/if}
         </fieldset>
 
+        {#if selectedServicesSummary.length > 0 && priceMap}
+            <div class="order-summary">
+                {#each selectedServicesSummary as item}
+                    <div class="summary-row">
+                        <span>{item.name}</span>
+                        <span>{item.price != null ? formatPrice(item.price) : '—'}</span>
+                    </div>
+                {/each}
+                <div class="summary-row summary-total">
+                    <span>Estimated total</span>
+                    <strong>{formatPrice(totalPrice)}</strong>
+                </div>
+            </div>
+        {:else if safetyKey && !bodyClassLoading && !bodyClass}
+            <!-- TODO: when sending email to owner, must specify owner needs to contact customer -->
+            <div style="padding: 10px 0 4px; font-size: 0.85rem; opacity: 0.7">
+                Special vehicle type — we'll follow up with pricing after you book.
+            </div>
+        {/if}
+
         <button disabled={!selectedTime || !appointmentDateString || !selectedModel}
                 style="margin-top: 5px; align-self: center">
             Schedule Appointment
@@ -357,6 +416,7 @@
 {#if isServiceModalOpen}
 <ServiceModal
         {services}
+        {priceMap}
         selectedIds={selectedServiceIds}
         onSave={handleServicesSave}
         onClose={closeServiceModal}
@@ -420,5 +480,27 @@
 
     input {
         font-size: .8rem!important;
+    }
+
+    .order-summary {
+        margin-top: 8px;
+        font-size: 0.85rem;
+        border-top: 1px solid var(--modal-border, rgba(255,255,255,0.15));
+        padding-top: 8px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+        opacity: 0.8;
+    }
+
+    .summary-total {
+        border-top: 1px solid var(--modal-border, rgba(255,255,255,0.15));
+        margin-top: 4px;
+        padding-top: 6px;
+        opacity: 1;
+        font-size: 0.9rem;
     }
 </style>

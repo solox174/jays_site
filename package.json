@@ -7,7 +7,8 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"prepare": "svelte-kit sync || echo ''"
+		"prepare": "svelte-kit sync || echo ''",
+		"seed": "tsx scripts/seed.ts"
 	},
 	"devDependencies": {
 		"@aws-amplify/backend-cli": "^1.8.2",
@@ -35,6 +36,6 @@
 		"amplify-adapter": "^1.2.3",
 		"aws-amplify": "^6.16.3",
 		"aws-jwt-verify": "^5.1.1",
-		"worse-select": "^0.5.0"
+		"worse-select": "^0.5.1"
 	}
 }
