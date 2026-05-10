@@ -200,7 +200,7 @@
     }
 
     function openServiceModal() {
-        if (!$isBusy) {
+        if (!$isBusy && selectedModel) {
             isServiceModalOpen = true;
         }
     }
@@ -356,6 +356,7 @@
                        autocomplete="off"
                        style="width:200px"
                        readonly
+                       disabled={!selectedModel}
                        value={selectedServiceSummary}
                        onclick={openServiceModal} />
             </div>
@@ -471,6 +472,10 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+
+    #service:disabled {
+        cursor: not-allowed;
     }
 
     label {
