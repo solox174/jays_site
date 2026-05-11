@@ -98,6 +98,7 @@
 
     onMount(async () => {
         worseSelect();
+        fetch('/vehicle-data/makes.json').then(r => r.json()).then(data => makes = data);
         const BUSINESS_DAY_CAPACITY = 8;
         const appointmentCounts = new Map<string, number>();
         await data.deferred.data.then((data) => {
@@ -141,27 +142,17 @@
         return make.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     }
 
-    async function handleYearChange() {
+    function handleYearChange() {
         selectedMake = '';
         selectedModel = '';
-        makes = [];
         models = [];
-
-        if (!selectedYear) return;
-
-        try {
-            const res = await fetch('/vehicle-data/makes.json');
-            makes = await res.json();
-        } catch (error) {
-            console.error(error instanceof Error ? error.message : 'Failed to load vehicle makes.');
-        }
     }
 
     async function handleMakeChange() {
         selectedModel = '';
         models = [];
 
-        if (!selectedYear || !selectedMake) return;
+        if (!selectedMake) return;
 
         try {
             const res = await fetch(`/vehicle-data/models/${makeToFilename(selectedMake)}.json`);
@@ -330,8 +321,7 @@
                 <select id="make"
                         name="make"
                         bind:value={selectedMake}
-                        onchange={handleMakeChange}
-                        disabled={!selectedYear} >
+                        onchange={handleMakeChange}>
                     <option value="">
                         Select make
                     </option>
@@ -345,8 +335,7 @@
                 <label for="model">Model</label>
                 <select id="model"
                         name="model"
-                        bind:value={selectedModel}
-                        disabled={!selectedMake}>
+                        bind:value={selectedModel}>
                     <option value="">
                         Select model
                     </option>
