@@ -226,7 +226,7 @@
 
             vehicleId = await ensureVehicle();
 
-            // BEGIN: fake customer until account creation is created
+            // TODO: assign customer.id in session to customerId in <script> section
             const customer: Schema['Customer']['createType'] = {
                 email: "real@email.later",
                 firstName: "Joe",

@@ -13,7 +13,7 @@ const schema = a.schema({
             password: a.string().required(),
             appointments: a.hasMany('Appointment', 'customerId')
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     VehicleSpec: a
         .model({
@@ -22,7 +22,7 @@ const schema = a.schema({
             year: a.string().required(),
             appointments: a.hasMany('Appointment', 'vehicleId')
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     Appointment: a
         .model({
@@ -33,7 +33,7 @@ const schema = a.schema({
             date: a.datetime().required(),
             appointmentServices: a.hasMany('AppointmentService', 'appointmentId')
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     Service: a
         .model({
@@ -43,7 +43,7 @@ const schema = a.schema({
             prices: a.hasMany('ServicePrice', 'serviceId'),
             appointmentServices: a.hasMany('AppointmentService', 'serviceId')
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     ServicePrice: a
         .model({
@@ -52,7 +52,7 @@ const schema = a.schema({
             vehicleCategory: a.ref('VehicleCategory').required(),
             price: a.float().required()
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     AppointmentService: a
         .model({
@@ -61,7 +61,7 @@ const schema = a.schema({
             serviceId: a.id().required(),
             service: a.belongsTo('Service', 'serviceId')
         })
-        .authorization((allow) => [allow.guest()]),
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live,
 
     Session: a
         .model({
@@ -69,7 +69,7 @@ const schema = a.schema({
             email: a.string(),
             expiresAt: a.datetime().required(),
         })
-        .authorization((allow) => [allow.guest()])
+        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live
 });
 
 export type Schema = ClientSchema<typeof schema>;

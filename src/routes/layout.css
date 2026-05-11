@@ -201,7 +201,8 @@ button:not(.worse-select-header) {
 	text-transform: uppercase;
 }
 button.secondary {
-	background: var(--btn-bg-disabled)
+	background: var(--btn-bg-disabled);
+	border: solid 1px var(--brand-color);
 }
 button:not(.time-row):not(.worse-select-header):not(:disabled) {
 	color: #dcdcdc;

@@ -56,16 +56,10 @@
 
     onMount(() => {
         const selectedBase = services.find(
-            (service) => {
-                const serviceId = service.id ?? '';
-                selectedIds.includes(serviceId) && service.isPackage
-            }
+            (service) => selectedIds.includes(service.id ?? '') && service.isPackage
         );
         const selectedAddons = services.filter(
-            (service) => {
-                const serviceId = service.id ?? '';
-                selectedIds.includes(serviceId) && !service.isPackage
-            }
+            (service) => selectedIds.includes(service.id ?? '') && !service.isPackage
         );
 
         selectedBaseServiceId = selectedBase?.id ?? '';
