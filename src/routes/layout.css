@@ -67,9 +67,9 @@
 
 	/* button */
 	/*--btn-bg: #404040;
-	--btn-bg-disabled: #444444;
 	--btn-border: #818181;
 	--btn-border: white;*/
+	--btn-bg-disabled: #444444;
 	--btn-border-disabled: #a6a6a6;
 
 	/* input */

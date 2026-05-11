@@ -118,15 +118,13 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div class="backdrop" role="presentation" onclick={handleBackdropClick}>
-    <div
-            class="modal"
-            bind:this={modalEl}
-            tabindex="0"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="service-modal-title"
-            aria-describedby="service-modal-description"
-    >
+    <div class="modal"
+         bind:this={modalEl}
+         tabindex="0"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="service-modal-title"
+         aria-describedby="service-modal-description">
         <div class="header">
             <div>
                 <h2 id="service-modal-title">Select services</h2>
@@ -135,13 +133,12 @@
                 </p>
             </div>
 
-            <button
-                    type="button"
+            <button type="button"
                     class="icon-button"
+                    style="border-color: var(--btn-border); color: var(--btn-border)"
                     aria-label="Close service modal"
-                    onclick={close}
-            >
-                ✕
+                    onclick={close}>
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
@@ -166,13 +163,11 @@
                                 {#each visibleBaseServices as service (service.id)}
                                     <label class="service-item" role="listitem">
                                         <span class="service-control">
-                                            <input
-                                                    type="radio"
-                                                    name="base-service"
-                                                    value={service.id}
-                                                    checked={selectedBaseServiceId === service.id}
-                                                    onchange={handleBaseServiceChange}
-                                            />
+                                            <input type="radio"
+                                                   name="base-service"
+                                                   value={service.id}
+                                                   checked={selectedBaseServiceId === service.id}
+                                                   onchange={handleBaseServiceChange}/>
                                         </span>
 
                                         <span class="service-content">
@@ -199,12 +194,10 @@
                                 {#each visibleAddonServices as service (service.id)}
                                     <label class="service-item" role="listitem">
                                         <span class="service-control">
-                                            <input
-                                                    type="checkbox"
-                                                    value={service.id}
-                                                    checked={selectedAddonIds.includes(service.id)}
-                                                    onchange={handleAddonChange}
-                                            />
+                                            <input type="checkbox"
+                                                   value={service.id}
+                                                   checked={selectedAddonIds.includes(service.id)}
+                                                   onchange={handleAddonChange}/>
                                         </span>
 
                                         <span class="service-content">
@@ -394,36 +387,14 @@
         font-size: 0.95rem;
     }
 
-    .secondary,
     .icon-button {
         border: 1px solid var(--modal-border);
         border-radius: var(--border-radius);
-        padding: 0.55rem 0.8rem;
-        cursor: pointer;
         font: inherit;
         background: var(--modal-bg);
-    }
-
-    .primary {
-        border: 1px solid var(--btn-bg);
-        border-radius: var(--border-radius);
-        padding: 0.55rem 0.8rem;
-        cursor: pointer;
-        font: inherit;
-        background: var(--btn-bg);
-    }
-
-    .primary:disabled {
-        opacity: 0.4;
-        cursor: not-allowed;
-    }
-
-    .icon-button {
         width: 2.25rem;
         height: 2.25rem;
-        display: grid;
-        place-items: center;
-        flex: 0 0 auto;
         padding: 0;
     }
+
 </style>

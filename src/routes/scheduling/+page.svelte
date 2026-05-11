@@ -34,11 +34,22 @@
     let selectedYear = $state('');
     let selectedServiceIds = $state<(string | undefined)[]>([]);
     let appointmentDateString = $state('');
-    let displayDate = $derived(
-        appointmentDateString
-            ? new Date(appointmentDateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-            : ''
-    );
+    let selectedTime = $state('');
+    let displayDate = $derived((() => {
+        if (!appointmentDateString) return '';
+        const date = new Date(appointmentDateString);
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const day = date.getDate();
+        const v = day % 100;
+        const suffix = (v >= 11 && v <= 13) ? 'th' : (['th','st','nd','rd'][day % 10] ?? 'th');
+        const dateStr = `${month} ${day}${suffix}`;
+        if (!selectedTime) return dateStr;
+        const [h, m] = selectedTime.split(':').map(Number);
+        const period = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 || 12;
+        const timeStr = m === 0 ? `${h12}${period}` : `${h12}:${String(m).padStart(2, '0')}${period}`;
+        return `${dateStr}, ${timeStr}`;
+    })());
 
     let makes = $state<string[]>([]);
     let models = $state<string[]>([]);
@@ -84,7 +95,6 @@
 
     let isServiceModalOpen = $state(false);
     let showTimePicker = $state(false);
-    let selectedTime = $state('');
 
     onMount(async () => {
         worseSelect();
@@ -117,7 +127,7 @@
                     }
                 }
             },
-            onSelect({ date, formattedDate, datepicker }) {
+            onSelect({ date, datepicker }) {
                 if (date instanceof Date) {
                     showTimePicker = true;
                     appointmentDateString = date.toISOString();
@@ -301,9 +311,9 @@
 </svelte:head>
 
 <form onsubmit={handleSubmit}>
-    <div style="background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius); margin: 0 auto; width: min(550px, 100%); padding: 24px; box-sizing: border-box">
-    <div style="display: flex; flex-direction: column; margin: 0 auto; width: min(550px, 100%)">
-        <legend class="section-title">Vehicle</legend>
+    <div style="background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius); margin: 0 auto; width: min(590px, 100%); padding: 24px; box-sizing: border-box">
+    <div style="display: flex; flex-direction: column; margin: 0 auto; width: min(590px, 100%)">
+        <div class="section-title">Vehicle</div>
         <fieldset class="form-section scheduling-section">
             <div class="dropdown">
                 <label for="year">Year</label>
@@ -347,14 +357,15 @@
             </div>
         </fieldset>
 
-        <legend class="section-title" style="margin-top: 40px;">Services & Date</legend>
+        <div class="section-title" style="margin-top: 40px;">Services & Date</div>
         <fieldset class="form-section scheduling-section">
             <div class="dropdown">
-                <label for="service">Services</label>
+                <label for="service">Select Services</label>
                 <input id="service"
                        type="text"
                        autocomplete="off"
-                       style="width:200px"
+                       placeholder="{selectedModel ? '' : 'Select vehicle first'}."
+                       style="width:150px; text-align: {selectedModel ? 'left' : 'center'}"
                        readonly
                        disabled={!selectedModel}
                        value={selectedServiceSummary}
@@ -368,22 +379,9 @@
                         value={displayDate}
                         autocomplete="off"
                         type="text"
-                        style="width: 95px; text-align: center"
+                        style="width: 95px;"
                 />
             </div>
-            {#if showTimePicker}
-            <TimePickerModal
-                    selectedDate={appointmentDateString}
-                    businessStartTime={'09:00'}
-                    businessCloseTime={'17:00'}
-                    appointmentDurationHours={2}
-                    existingAppointments={appointments}
-                    selectedTime={selectedTime}
-                    onClose={() => (showTimePicker = false)}
-                    onSelect={(time) => (selectedTime = time)}
-                    onConfirm={(time) => { selectedTime = time ?? ''; showTimePicker = false; }}
-            />
-            {/if}
         </fieldset>
 
         {#if selectedServicesSummary.length > 0 && priceMap}
@@ -421,6 +419,19 @@
         selectedIds={selectedServiceIds}
         onSave={handleServicesSave}
         onClose={closeServiceModal}
+/>
+{/if}
+
+{#if showTimePicker}
+<TimePickerModal
+        selectedDate={appointmentDateString}
+        businessStartTime={'09:00'}
+        businessCloseTime={'17:00'}
+        appointmentDurationHours={2}
+        existingAppointments={appointments}
+        selectedTime={selectedTime}
+        onClose={() => (showTimePicker = false)}
+        onConfirm={(time) => { selectedTime = time ?? ''; showTimePicker = false; }}
 />
 {/if}
 
@@ -485,6 +496,8 @@
 
     input {
         font-size: .8rem!important;
+        text-align: center;
+        height: 16px;
     }
 
     .order-summary {

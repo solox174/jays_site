@@ -15,7 +15,6 @@
         existingAppointments: Schema['Appointment']['createType'][];
         selectedTime?: string | null;
         onClose?: () => void;
-        onSelect?: (time: string) => void;
         onConfirm?: (time: string | null) => void;
     };
 
@@ -27,7 +26,6 @@
         existingAppointments,
         selectedTime = null,
         onClose,
-        onSelect,
         onConfirm
     }: Props = $props();
 
@@ -37,16 +35,23 @@
         return value instanceof Date ? value : new Date(value);
     }
 
+    function ordinalSuffix(n: number): string {
+        const v = n % 100;
+        if (v >= 11 && v <= 13) return 'th';
+        switch (n % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+
     function formatSelectedDate(value: string | Date): string {
         const date = toDate(value);
-
         if (Number.isNaN(date.getTime())) return 'Invalid date';
-
-        return new Intl.DateTimeFormat('en-US', {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-        }).format(date);
+        const month = date.toLocaleString('en-US', { month: 'long' });
+        const day = date.getDate();
+        return `${month} ${day}${ordinalSuffix(day)}`;
     }
 
     function timeStringToMinutes(time: string): number {
@@ -150,12 +155,7 @@
 
     function selectSlot(slot: TimeSlot) {
         if (slot.disabled) return;
-        onSelect?.(slot.value);
-    }
-
-    function confirmSelection() {
-        if (!selectedTime) return;
-        onConfirm?.(selectedTime);
+        onConfirm?.(slot.value);
     }
 
     function handleOverlayClick() {
@@ -172,35 +172,26 @@
 <svelte:window onkeydown={handleWindowKeydown} />
 
 <div class="time-modal-overlay" role="button" tabindex="0" onkeydown="{void(0)}" onclick={handleOverlayClick}>
-    <div
-            role="dialog"
-            tabindex="0"
-            onkeydown="{void(0)}"
-            class="time-modal"
-            aria-modal="true"
-            aria-labelledby="time-modal-title"
-            onclick={(event) => event.stopPropagation()}
-    >
+    <div role="dialog"
+         tabindex="0"
+         onkeydown="{void(0)}"
+         class="time-modal"
+         aria-modal="true"
+         aria-labelledby="time-modal-title"
+         onclick={(event) => event.stopPropagation()}>
+
         <div class="time-modal__header">
             <div>
                 <h2 id="time-modal-title" class="time-modal__title">Select a time</h2>
+                <p class="time-modal__subtitle">{formattedDate}</p>
             </div>
 
-            <button
-                    type="button"
+            <button type="button"
                     class="time-modal__close"
+                    style="border-color: var(--btn-border); color: var(--btn-border)"
                     aria-label="Close time picker"
-                    onclick={closeModal}
-            >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path
-                            d="M18 6 6 18M6 6l12 12"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                    />
-                </svg>
+                    onclick={closeModal}>
+                <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
 
@@ -208,15 +199,13 @@
             {#if slots.length > 0}
                 <div class="time-modal__rows">
                     {#each slots as slot (slot.value)}
-                        <button
-                                type="button"
+                        <button type="button"
                                 class="time-row"
                                 class:selected={selectedTime === slot.value}
                                 class:disabled={slot.disabled}
                                 disabled={slot.disabled}
                                 aria-pressed={selectedTime === slot.value}
-                                onclick={() => selectSlot(slot)}
-                        >
+                                onclick={() => selectSlot(slot)}>
                             <span class="time-row__label">{slot.label}</span>
 
                             {#if slot.disabled}
@@ -234,22 +223,7 @@
             {/if}
         </div>
 
-        <div class="time-modal__footer">
-            <div class="time-modal__actions">
-                <button type="button" class="btn btn--secondary" onclick={closeModal}>
-                    Cancel
-                </button>
-
-                <button
-                        type="button"
-                        class="btn btn--primary"
-                        disabled={!selectedTime}
-                        onclick={confirmSelection}
-                >
-                    Continue
-                </button>
-            </div>
-        </div>
+        <div class="time-modal__footer"></div>
     </div>
 </div>
 
@@ -286,12 +260,6 @@
         padding: 1rem;
         border-bottom: 1px solid var(--modal-border);
         background: var(--modal-bg);
-    }
-
-    .time-modal__eyebrow {
-        margin: 0 0 0.25rem;
-        font-size: 0.875rem;
-        font-weight: 400;
     }
 
     .time-modal__title {
@@ -423,11 +391,7 @@
     }
 
     .time-modal__footer {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 0.5rem;
-        padding: 1rem;
+        padding: 0.5rem;
         border-top: 1px solid var(--modal-border);
         background: var(--modal-bg);
     }
