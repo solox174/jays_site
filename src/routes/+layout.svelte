@@ -40,6 +40,7 @@
 			TODO: add dropdown (use mobile dropdown as template) with
 			     * edit profile (show "log in" instead if user not logged in)
 			     * dark/light toggle
+			     consider refactoring both into a Component
 			-->
 			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
 			   id="toggle-color-scheme"
