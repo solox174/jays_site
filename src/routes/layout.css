@@ -200,6 +200,9 @@ input:not([type='checkbox']):not([type='radio']) {
 button:not(.worse-select-header) {
 	text-transform: uppercase;
 }
+button.secondary {
+	background: var(--btn-bg-disabled)
+}
 button:not(.time-row) {
 	color: #dcdcdc;
 }
