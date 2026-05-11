@@ -203,7 +203,7 @@ button:not(.worse-select-header) {
 button.secondary {
 	background: var(--btn-bg-disabled)
 }
-button:not(.time-row):not(.worse-select-header) {
+button:not(.time-row):not(.worse-select-header):not(:disabled) {
 	color: #dcdcdc;
 }
 button {
