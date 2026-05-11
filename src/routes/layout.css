@@ -200,9 +200,11 @@ input:not([type='checkbox']):not([type='radio']) {
 button:not(.worse-select-header) {
 	text-transform: uppercase;
 }
+button:not(.time-row) {
+	color: #dcdcdc;
+}
 button {
 	padding: 0.55rem 0.75rem;
-	color: #dcdcdc;
 	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
 	/* TODO: talk about global radius */
