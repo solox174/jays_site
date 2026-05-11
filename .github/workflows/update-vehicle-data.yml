@@ -1,0 +1,36 @@
+name: Update Vehicle Data
+
+on:
+  schedule:
+    - cron: '0 6 1 1 *'  # Jan 1st at 6am UTC
+    - cron: '0 6 1 7 *'  # Jul 1st at 6am UTC
+  workflow_dispatch:       # allow manual trigger from GitHub UI
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Rebuild vehicle data
+        run: npm run build:vehicle-data
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add static/vehicle-data/
+          git diff --staged --quiet || git commit -m "chore: update vehicle data for $(date +%Y)"
+          git push

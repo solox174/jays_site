@@ -8,13 +8,14 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
-		"seed": "tsx scripts/seed.ts"
+		"seed": "tsx scripts/seed.ts",
+		"build:vehicle-data": "tsx scripts/buildVehicleData.ts"
 	},
 	"devDependencies": {
 		"@aws-amplify/backend-cli": "^1.8.2",
 		"@neoconfetti/svelte": "^2.2.2",
 		"@sveltejs/adapter-auto": "^7.0.0",
-		"@sveltejs/kit": "^2.49.1",
+		"@sveltejs/kit": "2.57.1",
 		"@sveltejs/vite-plugin-svelte": "^6.2.1",
 		"ampx": "^0.2.3",
 		"aws-cdk-lib": "^2.234.1",

@@ -137,6 +137,10 @@
         });
     });
 
+    function makeToFilename(make: string): string {
+        return make.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    }
+
     async function handleYearChange() {
         selectedMake = '';
         selectedModel = '';
@@ -146,12 +150,10 @@
         if (!selectedYear) return;
 
         try {
-            $isBusy = true;
-            makes = await nhtsaApi.getMakeOptions();
+            const res = await fetch('/vehicle-data/makes.json');
+            makes = await res.json();
         } catch (error) {
             console.error(error instanceof Error ? error.message : 'Failed to load vehicle makes.');
-        } finally {
-            $isBusy = false;
         }
     }
 
@@ -162,12 +164,10 @@
         if (!selectedYear || !selectedMake) return;
 
         try {
-            $isBusy = true;
-            models = await nhtsaApi.getModelOptions(selectedMake, selectedYear);
+            const res = await fetch(`/vehicle-data/models/${makeToFilename(selectedMake)}.json`);
+            models = await res.json();
         } catch (error) {
             console.error(error instanceof Error ? error.message : 'Failed to load vehicle models.');
-        } finally {
-            $isBusy = false;
         }
     }
 
