@@ -36,6 +36,11 @@
 	<div>
 		<div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
 			<img src="{logo}" alt="logo" style="height: 200px; width: auto;" />
+			<!--
+			TODO: add dropdown (use mobile dropdown as template) with
+			     * edit profile (show "log in" instead if user not logged in)
+			     * dark/light toggle
+			-->
 			<i title="{theme.current === 'dark' ? 'light' : 'dark'} mode"
 			   id="toggle-color-scheme"
 			   onclick={toggleTheme}
