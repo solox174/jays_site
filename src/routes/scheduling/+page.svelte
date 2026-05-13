@@ -308,7 +308,7 @@
         <fieldset class="form-section scheduling-section">
             <div class="dropdown">
                 <label for="year">Year</label>
-                <select id="year" name="year" bind:value={selectedYear} onchange={handleYearChange}>
+                <select id="year" name="year" bind:value={selectedYear} onchange={handleYearChange} style="background:red">
                     <option value="">Select year</option>
                     {#each years as year}
                         <option value={year}>{year}</option>

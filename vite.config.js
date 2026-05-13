@@ -4,6 +4,9 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 
 export default defineConfig({
 	plugins: [sveltekit(), enhancedImages()],
+	optimizeDeps: {
+		include: ['air-datepicker/locale/en']
+	},
 	server: {
 		fs: {
 			// Add the path to the directory containing amplify_outputs.json

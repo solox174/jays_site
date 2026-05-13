@@ -36,12 +36,14 @@
 	/*--btn-bg-disabled: #9c2e34;*/
 	/*--btn-border: #393939;*/
 	--btn-bg: var(--brand-color);
-	--btn-bg-disabled: #818181FF;
+	--btn-bg-secondary: #ececec;
 	--btn-border: #717171;
-	--btn-border-disabled: #cccccc;
+	--btn-text-color-disabled: #6c6c6c;
+	--btn-border-disabled: var(--btn-text-color-disabled);
+	--btn-bg-disabled: #c5c5c5;
 
 	/* input */
-	--input-bg: #f9fafb;
+	--input-bg: white;
 	--input-bg-disabled: #f3f4f6;
 	--input-border: #9ca3af;
 
@@ -56,6 +58,14 @@
 	--shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.3);
 	--shadow-row-hover: 0 10px 24px rgba(17, 24, 39, 0.05);
 	--shadow-row-selected: 0 0 0 3px rgba(17, 24, 39, 0.06);
+
+	/* worse-select overrides */
+	--ws-active-bg: color-mix(in srgb, var(--brand-color) 40%, transparent);
+	--ws-selected-bg: color-mix(in srgb, var(--brand-color) 90%, transparent);
+
+	--ws-focus-outline: var(--brand-color);
+	--ws-active-outline: var(--brand-color);
+	--ws-selected-text-color: none;
 }
 
 :root[data-theme="dark"] {
@@ -69,11 +79,13 @@
 	/*--btn-bg: #404040;
 	--btn-border: #818181;
 	--btn-border: white;*/
-	--btn-bg-disabled: #444444;
-	--btn-border-disabled: #a6a6a6;
+	--btn-bg-secondary: #737373;
+	--btn-text-color-disabled: #939393;
+	--btn-bg-disabled: #494949;
+	--btn-border-disabled: var(--btn-text-color-disabled);
 
 	/* input */
-	--input-bg: #2a2a2a;
+	--input-bg: black;
 	--input-bg-disabled: #1e1e1e;
 	--input-border: #777777;
 
@@ -88,6 +100,14 @@
 	--shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.7);
 	--shadow-row-hover: 0 10px 24px rgba(0, 0, 0, 0.4);
 	--shadow-row-selected: 0 0 0 3px rgba(255, 255, 255, 0.1);
+
+	/* worse-select dark overrides */
+	--ws-dark-active-bg: color-mix(in srgb, var(--brand-color) 40%, transparent);
+	--ws-dark-selected-bg: color-mix(in srgb, var(--brand-color) 90%, transparent);
+	--ws-dark-focus-outline: var(--brand-color);
+	--ws-dark-active-outline: var(--brand-color);
+	--ws-dark-selected-text-color: none;
+
 }
 
 :root[data-theme="dark"] select,
@@ -96,7 +116,7 @@
 	box-shadow: none;
 }
 
-.air-datepicker.dark {
+:root[data-theme="dark"] .air-datepicker {
 	--adp-background-color: var(--modal-item-bg);
 	--adp-border-color: var(--modal-border);
 	--adp-border-radius: 8px;
@@ -110,14 +130,11 @@
 	--adp-accent-color: var(--btn-bg);
 	--adp-button-background-color-hover: var(--modal-item-bg-hover);
 
-	--adp-pointer-bg-color: var(--btn-border);
-	--adp-pointer-color: var(--btn-border);
-
 	box-shadow: var(--shadow-dialog);
 }
 
 :root[data-theme="dark"] .air-datepicker--pointer:after {
-	background: var(--modal-item-bg);
+	background: var(--adp-background-color);
 	border-color: var(--modal-border);
 }
 
@@ -195,23 +212,22 @@ input:not([type='checkbox']):not([type='radio']) {
 	cursor: pointer;
 	padding: 7px !important;
 	box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+	background: var(--input-bg);
 }
 
 button:not(.worse-select-header) {
 	text-transform: uppercase;
 }
 button.secondary {
-	background: var(--btn-bg-disabled);
+	background: var(--btn-bg-secondary);
 	border: solid 1px var(--brand-color);
 }
-button:not(.time-row):not(.worse-select-header):not(:disabled) {
-	color: #dcdcdc;
+button:not(.time-row):not(.worse-select-header):not(:disabled):not(.secondary):not(.icon-button) {
+	background: var(--btn-bg);
 }
 button {
 	padding: 0.55rem 0.75rem;
-	background: var(--btn-bg);
 	border: 1px solid var(--btn-border);
-	/* TODO: talk about global radius */
 	border-radius: var(--border-radius);
 	box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
 	cursor: pointer;
@@ -227,7 +243,7 @@ button:disabled {
 	background: var(--btn-bg-disabled);
 	cursor: not-allowed;
 	box-shadow: none;
-	color: #a6a6a6;
+	color: var(--btn-text-color-disabled);
 	border: 1px solid var(--btn-border-disabled);
 }
 
