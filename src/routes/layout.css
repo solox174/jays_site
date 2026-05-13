@@ -62,7 +62,7 @@
 
 	--ws-focus-outline: var(--brand-color);
 	--ws-active-outline: var(--brand-color);
-	--ws-selected-text-color: none;
+	--ws-selected-text-color: initial;
 }
 
 :root[data-theme="dark"] {
@@ -100,7 +100,7 @@
 	--ws-dark-selected-bg: color-mix(in srgb, var(--brand-color) 90%, transparent);
 	--ws-dark-focus-outline: var(--brand-color);
 	--ws-dark-active-outline: var(--brand-color);
-	--ws-dark-selected-text-color: none;
+	--ws-dark-selected-text-color: initial;
 
 }
 
