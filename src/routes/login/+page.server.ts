@@ -6,7 +6,7 @@ import { login } from '$lib/server/auth';
 export const actions: Actions = {
     default: async ({ request, cookies }) => {
         const form = await request.formData();
-        const username = String(form.get('username') ?? '');
+        const username = String(form.get('email') ?? '');
         const password = String(form.get('password') ?? '');
 
         const result = await login(username, password, cookies);

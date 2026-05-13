@@ -69,7 +69,7 @@ const schema = a.schema({
             email: a.string(),
             expiresAt: a.datetime().required(),
         })
-        .authorization((allow) => [allow.guest()]) // TODO: replace with allow.authenticated() once auth is live
+        .authorization((allow) => [allow.guest()]), // TODO: replace with allow.authenticated() once auth is live
 });
 
 export type Schema = ClientSchema<typeof schema>;
