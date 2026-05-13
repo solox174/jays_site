@@ -32,9 +32,6 @@
 	--brand-color: #bd101a;
 
 	/* buttons */
-	/*--btn-bg: #b5b5b5;*/
-	/*--btn-bg-disabled: #9c2e34;*/
-	/*--btn-border: #393939;*/
 	--btn-bg: var(--brand-color);
 	--btn-bg-secondary: #ececec;
 	--btn-border: #717171;
@@ -69,16 +66,13 @@
 }
 
 :root[data-theme="dark"] {
-	--color-active-nav-indicator: white;
 	color-scheme: dark;
-	--overlay-bg: rgb(0 0 0 / 0.75);
-	--glass-color: rgba(60, 60, 60, 0.3);
+	--overlay-bg: rgb(28 28 28 / 0.75);
+	--color-active-nav-indicator: white;
 	--label-color: #aaaaaa;
+	--glass-color: rgba(60, 60, 60, 0.3);
 
 	/* button */
-	/*--btn-bg: #404040;
-	--btn-border: #818181;
-	--btn-border: white;*/
 	--btn-bg-secondary: #737373;
 	--btn-text-color-disabled: #939393;
 	--btn-bg-disabled: #494949;
@@ -129,6 +123,15 @@
 
 	--adp-accent-color: var(--btn-bg);
 	--adp-button-background-color-hover: var(--modal-item-bg-hover);
+
+	--adp-color: #d1d5db;
+	--adp-color-secondary: var(--label-color);
+	--adp-color-disabled: var(--btn-text-color-disabled);
+	--adp-color-other-month: var(--input-border);
+	--adp-color-other-month-hover: var(--btn-text-color-disabled);
+	--adp-background-color-hover: var(--modal-item-bg-hover);
+	--adp-background-color-active: var(--modal-item-bg-hover);
+	--adp-nav-arrow-color: var(--label-color);
 
 	box-shadow: var(--shadow-dialog);
 }

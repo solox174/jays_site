@@ -9,6 +9,7 @@
 	let mouseX = $state(0);
 	let mouseY = $state(0);
 	let menuOpen = $state(false);
+	// svelte-ignore non_reactive_update
 	let navEl: HTMLElement | null = null;
 	let phone: HTMLSpanElement;
 	let email: HTMLSpanElement;

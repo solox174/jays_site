@@ -8,7 +8,7 @@ import {
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import type { Cookies } from '@sveltejs/kit';
 import type { Schema } from '../../../amplify/data/resource';
-import { amplifyClient } from '../api/amplifyClient';
+import { amplifyClient } from '../client/amplifyClient';
 import outputs from '../../../amplify_outputs.json';
 
 const region = outputs.auth.aws_region;

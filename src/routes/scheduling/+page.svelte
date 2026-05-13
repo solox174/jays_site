@@ -9,7 +9,7 @@
     import TimePickerModal from '$lib/component/TimePickerModal.svelte';
 
     import 'air-datepicker/air-datepicker.css';
-    import { amplifyClient } from '$lib/api/amplifyClient';
+    import { amplifyClient } from '$lib/client/amplifyClient';
     import type { PageProps } from './$types';
     import { isBusy } from '$lib/stores/ui';
 
@@ -115,7 +115,7 @@
         }
 
         new AirDatepicker('#calendar', {
-            locale: localeEn,
+            locale: (localeEn as any).default ?? localeEn,
 
             onRenderCell({date, cellType}) {
                 if (cellType == 'day' && appointments) {
@@ -434,10 +434,6 @@
         padding: 0 0 24px 0;
         margin: 0;
         min-inline-size: 0;
-    }
-
-    .form-section + .form-section {
-        padding-top: 8px;
     }
 
     .dropdown {

@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import { amplifyClient } from '$lib/api/amplifyClient';
+import { amplifyClient } from '../../lib/client/amplifyClient';
 
 export const load: PageLoad = () => {
     const dataPromise = Promise.all([

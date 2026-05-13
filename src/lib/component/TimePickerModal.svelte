@@ -293,35 +293,9 @@
         border-color: var(--btn-border);
     }
 
-    .time-modal__close svg {
-        width: 18px;
-        height: 18px;
-    }
-
     .time-modal__body {
         padding: 1rem;
         overflow: auto;
-    }
-
-    .time-modal__summary {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 18px;
-        padding: 14px 16px;
-        border: 1px solid var(--modal-border);
-        border-radius: var(--border-radius);
-        background: var(--modal-item-bg);
-    }
-
-    .time-modal__summary-label {
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .time-modal__summary-value {
-        font-size: 16px;
-        font-weight: 800;
     }
 
     .time-modal__rows {
@@ -396,57 +370,6 @@
         background: var(--modal-bg);
     }
 
-    .time-modal__selection-label {
-        font-size: 12px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-    }
-
-    .time-modal__selection-value {
-        margin-top: 4px;
-        font-size: 16px;
-        font-weight: 700;
-    }
-
-    .btn {
-        border-radius: var(--border-radius);
-        padding: 0.55rem 0.8rem;
-        font: inherit;
-        font-weight: 600;
-        cursor: pointer;
-        transition:
-                background 160ms ease,
-                border-color 160ms ease,
-                color 160ms ease,
-                opacity 160ms ease;
-    }
-
-    .btn--secondary {
-        border: 1px solid var(--modal-border);
-        background: var(--modal-bg);
-    }
-
-    .btn--secondary:hover {
-        border-color: var(--modal-border);
-        background: var(--modal-item-bg);
-    }
-
-    .btn--primary {
-        border: 1px solid var(--btn-bg);
-        background: var(--btn-bg);
-    }
-
-    .btn--primary:hover {
-        opacity: 0.85;
-    }
-
-    .btn--primary:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-        transform: none;
-    }
-
     @media (max-width: 640px) {
         .time-modal-overlay {
             padding: 0;
@@ -463,15 +386,6 @@
         .time-modal__footer {
             flex-direction: column;
             align-items: stretch;
-        }
-
-        .time-modal__actions {
-            flex-direction: column-reverse;
-            width: 100%;
-        }
-
-        .btn {
-            width: 100%;
         }
     }
 </style>
