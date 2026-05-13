@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { isBusy } from '$lib/stores/ui';
 	import { theme } from '$lib/stores/colorScheme.svelte';
-	import logo from '$lib/images/jays_auto.webp';
+	import logo from '$lib/assets/images/jays_auto.svg';
 
 	let { children } = $props();
 	let mouseX = $state(0);
@@ -104,7 +104,7 @@
 	:global(html) {
 		background-image:
 				linear-gradient(rgba(150, 150, 150, 0.5),rgba(150, 150, 150, 0.5)),
-				url('$lib/images/background-2.jpeg');
+				url('$lib/assets/images/background-2.jpeg');
 
 		background-repeat: no-repeat;
 		background-size: cover;
