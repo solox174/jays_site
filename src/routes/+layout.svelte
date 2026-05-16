@@ -104,12 +104,19 @@
 		{@render children()}
 	</main>
 
-	<div style="position: fixed; bottom: 0; left: 0; right: 0; background: var(--overlay-bg); backdrop-filter: blur(4px); padding: 5px 0; text-align: center; font-weight: 500">
-		<i class="fa-solid fa-phone"></i>
-		<a id="phone" title="phone" href="." onclick="{(e) => e.preventDefault()}" style="color: #aeaeae;"></a>
-		<i class="fa-solid fa-envelope" style="margin-left: 10px"></i>
-		<a id="email" title="email" href="." onclick="{(e) => e.preventDefault()}" style="color: #aeaeae;"></a>
-		<span style="position: absolute; right: 16px; color: #aeaeae; font-size: 0.75rem">© 2026 Fasthold Inc.</span>
+	<div class="footer-bar">
+		<a href="tel:+14808195443" class="footer-phone" style="color: #aeaeae;">
+			<i class="fa-solid fa-phone"></i>
+			<span id="phone" class="footer-contact-text"></span>
+		</a>
+		<a href="mailto:jaysautocarcare@gmail.com" class="footer-email" style="color: #aeaeae;">
+			<i class="fa-solid fa-envelope"></i>
+			<span id="email" class="footer-contact-text"></span>
+		</a>
+		<span class="footer-copy" style="color: #aeaeae; font-size: 0.75rem">
+			<i class="fa-solid fa-copyright footer-copy-icon"></i>
+			<span class="footer-copy-text">© 2026 Fasthold Inc.</span>
+		</span>
 	</div>
 </div>
 
