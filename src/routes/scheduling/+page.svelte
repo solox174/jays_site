@@ -19,10 +19,10 @@
     let appointments = $state<Schema['Appointment']['createType'][]>([]);
     let servicePrices = $state<Schema['ServicePrice']['createType'][]>([]);
     let selectedServiceSummary = $derived(
-        services
+        services.length ? services
             .filter((service) => selectedServiceIds.includes(service.id ?? ''))
             .map((service) => service.name)
-            .join(', ')
+            .join(', ') : ''
     );
 
     // TODO: get from session

@@ -187,7 +187,7 @@
             </div>
 
             <button type="button"
-                    class="time-modal__close"
+                    class="time-modal__close icon-button"
                     style="border-color: var(--btn-border); color: var(--btn-border)"
                     aria-label="Close time picker"
                     onclick={closeModal}>

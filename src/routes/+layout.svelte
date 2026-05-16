@@ -137,13 +137,7 @@
 		background-attachment: fixed;
 		min-height: 100%;
 	}
-	#toggle-color-scheme[data-dark-mode="false"] {
-		color: black!important;
-	}
-	#toggle-color-scheme[data-dark-mode="true"] {
-		color: white;
-	}
-	.cursor-spinner {
+.cursor-spinner {
 		position: fixed;
 		z-index: 9999;
 		pointer-events: none;
