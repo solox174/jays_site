@@ -319,7 +319,7 @@ button:focus:not(:focus-visible) {
 }
 
 .nav-desktop a {
-    color: var(--label-color);
+    color: #a5a5a5;
     transition: color 180ms ease;
 }
 
