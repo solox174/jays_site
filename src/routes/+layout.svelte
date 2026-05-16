@@ -105,11 +105,11 @@
 	</main>
 
 	<div class="footer-bar">
-		<a href="tel:+14808195443" class="footer-phone" style="color: #aeaeae;">
+		<a href="tel:+14808195443" title="phone" class="footer-phone" style="color: #aeaeae;">
 			<i class="fa-solid fa-phone"></i>
 			<span id="phone" class="footer-contact-text"></span>
 		</a>
-		<a href="mailto:jaysautocarcare@gmail.com" class="footer-email" style="color: #aeaeae;">
+		<a href="mailto:jaysautocarcare@gmail.com" title="email" class="footer-email" style="color: #aeaeae;">
 			<i class="fa-solid fa-envelope"></i>
 			<span id="email" class="footer-contact-text"></span>
 		</a>
