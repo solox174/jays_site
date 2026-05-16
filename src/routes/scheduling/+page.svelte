@@ -393,7 +393,7 @@
             </div>
         {/if}
 
-        <button disabled={!selectedTime || !appointmentDateString || !selectedModel}
+        <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
                 style="margin-top: 5px; align-self: center">
             Schedule Appointment
         </button>
