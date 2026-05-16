@@ -18,7 +18,7 @@
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
                     <div style="display: flex; justify-content: space-evenly;">
                         <button type="submit">Login</button>
-                        <!-- alt not valid on <a>. IDE flagged with red -->
+                        <!-- TODO: alt not valid on <a>. IDE flagged with red -->
                         <a href="/create-account" alt="create account"> <button type="button">Sign up</button> </a>
                     </div>
                     <div style="display: flex; justify-content: center;">
