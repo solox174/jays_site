@@ -225,7 +225,7 @@ button.secondary {
 	background: var(--btn-bg-secondary);
 	border: solid 1px var(--brand-color);
 }
-button:not(.time-row):not(.worse-select-header):not(:disabled):not(.secondary):not(.icon-button) {
+button:not(.time-row):not(.worse-select-header):not(:disabled):not(.secondary):not(.icon-button):not(.bare-btn) {
 	background: var(--btn-bg);
 }
 button {
@@ -262,19 +262,31 @@ button:focus:not(:focus-visible) {
 	font-size: 1.5rem;
 }
 
-.nav-mobile {
-	display: none;
+.nav-mobile, .nav-settings {
 	position: relative;
+}
+.nav-mobile {
 	text-align: center;
+	display: none;
 }
 
-.hamburger {
+.bare-btn {
 	background: none;
 	border: none;
 	box-shadow: none;
 	font-size: 1.5rem;
 	cursor: pointer;
 	padding: 0.25rem 0.75rem;
+	opacity: 0.65;
+	transition: opacity 180ms ease;
+}
+
+.bare-btn:hover {
+	opacity: 1;
+}
+
+:root[data-theme="dark"] .slider:before {
+	background-color: white;
 }
 
 .nav-dropdown {
@@ -296,6 +308,12 @@ button:focus:not(:focus-visible) {
 	padding: 0.75rem 1.25rem;
 	font-size: 1.2rem;
 	border-bottom: 1px solid var(--modal-border);
+	background: var(--modal-item-bg);
+}
+
+.nav-dropdown a:hover {
+	background: var(--modal-item-bg-hover);
+	text-decoration: none;
 }
 
 .nav-dropdown a:last-child {
