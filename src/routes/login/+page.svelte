@@ -18,9 +18,14 @@
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
                     <div style="display: flex; justify-content: space-evenly;">
                         <button type="submit">Login</button>
+                        <!-- alt not valid on <a>. IDE flagged with red -->
                         <a href="/create-account" alt="create account"> <button type="button">Sign up</button> </a>
                     </div>
                     <div style="display: flex; justify-content: center;">
+                        <!--
+                        TODO: use a CSS var (e.g. --label-color) — #ccc is illegible in light mode. always test both themes
+                              looking great, otherwise
+                        -->
                         <a href="/forgot-password" style="color: #ccc; font-size: 0.8rem; text-decoration: none;">Forgot password?</a>
                     </div>
                 </div>
