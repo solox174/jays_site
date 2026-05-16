@@ -69,9 +69,9 @@
 				{#if settingsMenuOpen}
 					<div class="nav-dropdown" style="width: 250px">
 						{#if data.loggedIn}
-							<a href="/profile">Edit Profile</a>
+							<a href="/profile" onclick={() => settingsMenuOpen = false}>Edit Profile</a>
 						{:else}
-							<a href="/login">Log In</a>
+							<a href="/login" onclick={() => settingsMenuOpen = false}>Log In</a>
 						{/if}
 						<a style="display: flex; justify-content: space-between; align-items: center;" href="." onclick="{(e) => e.preventDefault()}">
 							<span id="theme-toggle-label">{theme.current === 'dark' ? 'Light' : 'Dark'} Theme</span>
