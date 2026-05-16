@@ -24,7 +24,6 @@
 	--border-radius: 0.25rem;
 	--overlay-bg: rgb(15 23 42 / 0.28);
 	--glass-color: rgb(255, 255, 255, 0.3);
-	--color-active-nav-indicator: black;
 	--label-color: #323232;
 	--brand-color: #bd101a;
 
@@ -65,7 +64,6 @@
 :root[data-theme="dark"] {
 	color-scheme: dark;
 	--overlay-bg: rgb(28 28 28 / 0.75);
-	--color-active-nav-indicator: white;
 	--label-color: #aaaaaa;
 	--glass-color: rgba(60, 60, 60, 0.3);
 
@@ -251,12 +249,8 @@ button:focus:not(:focus-visible) {
 	font-size: 1.5rem;
 }
 
-.nav-mobile, .nav-settings {
+.nav-settings {
 	position: relative;
-}
-.nav-mobile {
-	text-align: center;
-	display: none;
 }
 
 .nav-mobile-trigger {
@@ -317,26 +311,23 @@ button:focus:not(:focus-visible) {
 	border-bottom: none;
 }
 
-.active-nav {
-	position: relative;
+.nav-mobile-trigger .nav-dropdown {
+	left: 0;
+	transform: none;
 }
 
-.nav-dropdown .active-nav::before {
-	display: none;
+.nav-desktop a {
+	color: var(--label-color);
+	transition: color 180ms ease;
 }
 
-.active-nav::before {
-	--size: 6px;
-	content: '';
-	margin: 0;
-	padding: 0;
-	width: 0;
-	height: 0;
-	left: calc(50% - (var(--size)/2));
-	bottom: -10px;
-	position: absolute;
-	border: var(--size) solid transparent;
-	border-bottom: var(--size) solid var(--color-active-nav-indicator);
+.nav-desktop a:hover {
+	color: var(--brand-color);
+	text-decoration: none;
+}
+
+.nav-desktop .active-nav {
+	color: var(--brand-color);
 }
 
 .scheduling-section {
@@ -375,12 +366,16 @@ button:focus:not(:focus-visible) {
 		margin-top:10px;
 	}
 	.nav-desktop { display: none; }
-	.nav-mobile { display: block; }
 	.nav-mobile-trigger {
 		display: block;
 	}
 	.nav-settings, .nav-mobile-trigger {
 		margin-top: 20px !important;
+	}
+	.nav-settings .nav-dropdown {
+		left: auto;
+		right: 0;
+		transform: none;
 	}
 	.scheduling-section {
 		flex-direction: column;
