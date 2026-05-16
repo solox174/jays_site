@@ -1,6 +1,7 @@
 <script lang="ts">
 
 
+    // TODO: let me know if event is not underlined in red in your IDE
     function validateForm(event) {
         event.preventDefault(); // Prevent actual form submission
 
@@ -21,51 +22,52 @@
 </script>
 
 
-    <div style="display: flex; justify-content: center; margin: 0 auto; padding: 30px 0; width: 100%;  background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius)">
-        <form method="post" style="width: min(400px, 100%); padding: 5px">
-            <legend class="section-title">Create Account</legend>
-            <div style="display: flex; justify-content: space-between; width: 100%;">
-                <fieldset
-                        style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
-                    <div style="display: flex; flex-direction: column">
-                        <label for="first-name">First Name:</label>
-                        <input id="first-name" name="first-name" type="text" required/>
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label for="email">Email:</label>
-                        <input id="email-address" name="email" type="email" required/>
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label for="password">Password:</label>
-                        <input id="password" name="password" type="password" required/>
-                    </div>
-                </fieldset>
-                <fieldset
-                        style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
-                    <div style="display: flex; flex-direction: column">
-                        <label for="last-name">Last Name:</label>
-                        <input id="last-name" name="last-name" type="text" required/>
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label for="phone-number">Phone Number:</label>
-                        <input id="phone-number" name="phone-number"   type="tel" required/>
-                    </div>
-                    <div style="display: flex; flex-direction: column">
-                        <label for="confirm-password">Confirm Password:</label>
-                        <input id="confirm-password" name="confirm-password" type="password" required/>
-                    </div>
-                </fieldset>
-            </div>
-            <button type="submit" onsubmit="{validateForm}" style="float: left; margin-top: 20px">Submit</button>
-        </form>
-    </div>
+<div style="display: flex; justify-content: center; margin: 0 auto; padding: 30px 0; width: 100%;  background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius)">
+    <form method="post" style="width: min(400px, 100%); padding: 5px">
+        <legend class="section-title">Create Account</legend>
+        <div style="display: flex; justify-content: space-between; width: 100%;">
+            <fieldset
+                    style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
+                <div style="display: flex; flex-direction: column">
+                    <label for="first-name">First Name:</label>
+                    <input id="first-name" name="first-name" required type="text"/>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label for="email">Email:</label>
+                    <input id="email-address" name="email" required type="email"/>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label for="password">Password:</label>
+                    <input id="password" name="password" required type="password"/>
+                </div>
+            </fieldset>
+            <fieldset
+                    style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
+                <div style="display: flex; flex-direction: column">
+                    <label for="last-name">Last Name:</label>
+                    <input id="last-name" name="last-name" required type="text"/>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label for="phone-number">Phone Number:</label>
+                    <input id="phone-number" name="phone-number" required type="tel"/>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input id="confirm-password" name="confirm-password" required type="password"/>
+                </div>
+            </fieldset>
+        </div>
+        <button onsubmit="{validateForm}" style="float: left; margin-top: 20px" type="submit">Submit</button>
+    </form>
+</div>
 
-    <style>
-        label {
-            font-weight: 500;
-        }
-        input {
-            margin-top: 5px;
-            width: 150px;
-        }
-    </style>
+<style>
+    label {
+        font-weight: 500;
+    }
+
+    input {
+        margin-top: 5px;
+        width: 150px;
+    }
+</style>

@@ -1,15 +1,20 @@
 <script lang="ts">
-    import type { PageProps } from './$types';
+    import type {PageProps} from './$types';
 
-    let { data }: PageProps = $props();
-    const { pairs } = data;
+    let {data}: PageProps = $props();
+    const {pairs} = data;
 
     let current = $state(0);
     let videoEls: (HTMLVideoElement | null)[] = [];
-    let videoStates = $state(pairs.map(() => ({ paused: true, progress: 0 })));
+    let videoStates = $state(pairs.map(() => ({paused: true, progress: 0})));
 
-    function prev() { current = (current - 1 + pairs.length) % pairs.length; }
-    function next() { current = (current + 1) % pairs.length; }
+    function prev() {
+        current = (current - 1 + pairs.length) % pairs.length;
+    }
+
+    function next() {
+        current = (current + 1) % pairs.length;
+    }
 
     function onKeydown(e: KeyboardEvent) {
         if (e.key === 'ArrowLeft') prev();
@@ -50,13 +55,13 @@
     <title>Before &amp; After</title>
 </svelte:head>
 
-<svelte:window onkeydown={onKeydown} />
+<svelte:window onkeydown={onKeydown}/>
 
 <section class="showcase">
     <div class="section-title">Results</div>
 
     <div class="carousel">
-        <button class="arrow" onclick={prev} aria-label="Previous">
+        <button aria-label="Previous" class="arrow" onclick={prev}>
             <i class="fa-solid fa-chevron-left"></i>
         </button>
 
@@ -66,13 +71,13 @@
                     <div class="slide">
                         <div class="video-wrap">
                             <video
-                                bind:this={videoEls[i]}
-                                src={pair.video}
-                                muted loop playsinline
-                                onclick={() => togglePlay(i)}
-                                onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
-                                onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
-                                ontimeupdate={e => onTimeUpdate(i, e)}
+                                    bind:this={videoEls[i]}
+                                    src={pair.video}
+                                    muted loop playsinline
+                                    onclick={() => togglePlay(i)}
+                                    onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
+                                    onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
+                                    ontimeupdate={e => onTimeUpdate(i, e)}
                             ></video>
 
                             <div class="play-icon" class:visible={videoStates[i].paused}>
@@ -84,12 +89,12 @@
                             {/if}
 
                             <input
-                                type="range"
-                                class="progress-bar"
-                                min="0" max="100" step="0.1"
-                                value={videoStates[i].progress}
-                                oninput={e => onSeek(i, e)}
-                                aria-label="Video progress"
+                                    type="range"
+                                    class="progress-bar"
+                                    min="0" max="100" step="0.1"
+                                    value={videoStates[i].progress}
+                                    oninput={e => onSeek(i, e)}
+                                    aria-label="Video progress"
                             />
                         </div>
                     </div>
@@ -97,7 +102,7 @@
             </div>
         </div>
 
-        <button class="arrow" onclick={next} aria-label="Next">
+        <button aria-label="Next" class="arrow" onclick={next}>
             <i class="fa-solid fa-chevron-right"></i>
         </button>
     </div>
@@ -105,10 +110,10 @@
     <div class="dots">
         {#each pairs as _, i}
             <button
-                class="dot"
-                class:active={i === current}
-                onclick={() => current = i}
-                aria-label="Go to slide {i + 1}"
+                    class="dot"
+                    class:active={i === current}
+                    onclick={() => current = i}
+                    aria-label="Go to slide {i + 1}"
             ></button>
         {/each}
     </div>
@@ -278,7 +283,9 @@
         transition: opacity 160ms ease;
     }
 
-    .arrow:hover { opacity: 0.75; }
+    .arrow:hover {
+        opacity: 0.75;
+    }
 
     .dots {
         display: flex;

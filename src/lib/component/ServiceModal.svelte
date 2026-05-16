@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
     import type {Schema} from "../../../amplify/data/resource";
 
     type Props = {
@@ -19,7 +19,11 @@
     }: Props = $props();
 
     function formatPrice(price: number) {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(price);
     }
 
     let modalEl = $state<HTMLDivElement | null>(null);
@@ -73,7 +77,7 @@
     }
 
     function save() {
-        onSave?.({ ids: draftSelectedIds });
+        onSave?.({ids: draftSelectedIds});
         onClose?.();
     }
 
@@ -109,16 +113,16 @@
     }
 </script>
 
-<svelte:window onkeydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown}/>
 
-<div class="backdrop" role="presentation" onclick={handleBackdropClick}>
-    <div class="modal"
-         bind:this={modalEl}
-         tabindex="0"
-         role="dialog"
-         aria-modal="true"
+<div class="backdrop" onclick={handleBackdropClick} role="presentation">
+    <div aria-describedby="service-modal-description"
          aria-labelledby="service-modal-title"
-         aria-describedby="service-modal-description">
+         aria-modal="true"
+         bind:this={modalEl}
+         class="modal"
+         role="dialog"
+         tabindex="0">
         <div class="header">
             <div>
                 <h2 id="service-modal-title">Select services</h2>
@@ -127,11 +131,11 @@
                 </p>
             </div>
 
-            <button type="button"
+            <button aria-label="Close service modal"
                     class="icon-button"
+                    onclick={close}
                     style="border-color: var(--btn-border); color: var(--btn-border)"
-                    aria-label="Close service modal"
-                    onclick={close}>
+                    type="button">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -219,8 +223,9 @@
             </div>
 
             <div class="footer-actions">
-                <button type="button" class="secondary" onclick={close}>Cancel</button>
-                <button type="button" class="primary" onclick={save} disabled={draftSelectedIds.length === 0}>Confirm</button>
+                <button class="secondary" onclick={close} type="button">Cancel</button>
+                <button class="primary" disabled={draftSelectedIds.length === 0} onclick={save} type="button">Confirm
+                </button>
             </div>
         </div>
     </div>

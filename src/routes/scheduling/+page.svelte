@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { nhtsaApi, type VehicleCategory } from '$lib/api/nhtsaApi';
-    import type { Schema } from '$lib/../../amplify/data/resource';
+    import {onMount} from 'svelte';
+    import {nhtsaApi, type VehicleCategory} from '$lib/api/nhtsaApi';
+    import type {Schema} from '$lib/../../amplify/data/resource';
     import AirDatepicker from 'air-datepicker';
-    import { worseSelect } from 'worse-select';
+    import {worseSelect} from 'worse-select';
     import localeEn from 'air-datepicker/locale/en';
     import ServiceModal from '$lib/component/ServiceModal.svelte';
     import TimePickerModal from '$lib/component/TimePickerModal.svelte';
 
     import 'air-datepicker/air-datepicker.css';
-    import { amplifyClient } from '$lib/client/amplifyClient';
-    import type { PageProps } from './$types';
-    import { isBusy } from '$lib/stores/ui';
+    import {amplifyClient} from '$lib/client/amplifyClient';
+    import type {PageProps} from './$types';
+    import {isBusy} from '$lib/stores/ui';
 
     $isBusy = true;
-    let { data }: PageProps = $props();
+    let {data}: PageProps = $props();
     let services = $state<Schema['Service']['createType'][]>([]);
     let appointments = $state<Schema['Appointment']['createType'][]>([]);
     let servicePrices = $state<Schema['ServicePrice']['createType'][]>([]);
@@ -38,10 +38,10 @@
     let displayDate = $derived((() => {
         if (!appointmentDateString) return '';
         const date = new Date(appointmentDateString);
-        const month = date.toLocaleString('en-US', { month: 'short' });
+        const month = date.toLocaleString('en-US', {month: 'short'});
         const day = date.getDate();
         const v = day % 100;
-        const suffix = (v >= 11 && v <= 13) ? 'th' : (['th','st','nd','rd'][day % 10] ?? 'th');
+        const suffix = (v >= 11 && v <= 13) ? 'th' : (['th', 'st', 'nd', 'rd'][day % 10] ?? 'th');
         const dateStr = `${month} ${day}${suffix}`;
         if (!selectedTime) return dateStr;
         const [h, m] = selectedTime.split(':').map(Number);
@@ -62,20 +62,24 @@
                 servicePrices
                     .filter(sp => sp.vehicleCategory === bodyClass)
                     .map(sp => [sp.serviceId, sp.price] as [string, number])
-              )
+            )
             : undefined
     );
     let selectedServicesSummary = $derived(
         services
             .filter(s => selectedServiceIds.includes(s.id ?? ''))
-            .map(s => ({ name: s.name, price: priceMap?.get(s.id ?? '') }))
+            .map(s => ({name: s.name, price: priceMap?.get(s.id ?? '')}))
     );
     let totalPrice = $derived(
         selectedServiceIds.reduce((sum, id) => sum + (priceMap?.get(id ?? '') ?? 0), 0)
     );
 
     function formatPrice(price: number) {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        }).format(price);
     }
 
     $effect(() => {
@@ -91,7 +95,7 @@
         })();
     });
     const currentYear = new Date().getFullYear();
-    let years = Array.from({ length: 35 }, (_, index) => String(currentYear - index));
+    let years = Array.from({length: 35}, (_, index) => String(currentYear - index));
 
     let isServiceModalOpen = $state(false);
     let showTimePicker = $state(false);
@@ -128,7 +132,7 @@
                     }
                 }
             },
-            onSelect({ date, datepicker }) {
+            onSelect({date, datepicker}) {
                 if (date instanceof Date) {
                     showTimePicker = true;
                     appointmentDateString = date.toISOString();
@@ -167,12 +171,12 @@
             throw new Error('Year, make, and model are required.');
         }
 
-        const { data: existingVehicleSpecs, errors } = await amplifyClient.models.VehicleSpec.list({
+        const {data: existingVehicleSpecs, errors} = await amplifyClient.models.VehicleSpec.list({
             filter: {
                 and: [
-                    { year: { eq: selectedYear } },
-                    { make: { eq: selectedMake } },
-                    { model: { eq: selectedModel } }
+                    {year: {eq: selectedYear}},
+                    {make: {eq: selectedMake}},
+                    {model: {eq: selectedModel}}
                 ]
             }
         });
@@ -185,7 +189,7 @@
             return existingVehicleSpecs[0].id;
         }
 
-        const { data: vehicleSpecModel, errors: createErrors } = await amplifyClient.models.VehicleSpec.create({
+        const {data: vehicleSpecModel, errors: createErrors} = await amplifyClient.models.VehicleSpec.create({
             year: selectedYear,
             make: selectedMake,
             model: selectedModel
@@ -234,7 +238,7 @@
                 phoneNumber: "+12672310897",
                 password: "xxxxxxx"
             }
-            const { data: customerModel }= await amplifyClient.models.Customer.create(customer);
+            const {data: customerModel} = await amplifyClient.models.Customer.create(customer);
             const customerId = customerModel?.id;
 
             if (!customerId) throw new Error('Customer creation failed');
@@ -253,7 +257,7 @@
             // Amplify's generated types allow `id` to be undefined on create/read model
             // objects, even though these objects will always have an id at runtime. These
             // null checks on id's exist to satisfy TypeScript, even though they will never trigger.
-            const { data: appointmentModel, errors } = await amplifyClient.models.Appointment.create(appointment);
+            const {data: appointmentModel, errors} = await amplifyClient.models.Appointment.create(appointment);
 
             if (errors?.length) throw new Error('Appointment creation failed');
 
@@ -262,7 +266,7 @@
 
             const appointmentServices: Schema['AppointmentService']['createType'][] = selectedServiceIds.map((serviceId) => {
                 if (!serviceId) throw new Error('Service id missing');
-                return { appointmentId, serviceId };
+                return {appointmentId, serviceId};
             });
             // TODO: Promise.allSettled() with "rollback"
             await Promise.all(
@@ -294,134 +298,133 @@
     }
 </script>
 
-<svelte:window onkeydown={handleWindowKeydown} />
+<svelte:window onkeydown={handleWindowKeydown}/>
 
 <svelte:head>
     <title>Schedule</title>
-    <meta name="description" content="Svelte demo app" />
+    <meta content="Svelte demo app" name="description"/>
 </svelte:head>
 
 <form onsubmit={handleSubmit}>
     <div style="background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius); margin: 0 auto; width: min(590px, 100%); padding: 24px; box-sizing: border-box">
-    <div style="display: flex; flex-direction: column; margin: 0 auto; width: min(590px, 100%)">
-        <div class="section-title">Vehicle</div>
-        <fieldset class="form-section scheduling-section">
-            <div class="dropdown">
-                <label for="year">Year</label>
-                <select id="year" name="year" bind:value={selectedYear} onchange={handleYearChange} style="background:red">
-                    <option value="">Select year</option>
-                    {#each years as year}
-                        <option value={year}>{year}</option>
-                    {/each}
-                </select>
-            </div>
-
-            <div class="dropdown">
-                <label for="make">Make</label>
-                <select id="make"
-                        name="make"
-                        bind:value={selectedMake}
-                        onchange={handleMakeChange}>
-                    <option value="">
-                        Select make
-                    </option>
-                    {#each makes as make}
-                        <option value={make}>{make}</option>
-                    {/each}
-                </select>
-            </div>
-
-            <div class="dropdown">
-                <label for="model">Model</label>
-                <select id="model"
-                        name="model"
-                        bind:value={selectedModel}>
-                    <option value="">
-                        Select model
-                    </option>
-                    {#each models as model}
-                        <option value={model}>{model}</option>
-                    {/each}
-                </select>
-            </div>
-        </fieldset>
-
-        <div class="section-title" style="margin-top: 40px;">Services & Date</div>
-        <fieldset class="form-section scheduling-section">
-            <div class="dropdown">
-                <label for="service">Services</label>
-                <input id="service"
-                       type="text"
-                       autocomplete="off"
-                       placeholder="{selectedModel ? '' : 'Select vehicle first'}."
-                       style="width:150px; text-align: {selectedModel ? 'left' : 'center'}"
-                       readonly
-                       disabled={!selectedModel}
-                       value={selectedServiceSummary}
-                       onclick={openServiceModal} />
-            </div>
-
-            <div class="dropdown">
-                <label for="calendar">Date</label>
-                <input
-                        id="calendar"
-                        value={displayDate}
-                        autocomplete="off"
-                        type="text"
-                        style="width: 95px;"
-                />
-            </div>
-        </fieldset>
-
-        {#if selectedServicesSummary.length > 0 && priceMap}
-            <div class="order-summary">
-                {#each selectedServicesSummary as item}
-                    <div class="summary-row">
-                        <span>{item.name}</span>
-                        <span>{item.price != null ? formatPrice(item.price) : '—'}</span>
-                    </div>
-                {/each}
-                <div class="summary-row summary-total">
-                    <span>Estimated total</span>
-                    <strong>{formatPrice(totalPrice)}</strong>
+        <div style="display: flex; flex-direction: column; margin: 0 auto; width: min(590px, 100%)">
+            <div class="section-title">Vehicle</div>
+            <fieldset class="form-section scheduling-section">
+                <div class="dropdown">
+                    <label for="year">Year</label>
+                    <select bind:value={selectedYear} id="year" name="year" onchange={handleYearChange}
+                            style="background:red">
+                        <option value="">Select year</option>
+                        {#each years as year}
+                            <option value={year}>{year}</option>
+                        {/each}
+                    </select>
                 </div>
-            </div>
-        {:else if safetyKey && !bodyClassLoading && !bodyClass}
-            <!-- TODO: when sending email to owner, must specify owner needs to contact customer -->
-            <div style="padding: 10px 0 4px; font-size: 0.85rem; opacity: 0.7">
-                Special vehicle type — we'll follow up with pricing after you book.
-            </div>
-        {/if}
 
-        <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
-                style="margin-top: 5px; align-self: center">
-            Schedule Appointment
-        </button>
-    </div>
+                <div class="dropdown">
+                    <label for="make">Make</label>
+                    <select bind:value={selectedMake}
+                            id="make"
+                            name="make"
+                            onchange={handleMakeChange}>
+                        <option value="">
+                            Select make
+                        </option>
+                        {#each makes as make}
+                            <option value={make}>{make}</option>
+                        {/each}
+                    </select>
+                </div>
+
+                <div class="dropdown">
+                    <label for="model">Model</label>
+                    <select bind:value={selectedModel}
+                            id="model"
+                            name="model">
+                        <option value="">
+                            Select model
+                        </option>
+                        {#each models as model}
+                            <option value={model}>{model}</option>
+                        {/each}
+                    </select>
+                </div>
+            </fieldset>
+
+            <div class="section-title" style="margin-top: 40px;">Services & Date</div>
+            <fieldset class="form-section scheduling-section">
+                <div class="dropdown">
+                    <label for="service">Services</label>
+                    <input autocomplete="off"
+                           disabled={!selectedModel}
+                           id="service"
+                           onclick={openServiceModal}
+                           placeholder="{selectedModel ? '' : 'Select vehicle first'}."
+                           readonly
+                           style="width:150px; text-align: {selectedModel ? 'left' : 'center'}"
+                           type="text"
+                           value={selectedServiceSummary}/>
+                </div>
+
+                <div class="dropdown">
+                    <label for="calendar">Date</label>
+                    <input autocomplete="off"
+                           id="calendar"
+                           style="width: 95px;"
+                           type="text"
+                           value={displayDate} />
+                </div>
+            </fieldset>
+
+            {#if selectedServicesSummary.length > 0 && priceMap}
+                <div class="order-summary">
+                    {#each selectedServicesSummary as item}
+                        <div class="summary-row">
+                            <span>{item.name}</span>
+                            <span>{item.price != null ? formatPrice(item.price) : '—'}</span>
+                        </div>
+                    {/each}
+                    <div class="summary-row summary-total">
+                        <span>Estimated total</span>
+                        <strong>{formatPrice(totalPrice)}</strong>
+                    </div>
+                </div>
+            {:else if safetyKey && !bodyClassLoading && !bodyClass}
+                <!-- TODO: when sending email to owner, must specify owner needs to contact customer -->
+                <div style="padding: 10px 0 4px; font-size: 0.85rem; opacity: 0.7">
+                    Special vehicle type — we'll follow up with pricing after you book.
+                </div>
+            {/if}
+
+            <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
+                    style="margin-top: 5px; align-self: center">
+                Schedule Appointment
+            </button>
+        </div>
     </div>
 </form>
 
 {#if isServiceModalOpen}
-<ServiceModal
-        {services}
-        {priceMap}
-        selectedIds={selectedServiceIds}
-        onSave={handleServicesSave}
-        onClose={closeServiceModal}
-/>
+    <ServiceModal
+            {services}
+            {priceMap}
+            selectedIds={selectedServiceIds}
+            onSave={handleServicesSave}
+            onClose={closeServiceModal}
+    />
 {/if}
 
 {#if showTimePicker}
-<TimePickerModal
-        selectedDate={appointmentDateString}
-        businessStartTime={'09:00'}
-        businessCloseTime={'17:00'}
-        appointmentDurationHours={2}
-        existingAppointments={appointments}
-        selectedTime={selectedTime}
-        onClose={() => (showTimePicker = false)}
-        onConfirm={(time) => { selectedTime = time ?? ''; showTimePicker = false; }}
-/>
+    <TimePickerModal
+            selectedDate={appointmentDateString}
+            businessStartTime={'09:00'}
+            businessCloseTime={'17:00'}
+            appointmentDurationHours={2}
+            existingAppointments={appointments}
+            selectedTime={selectedTime}
+            onClose={() => (showTimePicker = false)}
+            onConfirm={(time) => { selectedTime = time ?? ''; showTimePicker = false; }}
+    />
 {/if}
 
 <style>
@@ -446,6 +449,7 @@
         .dropdown {
             position: relative;
         }
+
         .dropdown label {
             position: absolute;
             right: 100%;
@@ -453,6 +457,7 @@
             transform: translateY(-50%);
             padding-right: 8px;
         }
+
         #service, #calendar {
             flex: none;
         }
@@ -478,7 +483,7 @@
     }
 
     input {
-        font-size: .8rem!important;
+        font-size: .8rem !important;
         text-align: center;
         height: 16px;
     }
@@ -486,7 +491,7 @@
     .order-summary {
         margin-top: 8px;
         font-size: 0.85rem;
-        border-top: 1px solid var(--modal-border, rgba(255,255,255,0.15));
+        border-top: 1px solid var(--modal-border, rgba(255, 255, 255, 0.15));
         padding-top: 8px;
     }
 
@@ -498,7 +503,7 @@
     }
 
     .summary-total {
-        border-top: 1px solid var(--modal-border, rgba(255,255,255,0.15));
+        border-top: 1px solid var(--modal-border, rgba(255, 255, 255, 0.15));
         margin-top: 4px;
         padding-top: 6px;
         opacity: 1;

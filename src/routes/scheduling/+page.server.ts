@@ -1,4 +1,4 @@
-import type { Actions } from './$types';
+import type {Actions} from './$types';
 
 // TODO: use `@aws-sdk/client-ses` to send email with appointment details to Jay and confirmation email to customer
 // TODO: Add UI feedback to customer on error

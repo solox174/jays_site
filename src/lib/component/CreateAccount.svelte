@@ -6,34 +6,34 @@
                     style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
                 <div style="display: flex; flex-direction: column">
                     <label for="first-name">First Name:</label>
-                    <input id="first-name" name="last-name" type="text" required/>
+                    <input id="first-name" name="last-name" required type="text"/>
                 </div>
                 <div style="display: flex; flex-direction: column">
                     <label for="email">Email:</label>
-                    <input id="email-address" name="email" type="email" required/>
+                    <input id="email-address" name="email" required type="email"/>
                 </div>
                 <div style="display: flex; flex-direction: column">
                     <label for="password">Password:</label>
-                    <input id="password" name="password" type="password" required/>
+                    <input id="password" name="password" required type="password"/>
                 </div>
             </fieldset>
             <fieldset
                     style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
                 <div style="display: flex; flex-direction: column">
                     <label for="last-name">Last Name:</label>
-                    <input id="last-name" name="last-name" type="text" required/>
+                    <input id="last-name" name="last-name" required type="text"/>
                 </div>
                 <div style="display: flex; flex-direction: column">
                     <label for="phone-number">Phone Number:</label>
-                    <input id="phone-number" name="phone-number" type="number" required/>
+                    <input id="phone-number" name="phone-number" required type="number"/>
                 </div>
                 <div style="display: flex; flex-direction: column">
                     <label for="confirm-password">Confirm Password:</label>
-                    <input id="confirm-password" name="confirm-password" type="password" required/>
+                    <input id="confirm-password" name="confirm-password" required type="password"/>
                 </div>
             </fieldset>
         </div>
-        <button type="submit" style="float: right; margin-top: 20px">Submit</button>
+        <button style="float: right; margin-top: 20px" type="submit">Submit</button>
     </form>
 </div>
 
@@ -41,6 +41,7 @@
     label {
         font-weight: 500;
     }
+
     input {
         margin-top: 5px;
         width: 150px;

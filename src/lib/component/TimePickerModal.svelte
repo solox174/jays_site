@@ -39,17 +39,21 @@
         const v = n % 100;
         if (v >= 11 && v <= 13) return 'th';
         switch (n % 10) {
-            case 1: return 'st';
-            case 2: return 'nd';
-            case 3: return 'rd';
-            default: return 'th';
+            case 1:
+                return 'st';
+            case 2:
+                return 'nd';
+            case 3:
+                return 'rd';
+            default:
+                return 'th';
         }
     }
 
     function formatSelectedDate(value: string | Date): string {
         const date = toDate(value);
         if (Number.isNaN(date.getTime())) return 'Invalid date';
-        const month = date.toLocaleString('en-US', { month: 'long' });
+        const month = date.toLocaleString('en-US', {month: 'long'});
         const day = date.getDate();
         return `${month} ${day}${ordinalSuffix(day)}`;
     }
@@ -169,28 +173,28 @@
     }
 </script>
 
-<svelte:window onkeydown={handleWindowKeydown} />
+<svelte:window onkeydown={handleWindowKeydown}/>
 
-<div class="time-modal-overlay" role="button" tabindex="0" onkeydown="{void(0)}" onclick={handleOverlayClick}>
-    <div role="dialog"
-         tabindex="0"
-         onkeydown="{void(0)}"
-         class="time-modal"
+<div class="time-modal-overlay" onclick={handleOverlayClick} onkeydown="{void(0)}" role="button" tabindex="0">
+    <div aria-labelledby="time-modal-title"
          aria-modal="true"
-         aria-labelledby="time-modal-title"
-         onclick={(event) => event.stopPropagation()}>
+         class="time-modal"
+         onclick={(event) => event.stopPropagation()}
+         onkeydown="{void(0)}"
+         role="dialog"
+         tabindex="0">
 
         <div class="time-modal__header">
             <div>
-                <h2 id="time-modal-title" class="time-modal__title">Select a time</h2>
+                <h2 class="time-modal__title" id="time-modal-title">Select a time</h2>
                 <p class="time-modal__subtitle">{formattedDate}</p>
             </div>
 
-            <button type="button"
+            <button aria-label="Close time picker"
                     class="time-modal__close icon-button"
+                    onclick={closeModal}
                     style="border-color: var(--btn-border); color: var(--btn-border)"
-                    aria-label="Close time picker"
-                    onclick={closeModal}>
+                    type="button">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -316,10 +320,9 @@
         border-radius: var(--border-radius);
         background: var(--modal-item-bg);
         cursor: pointer;
-        transition:
-                border-color 160ms ease,
-                background 160ms ease,
-                box-shadow 160ms ease;
+        transition: border-color 160ms ease,
+        background 160ms ease,
+        box-shadow 160ms ease;
     }
 
     .time-row:hover {

@@ -1,10 +1,10 @@
 // src/routes/login/+page.server.ts
-import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
-import { login } from '$lib/server/auth';
+import {fail, redirect} from '@sveltejs/kit';
+import type {Actions} from './$types';
+import {login} from '$lib/server/auth';
 
 export const actions: Actions = {
-    default: async ({ request, cookies }) => {
+    default: async ({request, cookies}) => {
         const form = await request.formData();
         const username = String(form.get('email') ?? '');
         const password = String(form.get('password') ?? '');
@@ -12,7 +12,7 @@ export const actions: Actions = {
         const result = await login(username, password, cookies);
 
         if (!result.ok) {
-            return fail(400, { message: 'Login failed', challengeName: result.challengeName });
+            return fail(400, {message: 'Login failed', challengeName: result.challengeName});
         }
 
         redirect(303, '/scheduling');

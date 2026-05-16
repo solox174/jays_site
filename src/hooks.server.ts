@@ -1,10 +1,9 @@
-import type { Handle } from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
-import { verifySession } from '$lib/server/auth';
+import type {Handle} from '@sveltejs/kit';
+import {verifySession} from '$lib/server/auth';
 
 const PROTECTED = ['/scheduling', '/account', '/admin'];
 
-export const handle: Handle = async ({ event, resolve }) => {
+export const handle: Handle = async ({event, resolve}) => {
     const sessionId = event.cookies.get('session');
     event.locals.user = await verifySession(sessionId);
 
