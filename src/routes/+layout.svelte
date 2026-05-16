@@ -13,6 +13,8 @@
 	// svelte-ignore non_reactive_update
 	let navEl: HTMLElement | null = null;
 	// svelte-ignore non_reactive_update
+	let navBtnEl: HTMLElement | null = null;
+	// svelte-ignore non_reactive_update
 	let settingsEl: HTMLElement | null = null;
 
 	function handleMouseMove(event: MouseEvent) {
@@ -33,10 +35,10 @@
 				settingsMenuOpen = false;
 			}
 		}
-		if (navEl) {
-			if (navEl.querySelector('button')?.contains(e.target as Node)) {
+		if (navBtnEl) {
+			if (navBtnEl.contains(e.target as Node)) {
 				mobileMenuOpen = !mobileMenuOpen;
-			} else if (!navEl.contains(e.target as Node)) {
+			} else if (!navEl?.contains(e.target as Node)) {
 				mobileMenuOpen = false;
 			}
 		}
@@ -47,11 +49,17 @@
 <div style="display: flex; flex-direction: column; height: 100dvh">
 	<div>
 		<div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
-			<img src="{logo}" alt="logo" style="height: 200px; width: auto;" />
+			<img id="hero" src="{logo}" alt="logo" style="height: 200px; width: auto;" />
 			<!-- TODO: consider refactoring menu here and for mobile into a Component. Low priority  -->
+			<button class="bare-btn nav-mobile-trigger"
+					bind:this={navBtnEl} aria-label="Menu"
+					aria-expanded={mobileMenuOpen}
+					style="padding-left: 0">
+				<i class="fa-solid fa-bars"></i>
+			</button>
 	
 			<div class="nav-settings" bind:this={settingsEl} style="position: absolute; margin-top: 20px; top: 0; right: 0; font-size: 1.3rem">
-				<button class="bare-btn" aria-label="Settings" aria-expanded={settingsMenuOpen}>
+				<button class="bare-btn" aria-label="Settings" aria-expanded={settingsMenuOpen} style="padding-right: 0">
 					<i class="fa-solid fa-user-gear" style="font-size: 1.5rem"></i>
 				</button>
 				{#if settingsMenuOpen}
@@ -76,17 +84,14 @@
 			</div>
 		</div>
 		{#if page.url.pathname !== '/login'}
-		<nav class="site-nav" bind:this={navEl}>
+		<nav class="site-nav">
 			<div class="nav-desktop">
 				<a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
 				<a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling">Scheduling</a>
 				<a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
 			</div>
 
-			<div class="nav-mobile">
-				<button class="bare-btn" aria-label="Menu" aria-expanded={mobileMenuOpen}>
-					<i class="fa-solid fa-bars"></i>
-				</button>
+			<div class="nav-mobile" bind:this={navEl}>
 				{#if mobileMenuOpen}
 				<div class="nav-dropdown">
 					<a class:active-nav="{page.url.pathname === '/'}" href="/" onclick={() => mobileMenuOpen = false}>Home</a>

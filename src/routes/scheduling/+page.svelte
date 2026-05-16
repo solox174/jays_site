@@ -349,7 +349,7 @@
         <div class="section-title" style="margin-top: 40px;">Services & Date</div>
         <fieldset class="form-section scheduling-section">
             <div class="dropdown">
-                <label for="service">Select Services</label>
+                <label for="service">Services</label>
                 <input id="service"
                        type="text"
                        autocomplete="off"
@@ -452,7 +452,6 @@
             top: 50%;
             transform: translateY(-50%);
             padding-right: 8px;
-            white-space: nowrap;
         }
         #service, #calendar {
             flex: none;
@@ -475,7 +474,6 @@
     }
 
     label {
-        text-align: center;
         margin-right: 5px;
     }
 
