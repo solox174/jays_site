@@ -7,7 +7,7 @@
 <div class="glass-panel">
     <form method="POST">
         <fieldset style="width: 100%; border: none;">
-            <div style="max-width: 250px; display: flex; justify-content: center; flex-direction: column; margin: 0 auto; border: none; gap: 10px;">
+            <div style="max-width: 180px; display: flex; justify-content: center; flex-direction: column; margin: 0 auto; border: none; gap: 10px;">
                 <label for="email-address">Email:</label>
                 <input id="email-address" name="email" required type="email"/>
                 <label for="password">Password:</label>
@@ -16,11 +16,11 @@
                     <p style="color: red;">{form.message}</p>
                 {/if}
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                    <div style="display: flex; justify-content: space-evenly;">
+                    <div style="display: flex; justify-content: center; gap: 15px">
                         <button type="submit">Login</button>
                         <!-- TODO: alt not valid on <a>. IDE flagged with red -->
                         <a alt="create account" href="/create-account">
-                            <button type="button">Sign up</button>
+                            <button type="button" class="secondary">Sign up</button>
                         </a>
                     </div>
                     <div style="display: flex; justify-content: center;">
