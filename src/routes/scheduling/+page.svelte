@@ -310,8 +310,8 @@
 </svelte:head>
 
 <form onsubmit={handleSubmit}>
-    <div style="background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius); margin: 0 auto; width: min(590px, 100%); padding: 24px; box-sizing: border-box">
-        <div style="display: flex; flex-direction: column; margin: 0 auto; width: min(590px, 100%)">
+    <div class="glass-panel">
+        <div style="display: flex; flex-direction: column">
             <div class="section-title">Vehicle</div>
             <fieldset class="form-section scheduling-section">
                 <div class="dropdown">

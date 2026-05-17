@@ -1,5 +1,5 @@
-<div style="display: flex; justify-content: center; margin: 0 auto; padding: 30px 0; background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius)">
-    <form method="post" style="width: min(400px, 100%); padding: 5px">
+<div class="glass-panel">
+    <form method="post" style="width: min(400px, 100%); padding: 5px; margin: 0 auto">
         <div class="section-title">Create Account</div>
         <div style="display: flex; justify-content: space-between; width: 100%;">
             <fieldset

@@ -4,11 +4,10 @@
     export let form: ActionData;
 </script>
 
-<div style="display: flex; justify-content: center; margin: 0 auto; padding: 30px 0; width: 100%; background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius)">
+<div class="glass-panel">
     <form method="POST">
         <fieldset style="width: 100%; border: none;">
-            <legend class="section-title">Login</legend>
-            <div style="display: flex; justify-content: center; flex-direction: column; margin: 0 auto; border: none; gap: 10px;">
+            <div style="max-width: 250px; display: flex; justify-content: center; flex-direction: column; margin: 0 auto; border: none; gap: 10px;">
                 <label for="email-address">Email:</label>
                 <input id="email-address" name="email" required type="email"/>
                 <label for="password">Password:</label>

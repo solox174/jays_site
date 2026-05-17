@@ -7,7 +7,7 @@
 </svelte:head>
 
 
-<div style="background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius); margin: 0 auto; width: min(590px, 100%); padding: 24px; box-sizing: border-box;">
+<div class="glass-panel">
     Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem
     placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor.
     <div style="float: right; width: 200px; border-radius: var(--border-radius); overflow: hidden; margin: 10px 0 8px 16px;">

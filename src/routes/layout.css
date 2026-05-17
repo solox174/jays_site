@@ -402,6 +402,17 @@ button:focus:not(:focus-visible) {
     }
 }
 
+.glass-panel {
+    background: var(--glass-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius);
+    margin: 0 auto;
+    width: min(590px, 100%);
+    padding: 24px;
+    box-sizing: border-box;
+}
+
 .footer-bar {
     position: fixed;
     bottom: 0;

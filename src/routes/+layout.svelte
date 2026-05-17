@@ -95,7 +95,7 @@
                 {/if}
             </div>
         </div>
-        {#if page.url.pathname !== '/login'}
+        {#if page.url.pathname !== '/login' && page.url.pathname !== '/create-account'}
             <nav class="site-nav">
                 <div class="nav-desktop">
                     <a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
@@ -108,7 +108,7 @@
         <div></div>
     </div>
 
-    <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 15px 0 45px; box-sizing: border-box">
+    <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 20px 0 45px; box-sizing: border-box">
         {@render children()}
     </main>
 

@@ -22,9 +22,8 @@
 </script>
 
 
-<div style="display: flex; justify-content: center; margin: 0 auto; padding: 30px 0; width: 100%;  background: var(--glass-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: var(--border-radius)">
-    <form method="post" style="width: min(400px, 100%); padding: 5px">
-        <legend class="section-title">Create Account</legend>
+<div class="glass-panel">
+    <form method="post" style="width: min(400px, 100%); padding: 5px; margin: 0 auto">
         <div style="display: flex; justify-content: space-between; width: 100%;">
             <fieldset
                     style="display: flex; border: none; width: auto; padding: 0; flex-direction: column; row-gap: 20px;">
