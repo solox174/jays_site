@@ -64,6 +64,7 @@
 :root[data-theme="dark"] {
     color-scheme: dark;
     --overlay-bg: rgb(28 28 28 / 0.75);
+    color: #F5F5F7;
     --label-color: #aaaaaa;
     --glass-color: rgba(60, 60, 60, 0.3);
 
@@ -319,17 +320,22 @@ button:focus:not(:focus-visible) {
 }
 
 .nav-desktop a {
-    color: #a5a5a5;
+    color: #d3d3d3;
     transition: color 180ms ease;
+    font-weight: 500;
 }
 
 .nav-desktop a:hover {
-    color: var(--brand-color);
+    color: white;
     text-decoration: none;
 }
 
 .nav-desktop .active-nav {
-    color: var(--brand-color);
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: var(--brand-color);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 7px;
 }
 
 .scheduling-section {

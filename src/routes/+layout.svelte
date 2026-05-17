@@ -47,8 +47,8 @@
 <div style="display: flex; flex-direction: column; height: 100dvh">
     <div>
         <div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
-            <a href="/" title="home">
-                <img alt="logo" id="hero" src="{logo}" style="height: 200px; width: auto;"/>
+            <a href="/" title="home" style="margin-bottom:10px">
+                <img alt="logo" id="hero" src="{logo}" style="height: 180px; width: auto;"/>
             </a>
             <!-- TODO: consider refactoring menu here and for mobile into a Component. Low priority  -->
             <div bind:this={navBtnEl} class="nav-mobile-trigger">
@@ -108,7 +108,7 @@
         <div></div>
     </div>
 
-    <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 30px 0 45px; box-sizing: border-box">
+    <main style="flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding: 15px 0 45px; box-sizing: border-box">
         {@render children()}
     </main>
 

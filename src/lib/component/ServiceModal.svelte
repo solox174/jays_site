@@ -27,29 +27,11 @@
     }
 
     let modalEl = $state<HTMLDivElement | null>(null);
-    let filter = $state('');
     let selectedBaseServiceId = $state('');
     let selectedAddonIds = $state<(string | undefined)[]>([]);
 
-    const filteredServices = $derived.by(() => {
-        const q = filter.trim().toLowerCase();
-        if (!q) return services;
-
-        return services.filter((service) => {
-            return (
-                service.name.toLowerCase().includes(q) ||
-                service.description.toLowerCase().includes(q)
-            );
-        });
-    });
-
-    const visibleBaseServices = $derived.by((): typeof services => {
-        return filteredServices.filter((service) => service.isPackage);
-    });
-
-    const visibleAddonServices = $derived.by(() => {
-        return filteredServices.filter((service) => !service.isPackage);
-    });
+    const visibleBaseServices = $derived(services.filter((service) => service.isPackage));
+    const visibleAddonServices = $derived(services.filter((service) => !service.isPackage));
 
     const draftSelectedIds = $derived.by(() => {
         return [
@@ -127,7 +109,7 @@
             <div>
                 <h2 id="service-modal-title">Select services</h2>
                 <p id="service-modal-description">
-                    Choose a wash package and any individual services.
+                    Choose a wash package and/or any individual services.
                 </p>
             </div>
 
@@ -147,72 +129,65 @@
                     <p>There are no services available to select.</p>
                 </div>
             {:else}
-                {#if filteredServices.length === 0}
-                    <div class="empty-state">
-                        <h3>No matches</h3>
-                        <p>Try a different search term.</p>
-                    </div>
-                {:else}
-                    {#if visibleBaseServices.length > 0}
-                        <fieldset class="service-group">
-                            <legend>Main service</legend>
+                {#if visibleBaseServices.length > 0}
+                    <fieldset class="service-group">
+                        <legend>Packages</legend>
 
-                            <div class="service-list" role="list">
-                                {#each visibleBaseServices as service (service.id)}
-                                    <label class="service-item" role="listitem">
-                                        <span class="service-control">
-                                            <input type="radio"
-                                                   name="base-service"
-                                                   value={service.id}
-                                                   checked={selectedBaseServiceId === service.id}
-                                                   onchange={handleBaseServiceChange}/>
+                        <div class="service-list" role="list">
+                            {#each visibleBaseServices as service (service.id)}
+                                <label class="service-item" role="listitem">
+                                    <span class="service-control">
+                                        <input type="radio"
+                                               name="base-service"
+                                               value={service.id}
+                                               checked={selectedBaseServiceId === service.id}
+                                               onchange={handleBaseServiceChange}/>
+                                    </span>
+
+                                    <span class="service-content">
+                                        <span class="service-top">
+                                            <strong>{service.name}</strong>
+                                            {#if priceMap?.has(service.id ?? '')}
+                                                <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
+                                            {/if}
                                         </span>
 
-                                        <span class="service-content">
-                                            <span class="service-top">
-                                                <strong>{service.name}</strong>
-                                                {#if priceMap?.has(service.id ?? '')}
-                                                    <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
-                                                {/if}
-                                            </span>
+                                        <span class="service-description">{service.description}</span>
+                                    </span>
+                                </label>
+                            {/each}
+                        </div>
+                    </fieldset>
+                {/if}
 
-                                            <span class="service-description">{service.description}</span>
+                {#if visibleAddonServices.length > 0}
+                    <fieldset class="service-group">
+                        <legend>À La Carte</legend>
+
+                        <div class="service-list" role="list">
+                            {#each visibleAddonServices as service (service.id)}
+                                <label class="service-item" role="listitem">
+                                    <span class="service-control">
+                                        <input type="checkbox"
+                                               value={service.id}
+                                               checked={selectedAddonIds.includes(service.id)}
+                                               onchange={handleAddonChange}/>
+                                    </span>
+
+                                    <span class="service-content">
+                                        <span class="service-top">
+                                            <strong>{service.name}</strong>
+                                            {#if priceMap?.has(service.id ?? '')}
+                                                <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
+                                            {/if}
                                         </span>
-                                    </label>
-                                {/each}
-                            </div>
-                        </fieldset>
-                    {/if}
 
-                    {#if visibleAddonServices.length > 0}
-                        <fieldset class="service-group">
-                            <legend>Individual services</legend>
-
-                            <div class="service-list" role="list">
-                                {#each visibleAddonServices as service (service.id)}
-                                    <label class="service-item" role="listitem">
-                                        <span class="service-control">
-                                            <input type="checkbox"
-                                                   value={service.id}
-                                                   checked={selectedAddonIds.includes(service.id)}
-                                                   onchange={handleAddonChange}/>
-                                        </span>
-
-                                        <span class="service-content">
-                                            <span class="service-top">
-                                                <strong>{service.name}</strong>
-                                                {#if priceMap?.has(service.id ?? '')}
-                                                    <span>{formatPrice(priceMap.get(service.id ?? '')!)}</span>
-                                                {/if}
-                                            </span>
-
-                                            <span class="service-description">{service.description}</span>
-                                        </span>
-                                    </label>
-                                {/each}
-                            </div>
-                        </fieldset>
-                    {/if}
+                                        <span class="service-description">{service.description}</span>
+                                    </span>
+                                </label>
+                            {/each}
+                        </div>
+                    </fieldset>
                 {/if}
             {/if}
         </div>

@@ -219,6 +219,10 @@
         isServiceModalOpen = false;
     }
 
+    /* TODO:
+        move this to +page.server.ts serviceId's need to be submitted; use hidden inputs. Lets work on this one
+        together
+     */
     async function handleSubmit(event: SubmitEvent) {
         event.preventDefault();
         $isBusy = true;
@@ -359,7 +363,7 @@
                            disabled={!selectedModel}
                            id="service"
                            onclick={openServiceModal}
-                           placeholder="{selectedModel ? '' : 'Select vehicle first'}."
+                           placeholder="{selectedModel ? '' : 'select vehicle first'}"
                            readonly
                            style="width:150px; text-align: {selectedModel ? 'left' : 'center'}"
                            type="text"
