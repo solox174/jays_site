@@ -97,6 +97,13 @@
     const currentYear = new Date().getFullYear();
     let years = Array.from({length: 35}, (_, index) => String(currentYear - index));
 
+    let submitHint = $derived(
+        !selectedModel ? 'Select a vehicle to continue' :
+        selectedServiceIds.length === 0 ? 'Select a service to continue' :
+        !appointmentDateString ? 'Select a date to continue' :
+        !selectedTime ? 'Select a time to continue' : ''
+    );
+
     let isServiceModalOpen = $state(false);
     let showTimePicker = $state(false);
 
@@ -372,11 +379,15 @@
 
                 <div class="dropdown">
                     <label for="calendar">Date</label>
-                    <input autocomplete="off"
-                           id="calendar"
-                           style="width: 95px;"
-                           type="text"
-                           value={displayDate} />
+                    <span style="position: relative; display: inline-block;">
+                        <i class="fa-regular fa-calendar"></i>
+                        <input autocomplete="off"
+                               id="calendar"
+                               placeholder="Select date"
+                               style="width: 110px; padding-right: 1.75rem !important;"
+                               type="text"
+                               value={displayDate} />
+                    </span>
                 </div>
             </fieldset>
 
@@ -403,7 +414,11 @@
             <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
                     style="margin-top: 5px; align-self: center">
                 Schedule Appointment
+                <i class="fa-solid fa-lock"></i>
             </button>
+            {#if submitHint}
+                <p class="submit-hint">{submitHint}</p>
+            {/if}
         </div>
     </div>
 </form>
@@ -512,5 +527,28 @@
         padding-top: 6px;
         opacity: 1;
         font-size: 0.9rem;
+    }
+
+    button .fa-lock { display: none; font-size: 0.8em; }
+    button:disabled .fa-lock { display: inline; }
+
+    .submit-hint {
+        margin: 6px 0 0;
+        font-size: 0.75rem;
+        text-align: center;
+        opacity: 0.55;
+    }
+    .fa-calendar {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 0.4rem;
+        color: var(--input-border);
+        border-left: 1px solid var(--input-border);
+        pointer-events: none;
+        font-size: .9rem;
     }
 </style>
