@@ -228,10 +228,15 @@
         background: var(--modal-item-bg);
         cursor: pointer;
         appearance: none;
-        -webkit-appearance: none;
+        -webkit-appearance: none; /* required to override browser default before custom styles apply */
         border-radius: 0 !important;
     }
 
+    /*
+     * Track and thumb pseudo-elements have no CSS standard yet — ::slider-track / ::slider-thumb
+     * are proposed but unshipped. Until then, webkit (Chrome/Safari) and moz (Firefox) prefixes
+     * are both required to style range inputs cross-browser. Recheck ~2027.
+     */
     .progress-bar::-webkit-slider-runnable-track {
         height: 3px;
         background: rgba(0, 0, 0, 0.3);
@@ -239,7 +244,7 @@
     }
 
     .progress-bar::-webkit-slider-thumb {
-        -webkit-appearance: none;
+        -webkit-appearance: none; /* required — without this the thumb ignores width/height */
         width: 13px;
         height: 13px;
         border-radius: 50%;
