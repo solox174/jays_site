@@ -63,6 +63,8 @@
                            onclick={() => mobileMenuOpen = false}>Scheduling</a>
                         <a class:active-nav="{page.url.pathname === '/services'}" href="/services"
                            onclick={() => mobileMenuOpen = false}>Services</a>
+                        <a class:active-nav="{page.url.pathname === '/portfolio'}" href="/portfolio"
+                           onclick={() => mobileMenuOpen = false}>Portfolio</a>
                     </div>
                 {/if}
             </div>
@@ -96,11 +98,12 @@
             </div>
         </div>
         {#if page.url.pathname !== '/login' && page.url.pathname !== '/create-account'}
-            <nav class="site-nav">
+            <nav>
                 <div class="nav-desktop">
                     <a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
                     <a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling">Scheduling</a>
                     <a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
+                    <a class:active-nav="{page.url.pathname === '/portfolio'}" href="/portfolio">Portfolio</a>
                 </div>
 
             </nav>

@@ -58,9 +58,7 @@
 <svelte:window onkeydown={onKeydown}/>
 
 <section class="showcase">
-    <div class="section-title">Results</div>
-
-    <div class="carousel">
+    <div class="carousel" style="max-width: 450px">
         <button aria-label="Previous" class="arrow" onclick={prev}>
             <i class="fa-solid fa-chevron-left"></i>
         </button>
@@ -169,6 +167,7 @@
         border-radius: var(--border-radius);
         overflow: hidden;
         background: var(--modal-item-bg);
+        padding-top: 6px;
     }
 
     video {
@@ -237,7 +236,7 @@
 
     .progress-bar::-webkit-slider-runnable-track {
         height: 3px;
-        background: rgba(255, 255, 255, 0.35);
+        background: rgba(0, 0, 0, 0.3);
         border-radius: 2px;
     }
 
@@ -246,14 +245,14 @@
         width: 13px;
         height: 13px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--brand-color);
         margin-top: -5px;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     }
 
     .progress-bar::-moz-range-track {
         height: 3px;
-        background: rgba(255, 255, 255, 0.35);
+        background: rgba(0, 0, 0, 0.3);
         border-radius: 2px;
     }
 
@@ -261,7 +260,7 @@
         width: 13px;
         height: 13px;
         border-radius: 50%;
-        background: #ffffff;
+        background: var(--brand-color);
         border: none;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     }

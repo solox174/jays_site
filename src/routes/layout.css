@@ -248,7 +248,7 @@ button:focus:not(:focus-visible) {
     display: flex;
     justify-content: space-between;
     margin: 0 auto;
-    width: 400px;
+    width: 500px;
     font-size: 1.5rem;
 }
 
