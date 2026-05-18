@@ -414,7 +414,6 @@
             <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
                     style="margin-top: 5px; align-self: center">
                 Schedule Appointment
-                <i class="fa-solid fa-lock"></i>
             </button>
             {#if submitHint}
                 <p class="submit-hint">{submitHint}</p>
@@ -528,9 +527,6 @@
         opacity: 1;
         font-size: 0.9rem;
     }
-
-    button .fa-lock { display: none; font-size: 0.8em; }
-    button:disabled .fa-lock { display: inline; }
 
     .submit-hint {
         margin: 6px 0 0;
