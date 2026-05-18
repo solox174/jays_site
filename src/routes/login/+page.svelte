@@ -16,12 +16,12 @@
                     <p style="color: red;">{form.message}</p>
                 {/if}
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+                    <!-- TODO: alt not valid on <a>. IDE flagged with red -->
+                    <a alt="create account" href="/create-account">
+                        <button type="button" class="secondary">Sign up</button>
+                    </a>
                     <div style="display: flex; justify-content: center; gap: 15px">
                         <button type="submit">Login</button>
-                        <!-- TODO: alt not valid on <a>. IDE flagged with red -->
-                        <a alt="create account" href="/create-account">
-                            <button type="button" class="secondary">Sign up</button>
-                        </a>
                     </div>
                     <div style="text-align: center; margin-top: 5px">
                         <!--
