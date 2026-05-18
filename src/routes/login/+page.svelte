@@ -23,14 +23,12 @@
                             <button type="button" class="secondary">Sign up</button>
                         </a>
                     </div>
-                    <div style="display: flex; justify-content: center;">
+                    <div style="text-align: center; margin-top: 5px">
                         <!--
                         TODO: use a CSS var (e.g. --label-color) — #ccc is illegible in light mode. always test both themes
                               looking great, otherwise
                         -->
-                        <a href="/forgot-password"
-                           style="color: var(--label-color); font-size: 0.8rem; text-decoration: none;">Forgot
-                            password?</a>
+                        <a href="/forgot-password" style="color: var(--label-color); font-size: 0.8rem; text-decoration: none;">Forgot password?</a>
                     </div>
                 </div>
             </div>
