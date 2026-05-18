@@ -232,11 +232,15 @@
         border-radius: 0 !important;
     }
 
-    /*
-     * Track and thumb pseudo-elements have no CSS standard yet — ::slider-track / ::slider-thumb
-     * are proposed but unshipped. Until then, webkit (Chrome/Safari) and moz (Firefox) prefixes
-     * are both required to style range inputs cross-browser. Recheck ~2027.
+    /* TODO:
+        No CSS standard yet for range track/thumb — ::slider-track / ::slider-thumb are proposed
+        but unshipped. Recheck ~2027.
+        -webkit- covers Chrome + Safari: Chrome's Blink engine is a 2013 fork of WebKit and still
+        honors webkit prefixes for compatibility. -moz- covers Firefox. Neither vendor creates new
+        prefixes anymore (experimental features use runtime flags instead), so this is legacy syntax
+        we're stuck with until the standard lands.
      */
+
     .progress-bar::-webkit-slider-runnable-track {
         height: 3px;
         background: rgba(0, 0, 0, 0.3);
