@@ -2,7 +2,7 @@
 import {fail, redirect} from '@sveltejs/kit';
 import type {Actions} from './$types';
 // TODO: red in Intellij; syntax error
-import {Schema} from '../../../amplify/data/resource'
+import type {Schema} from '../../../amplify/data/resource'
 import {signup} from '$lib/server/auth';
 
 export const actions: Actions = {
