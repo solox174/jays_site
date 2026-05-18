@@ -200,7 +200,7 @@
 
     .services-label {
         position: absolute;
-        bottom: 2.75rem; /* must clear progress-bar height (40px) + gap */
+        bottom: 2.70rem; /* must clear progress-bar height (40px) + gap */
         left: 0.6rem;
         right: 0.6rem;
         padding: 4px 10px;
@@ -220,7 +220,7 @@
         left: 0;
         width: 100%;
         height: 40px !important;
-        padding: 0 5px !important;
+        padding: 0 10px !important;
         margin: 0;
         border: none !important;
         box-shadow: none !important;
