@@ -58,7 +58,7 @@
 <svelte:window onkeydown={onKeydown}/>
 
 <section class="showcase">
-    <div class="carousel" style="max-width: 450px">
+    <div class="carousel" style="max-width: 500px">
         <button aria-label="Previous" class="arrow" onclick={prev}>
             <i class="fa-solid fa-chevron-left"></i>
         </button>
@@ -68,15 +68,14 @@
                 {#each pairs as pair, i}
                     <div class="slide">
                         <div class="video-wrap">
-                            <video
-                                    bind:this={videoEls[i]}
-                                    src={pair.video}
-                                    muted loop playsinline
-                                    onclick={() => togglePlay(i)}
-                                    onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
-                                    onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
-                                    ontimeupdate={e => onTimeUpdate(i, e)}
-                            ></video>
+                            <video bind:this={videoEls[i]}
+                                   src={pair.video}
+                                   muted loop playsinline
+                                   onclick={() => togglePlay(i)}
+                                   onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
+                                   onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
+                                   ontimeupdate={e => onTimeUpdate(i, e)} >
+                            </video>
 
                             <div class="play-icon" class:visible={videoStates[i].paused}>
                                 <i class="fa-solid fa-play"></i>
@@ -86,14 +85,12 @@
                                 <span class="services-label">{pair.services}</span>
                             {/if}
 
-                            <input
-                                    type="range"
-                                    class="progress-bar"
-                                    min="0" max="100" step="0.1"
-                                    value={videoStates[i].progress}
-                                    oninput={e => onSeek(i, e)}
-                                    aria-label="Video progress"
-                            />
+                            <input type="range"
+                                   class="progress-bar"
+                                   min="0" max="100" step="0.1"
+                                   value={videoStates[i].progress}
+                                   oninput={e => onSeek(i, e)}
+                                   aria-label="Video progress" />
                         </div>
                     </div>
                 {/each}
@@ -203,7 +200,7 @@
 
     .services-label {
         position: absolute;
-        bottom: 1.8rem;
+        bottom: 2.75rem; /* must clear progress-bar height (40px) + gap */
         left: 0.6rem;
         right: 0.6rem;
         padding: 4px 10px;
@@ -217,17 +214,18 @@
     }
 
     /* Progress bar — overlaid at bottom of video */
-    .progress-bar {
+    input.progress-bar {
         position: absolute;
         bottom: 0;
         left: 0;
         width: 100%;
-        height: 20px !important;
-        padding: 0 !important;
+        height: 40px !important;
+        padding: 0 5px !important;
         margin: 0;
         border: none !important;
         box-shadow: none !important;
-        background: transparent;
+        box-sizing: border-box;
+        background: var(--modal-item-bg);
         cursor: pointer;
         appearance: none;
         -webkit-appearance: none;

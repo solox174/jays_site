@@ -192,7 +192,7 @@ input {
     height: 14px;
 }
 
-input:not([type='checkbox']):not([type='radio']) {
+input:not([type='checkbox']):not([type='radio']):not([type='range']) {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
