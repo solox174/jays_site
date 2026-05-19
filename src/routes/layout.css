@@ -405,7 +405,6 @@ button:focus:not(:focus-visible) {
 .glass-panel {
     background: var(--glass-color);
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border-radius: var(--border-radius);
     margin: 0 auto;
     width: min(590px, 100%);

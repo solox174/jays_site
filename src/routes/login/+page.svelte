@@ -15,21 +15,20 @@
                 {#if form?.message}
                     <p style="color: red;">{form.message}</p>
                 {/if}
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
-                    <!-- TODO: alt not valid on <a>. IDE flagged with red -->
-                    <a alt="create account" href="/create-account">
+                <div style="display: flex; justify-content: center; gap: 8px; margin-top: 10px;">
+                    <a title="create account" href="/create-account">
                         <button type="button" class="secondary">Sign up</button>
                     </a>
-                    <div style="display: flex; justify-content: center; gap: 15px">
+                    <div style="display: flex; justify-content: center">
                         <button type="submit">Login</button>
                     </div>
-                    <div style="text-align: center; margin-top: 5px">
-                        <!--
-                        TODO: use a CSS var (e.g. --label-color) — #ccc is illegible in light mode. always test both themes
-                              looking great, otherwise
-                        -->
-                        <a href="/forgot-password" style="color: var(--label-color); font-size: 0.8rem; text-decoration: none;">Forgot password?</a>
-                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 5px">
+                    <!--
+                    TODO: use a CSS var (e.g. --label-color) — #ccc is illegible in light mode. always test both themes
+                          looking great, otherwise
+                    -->
+                    <a href="/forgot-password" style="color: var(--label-color); font-size: 0.8rem; text-decoration: none;">Forgot password?</a>
                 </div>
             </div>
         </fieldset>
