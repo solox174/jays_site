@@ -23,12 +23,13 @@ export const actions: Actions = {
             email,
             password
         }
+        // TODO: enforce password complexity requirements in UI
         const result = await signup(customer);
 
         if (!result.ok) {
             return fail(400, {message: 'Signup failed', challengeName: result.challengeName});
         }
 
-        redirect(303, '/scheduling');
+        redirect(303, '/confirm-account');
     }
 };
