@@ -307,6 +307,7 @@
             closeServiceModal();
         }
     }
+    var color = "#717171h";
 </script>
 
 <svelte:window onkeydown={handleWindowKeydown}/>

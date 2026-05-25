@@ -39,7 +39,7 @@ const schema = a.schema({
         .model({
             name: a.string().required(),
             description: a.string().required(),
-            isPackage: a.boolean().required(),
+            isExclusive: a.boolean().required(),
             prices: a.hasMany('ServicePrice', 'serviceId'),
             appointmentServices: a.hasMany('AppointmentService', 'serviceId')
         })
