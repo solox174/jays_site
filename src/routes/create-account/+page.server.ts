@@ -3,10 +3,11 @@ import {fail, redirect} from '@sveltejs/kit';
 import type {Actions} from './$types';
 // TODO: red in Intellij; syntax error
 import type {Schema} from '../../../amplify/data/resource'
-import {signup} from '$lib/server/auth';
+import {signup, confirmSignup} from '$lib/server/auth';
+
 
 export const actions: Actions = {
-    default: async ({request, cookies}) => {
+    createAccount: async ({request, cookies}) => {
         const form = await request.formData();
         const email = String(form.get('email') ?? '');
         const firstName = String(form.get('first-name') ?? '');
@@ -30,6 +31,16 @@ export const actions: Actions = {
             return fail(400, {message: 'Signup failed', challengeName: result.challengeName});
         }
 
-        redirect(303, '/confirm-account');
+        return {
+            captureCode: true
+        }
+
+    },
+    confirmSignup: async ({request, cookies}) => {
+        const form = await request.formData();
+        const code = String(form.get('confirmation-code') ?? '');
+        const email = String(form.get('email') ?? '');
+
+        confirmSignup(email, code);
     }
-};
+}

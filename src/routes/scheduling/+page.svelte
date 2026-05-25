@@ -313,7 +313,6 @@
 
 <svelte:head>
     <title>Schedule</title>
-    <meta content="Svelte demo app" name="description"/>
 </svelte:head>
 
 <form onsubmit={handleSubmit}>
