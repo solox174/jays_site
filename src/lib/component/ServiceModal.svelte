@@ -30,8 +30,8 @@
     let selectedBaseServiceId = $state('');
     let selectedAddonIds = $state<(string | undefined)[]>([]);
 
-    const visibleBaseServices = $derived(services.filter((service) => service.isPackage));
-    const visibleAddonServices = $derived(services.filter((service) => !service.isPackage));
+    const visibleBaseServices = $derived(services.filter((service) => service.isExclusive));
+    const visibleAddonServices = $derived(services.filter((service) => !service.isExclusive));
 
     const draftSelectedIds = $derived.by(() => {
         return [
@@ -42,10 +42,10 @@
 
     onMount(() => {
         const selectedBase = services.find(
-            (service) => selectedIds.includes(service.id ?? '') && service.isPackage
+            (service) => selectedIds.includes(service.id ?? '') && service.isExclusive
         );
         const selectedAddons = services.filter(
-            (service) => selectedIds.includes(service.id ?? '') && !service.isPackage
+            (service) => selectedIds.includes(service.id ?? '') && !service.isExclusive
         );
 
         selectedBaseServiceId = selectedBase?.id ?? '';
@@ -109,7 +109,7 @@
             <div>
                 <h2 id="service-modal-title">Select services</h2>
                 <p id="service-modal-description">
-                    Choose a wash package and/or any individual services.
+                    Choose a detail and/or any individual treatments.
                 </p>
             </div>
 
@@ -131,7 +131,7 @@
             {:else}
                 {#if visibleBaseServices.length > 0}
                     <fieldset class="service-group">
-                        <legend>Packages</legend>
+                        <legend>Details</legend>
 
                         <div class="service-list" role="list">
                             {#each visibleBaseServices as service (service.id)}
@@ -162,7 +162,7 @@
 
                 {#if visibleAddonServices.length > 0}
                     <fieldset class="service-group">
-                        <legend>À La Carte</legend>
+                        <legend>Treatments</legend>
 
                         <div class="service-list" role="list">
                             {#each visibleAddonServices as service (service.id)}

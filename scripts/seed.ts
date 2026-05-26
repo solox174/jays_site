@@ -17,60 +17,60 @@ function flat(price: number): Prices {
     return { coupe: price, sedan: price, van: price, suv: price, jeep: price, truck: price };
 }
 
-const services: { name: string; description: string; isPackage: boolean; prices: Prices }[] = [
+const services: { name: string; description: string; isExclusive: boolean; prices: Prices }[] = [
     {
         name: 'Basic Wash',
         description: 'Foam cannon, trash removal, vacuum and wipe down.',
-        isPackage: true,
+        isExclusive: true,
         prices: { coupe: 120, sedan: 140, van: 140, suv: 200, jeep: 120, truck: 200 }
     },
     {
         name: 'Premium Wash',
         description: 'Foam cannon, clay bar, trash removal, vacuum, shampoo, steam clean, UV protection on all plastics and rubbers.',
-        isPackage: true,
+        isExclusive: true,
         prices: { coupe: 150, sedan: 160, van: 180, suv: 250, jeep: 150, truck: 250 }
     },
     {
         name: 'Gold Wash',
         description: 'Foam cannon, clay bar, vacuum, trash removal, steam clean, extraction, shampoo, and UV protection on all plastics and rubber.',
-        isPackage: true,
+        isExclusive: true,
         prices: { coupe: 180, sedan: 180, van: 200, suv: 300, jeep: 180, truck: 300 }
     },
     {
         name: 'Interior Only',
         description: 'Vacuum, trash removal, wipe down, UV protection on all plastics and rubber.',
-        isPackage: true,
+        isExclusive: true,
         // TODO: confirm van price with Jay
         prices: { coupe: 90, sedan: 100, suv: 110, jeep: 80, truck: 110 }
     },
     {
         name: 'Steam Clean',
         description: 'Full interior steam clean.',
-        isPackage: false,
+        isExclusive: true,
         prices: flat(40)
     },
     {
         name: 'Shampoo',
         description: 'Interior shampoo treatment.',
-        isPackage: false,
+        isExclusive: true,
         prices: { coupe: 50, sedan: 50, van: 50, suv: 70, jeep: 50, truck: 80 }
     },
     {
         name: 'Wax',
         description: 'Exterior wax protection.',
-        isPackage: false,
+        isExclusive: false,
         prices: flat(60)
     },
     {
         name: 'Clay Bar',
         description: 'Paint decontamination clay bar treatment.',
-        isPackage: false,
+        isExclusive: true,
         prices: flat(40)
     },
     {
         name: 'Ceramic Coating',
         description: 'Long-lasting ceramic protection for gloss, hydrophobic behavior, and easier maintenance.',
-        isPackage: false,
+        isExclusive: false,
         prices: { coupe: 200, sedan: 200, van: 300, suv: 400, jeep: 300, truck: 400 }
     }
 ];
@@ -82,7 +82,7 @@ async function seed() {
         const { data: serviceModel, errors } = await client.models.Service.create({
             name: service.name,
             description: service.description,
-            isPackage: service.isPackage
+            isExclusive: service.isExclusive
         });
 
         if (errors?.length || !serviceModel?.id) {

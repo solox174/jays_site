@@ -3,11 +3,11 @@
     let email = $state();
     let state = $state();
     // TODO: let me know if event is not underlined in red in your IDE
-    function validateForm(event) {
+    function validateForm(event: SubmitEvent) {
         event.preventDefault(); // Prevent actual form submission
 
         // Get the form element from the event
-        const form = event.target;
+        const form = event.target as HTMLFormElement;
 
         // Option 1: Using FormData (best for modern browsers)
         const formData = new FormData(form);
