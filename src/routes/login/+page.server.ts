@@ -3,8 +3,13 @@ import {fail, redirect} from '@sveltejs/kit';
 import type {Actions} from './$types';
 import {login} from '$lib/server/auth';
 
+export const load = async ({ url }) => {
+    return { from: url.searchParams.get('from') };
+};
+
+
 export const actions: Actions = {
-    default: async ({request, cookies}) => {
+    default: async ({request, url, cookies}) => {
         const form = await request.formData();
         const username = String(form.get('email') ?? '');
         const password = String(form.get('password') ?? '');
@@ -15,6 +20,6 @@ export const actions: Actions = {
             return fail(400, {message: 'Login failed', challengeName: result.challengeName});
         }
 
-        redirect(303, '/scheduling');
+        redirect(303, url.searchParams.get('from') ?? '/scheduling');
     }
 };

@@ -79,6 +79,7 @@
                     <div class="nav-dropdown" style="width: 250px">
                         {#if data.loggedIn}
                             <a href="/profile" onclick={() => settingsMenuOpen = false}>Edit Profile</a>
+                            <a href="/logout" onclick={() => settingsMenuOpen = false}>Logout</a>
                         {:else}
                             <a href="/login" onclick={() => settingsMenuOpen = false}>Log In</a>
                         {/if}
