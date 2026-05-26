@@ -1,33 +1,32 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {nhtsaApi, type VehicleCategory} from '$lib/api/nhtsaApi';
-    import type {Schema} from '$lib/../../amplify/data/resource';
     import AirDatepicker from 'air-datepicker';
     import {worseSelect} from 'worse-select';
     import localeEn from 'air-datepicker/locale/en';
     import ServiceModal from '$lib/component/ServiceModal.svelte';
     import TimePickerModal from '$lib/component/TimePickerModal.svelte';
+    import {enhance} from '$app/forms';
+    import type {SubmitFunction} from '@sveltejs/kit';
 
     import 'air-datepicker/air-datepicker.css';
-    import {amplifyClient} from '$lib/client/amplifyClient';
     import type {PageProps} from './$types';
     import {isBusy} from '$lib/stores/ui';
 
-    $isBusy = true;
-    let {data}: PageProps = $props();
-    let services = $state<Schema['Service']['createType'][]>([]);
-    let appointments = $state<Schema['Appointment']['createType'][]>([]);
-    let servicePrices = $state<Schema['ServicePrice']['createType'][]>([]);
+    let {data, form}: PageProps = $props();
+    // data is server-loaded and won't change reactively — safe to initialize state from it
+    // svelte-ignore state_referenced_locally
+    let services = $state(data.services);
+    // svelte-ignore state_referenced_locally
+    let appointments = $state(data.appointments);
+    // svelte-ignore state_referenced_locally
+    let servicePrices = $state(data.servicePrices);
     let selectedServiceSummary = $derived(
         services.length ? services
             .filter((service) => selectedServiceIds.includes(service.id ?? ''))
             .map((service) => service.name)
             .join(', ') : ''
     );
-
-    // TODO: get from session
-    let customerId = $state('');
-    let vehicleId = $state('');
 
     let selectedMake = $state('');
     let selectedModel = $state('');
@@ -107,17 +106,12 @@
     let isServiceModalOpen = $state(false);
     let showTimePicker = $state(false);
 
-    onMount(async () => {
+    onMount(() => {
         worseSelect();
-        fetch('/vehicle-data/makes.json').then(r => r.json()).then(data => makes = data);
+        fetch('/vehicle-data/makes.json').then(r => r.json()).then(d => makes = d);
+
         const BUSINESS_DAY_CAPACITY = 8;
         const appointmentCounts = new Map<string, number>();
-        await data.deferred.data.then((data) => {
-            services = data.services;
-            appointments = data.appointments;
-            servicePrices = data.servicePrices;
-            $isBusy = false;
-        });
         for (const appointment of appointments) {
             const localDate = new Date(appointment.date);
             const localDateYMD = `${localDate.getFullYear()}${localDate.getMonth()}${localDate.getDate()}`;
@@ -173,44 +167,6 @@
         }
     }
 
-    async function ensureVehicle(): Promise<string> {
-        if (!selectedYear || !selectedMake || !selectedModel) {
-            throw new Error('Year, make, and model are required.');
-        }
-
-        const {data: existingVehicleSpecs, errors} = await amplifyClient.models.VehicleSpec.list({
-            filter: {
-                and: [
-                    {year: {eq: selectedYear}},
-                    {make: {eq: selectedMake}},
-                    {model: {eq: selectedModel}}
-                ]
-            }
-        });
-
-        if (errors?.length) {
-            throw new Error(errors.map((error) => error.message).join(', '));
-        }
-
-        if (existingVehicleSpecs.length > 0) {
-            return existingVehicleSpecs[0].id;
-        }
-
-        const {data: vehicleSpecModel, errors: createErrors} = await amplifyClient.models.VehicleSpec.create({
-            year: selectedYear,
-            make: selectedMake,
-            model: selectedModel
-        });
-
-        if (createErrors?.length || !vehicleSpecModel?.id) {
-            throw new Error(
-                createErrors?.map((error) => error.message).join(', ') || 'Failed to create vehicle.'
-            );
-        }
-
-        return vehicleSpecModel.id;
-    }
-
     function openServiceModal() {
         if (!$isBusy && selectedModel) {
             isServiceModalOpen = true;
@@ -226,81 +182,22 @@
         isServiceModalOpen = false;
     }
 
-    /* TODO:
-        move this to +page.server.ts serviceId's need to be submitted; use hidden inputs. Lets work on this one
-        together
-     */
-    async function handleSubmit(event: SubmitEvent) {
-        event.preventDefault();
+    const handleEnhance: SubmitFunction = () => {
         $isBusy = true;
-
-        try {
-            if (selectedServiceIds.length === 0) {
-                throw new Error('Please select at least one service.');
+        return async ({result, update}) => {
+            if (result.type === 'success') {
+                selectedYear = '';
+                selectedMake = '';
+                selectedModel = '';
+                selectedServiceIds = [];
+                appointmentDateString = '';
+                selectedTime = '';
+                models = [];
             }
-
-            vehicleId = await ensureVehicle();
-
-            // TODO: assign customer.id in session to customerId in <script> section
-            const customer: Schema['Customer']['createType'] = {
-                email: "real@email.later",
-                firstName: "Joe",
-                lastName: "Smith",
-                phoneNumber: "+12672310897",
-                password: "xxxxxxx"
-            }
-            const {data: customerModel} = await amplifyClient.models.Customer.create(customer);
-            const customerId = customerModel?.id;
-
-            if (!customerId) throw new Error('Customer creation failed');
-            // END: fake customer
-            const appointmentDate = new Date(appointmentDateString);
-            const [hour, minutes] = selectedTime.split(':');
-            appointmentDate.setHours(Number.parseInt(hour));
-            appointmentDate.setMinutes(Number.parseInt(minutes));
-
-            const appointment: Schema['Appointment']['createType'] = {
-                customerId,
-                vehicleId,
-                date: appointmentDate.toISOString()
-            };
-
-            // Amplify's generated types allow `id` to be undefined on create/read model
-            // objects, even though these objects will always have an id at runtime. These
-            // null checks on id's exist to satisfy TypeScript, even though they will never trigger.
-            const {data: appointmentModel, errors} = await amplifyClient.models.Appointment.create(appointment);
-
-            if (errors?.length) throw new Error('Appointment creation failed');
-
-            const appointmentId = appointmentModel?.id;
-            if (!appointmentId) throw new Error('Appointment id missing after creation');
-
-            const appointmentServices: Schema['AppointmentService']['createType'][] = selectedServiceIds.map((serviceId) => {
-                if (!serviceId) throw new Error('Service id missing');
-                return {appointmentId, serviceId};
-            });
-            // TODO: Promise.allSettled() with "rollback"
-            await Promise.all(
-                appointmentServices.map(service => {
-                    return amplifyClient.models.AppointmentService.create(service)
-                })
-            );
-
-            vehicleId = '';
-            selectedYear = '';
-            selectedMake = '';
-            selectedModel = '';
-            selectedServiceIds = [];
-            appointmentDateString = '';
-            selectedTime = '';
-            makes = [];
-            models = [];
-        } catch (error) {
-            console.error(error instanceof Error ? error.message : 'Failed to create appointment.');
-        } finally {
             $isBusy = false;
-        }
-    }
+            await update();
+        };
+    };
 
     function handleWindowKeydown(event: KeyboardEvent) {
         if (event.key === 'Escape' && isServiceModalOpen) {
@@ -316,7 +213,7 @@
     <title>Schedule</title>
 </svelte:head>
 
-<form onsubmit={handleSubmit}>
+<form method="POST" use:enhance={handleEnhance}>
     <div class="glass-panel">
         <div style="display: flex; flex-direction: column">
             <div class="section-title">Vehicle</div>
@@ -409,6 +306,16 @@
                 <div style="padding: 10px 0 4px; font-size: 0.85rem; opacity: 0.7">
                     Special vehicle type — we'll follow up with pricing after you book.
                 </div>
+            {/if}
+
+            <input type="hidden" name="date" value={appointmentDateString} />
+            <input type="hidden" name="time" value={selectedTime} />
+            {#each selectedServiceIds as id}
+                {#if id}<input type="hidden" name="serviceId" value={id} />{/if}
+            {/each}
+
+            {#if form?.message}
+                <p style="color: red; text-align: center; margin: 8px 0 0; font-size: 0.85rem;">{form.message}</p>
             {/if}
 
             <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
