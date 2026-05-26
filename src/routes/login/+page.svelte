@@ -1,10 +1,9 @@
 <script lang="ts">
-    import type {ActionData} from './$types';
-
-    export let form: ActionData;
+    let {data, form} = $props();
 </script>
 
 <div class="glass-panel">
+    <div style="text-align: center; font-size: 0.9rem; font-weight: bold; margin-bottom: 20px">{#if data?.from === '/scheduling'}Please log in to schedule service.{/if}</div>
     <form method="POST">
         <fieldset style="width: 100%; border: none;">
             <div style="max-width: 180px; display: flex; justify-content: center; flex-direction: column; margin: 0 auto; border: none; gap: 10px;">

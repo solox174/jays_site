@@ -1,30 +1,13 @@
 <script lang="ts">
-    let { data, form } = $props();
-    let email = $state();
-    let state = $state();
-    // TODO: let me know if event is not underlined in red in your IDE
-    function validateForm(event: SubmitEvent) {
-        event.preventDefault(); // Prevent actual form submission
+    import {enhance} from '$app/forms';
 
-        // Get the form element from the event
-        const form = event.target as HTMLFormElement;
-
-        // Option 1: Using FormData (best for modern browsers)
-        const formData = new FormData(form);
-        const password = formData.get('password');
-        const confirmPassword = formData.get('confirm-password');
-
-        if (password !== confirmPassword) {
-            //Show user error
-            return;
-        }
-        form.submit();
-    }
+    let {form} = $props();
+    let createAccountState = $derived(form?.state);
+    let email = $state('');
 </script>
 
 <div class="glass-panel">
-    {#if !form?.captureCode}
-
+    {#if createAccountState !== 'captureCode'}
     <form method="post" class="grid-container"
           use:enhance={() => {
               return async ({ result, update }) => {
@@ -58,12 +41,12 @@
             <input id="confirm-password" name="confirm-password" required type="password"/>
         </div>
         <div style="grid-column: span 2; display: flex; justify-content: center; margin-top:20px">
-            <button onsubmit="{validateForm}" type="submit">Submit</button>
+            <button type="submit">Submit</button>
         </div>
     </form>
     {:else}
     <form method="post" action="?/confirmSignup" style="max-width: 400px; padding: 20px; margin: 0 auto; text-align: justify">
-        <h1>Confirm Your Email</h1>
+        <label for="confirmation-code">Confirm Your Email</label>
         <p>Thank you for signing up with Jay's Auto Detailing! Almost there — just one more step before we let you in! We've sent a confirmation code to your email. Please enter it below to verify your account.</p>
         <label for="confirmation-code" style="text-align: center; display: block">Confirmation Code:</label>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px">
