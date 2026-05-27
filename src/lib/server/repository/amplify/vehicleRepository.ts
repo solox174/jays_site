@@ -1,5 +1,6 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
 import type {VehicleRepository, VehicleSpec} from '../types';
+import {data} from "../../../../../amplify/data/resource";
 
 function toVehicleSpec(data: Record<string, unknown>): VehicleSpec {
     return {
@@ -11,6 +12,25 @@ function toVehicleSpec(data: Record<string, unknown>): VehicleSpec {
 }
 
 export const vehicleRepository: VehicleRepository = {
+    async create(vehicleSpec) {
+        const {data, errors} = await amplifyClient.models.VehicleSpec.create(vehicleSpec);
+        return toVehicleSpec(data as Record<string, unknown>);
+    },
+
+    async getById(id) {
+        const {data, errors} = await amplifyClient.models.VehicleSpec.get({id});
+        return toVehicleSpec(data as Record<string, unknown>);
+    },
+
+    async list() {
+        const {data, errors} = await amplifyClient.models.VehicleSpec.list();
+        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        return data.map(d => toVehicleSpec(d as Record<string, unknown>));
+    },
+
+    async delete(id) {
+        await amplifyClient.models.VehicleSpec.delete({id});
+    },
     async findOrCreate(year, make, model) {
         const {data: existing, errors} = await amplifyClient.models.VehicleSpec.list({
             filter: {

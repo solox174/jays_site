@@ -37,10 +37,10 @@ export interface ServicePrice {
 }
 
 interface Repository<T>{
-    getById?(id: string): Promise<T | null>;
-    list?(): Promise<T[]>;
-    create?(obj: Omit<T, 'id'>): Promise<T>;
-    delete?(id: string): Promise<void>;
+    getById(id: string): Promise<T | null>;
+    list(): Promise<T[]>;
+    create(obj: Omit<T, 'id'>): Promise<T>;
+    delete(id: string): Promise<void>;
 }
 
 export interface CustomerRepository extends Repository<Customer>{}
@@ -52,6 +52,11 @@ export interface VehicleRepository extends Repository<VehicleSpec> {
 }
 
 export interface ServiceRepository extends Repository<Service> {
+
+    // TODO: (NEXT) add method `async getByIds(serviceIds: string[])` and query by ids
+    //       change getById() so it calls getByIds by wrapping the single id in an array.
+    //       Then implement in serviceRepository.ts
+    //       this is called a "delegation pattern".
     listPrices(): Promise<ServicePrice[]>;
 }
 

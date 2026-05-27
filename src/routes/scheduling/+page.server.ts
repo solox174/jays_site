@@ -22,6 +22,7 @@ export const actions: Actions = {
         const dateString = String(form.get('date') ?? '');
         const time = String(form.get('time') ?? '');
         const serviceIds = form.getAll('serviceId').map(String).filter(Boolean);
+        // TODO: capture total price from form
 
         if (!year || !make || !model || !dateString || !time || !serviceIds.length) {
             return fail(400, {message: 'Please complete all fields before submitting.'});

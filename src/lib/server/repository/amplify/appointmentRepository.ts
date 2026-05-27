@@ -1,5 +1,6 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
 import type {Appointment, AppointmentRepository} from '../types';
+import {data} from "../../../../../amplify/data/resource";
 
 function toAppointment(data: Record<string, unknown>): Appointment {
     return {
@@ -11,6 +12,15 @@ function toAppointment(data: Record<string, unknown>): Appointment {
 }
 
 export const appointmentRepository: AppointmentRepository = {
+    async getById(id) {
+        const {data, errors} =  await amplifyClient.models.Appointment.get({id});
+        return toAppointment(data as Record<string, unknown>);
+    },
+
+    async delete(id) {
+        await amplifyClient.models.Appointment.delete({id});
+    },
+
     async list() {
         const {data, errors} = await amplifyClient.models.Appointment.list();
         if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));

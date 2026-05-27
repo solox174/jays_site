@@ -20,6 +20,20 @@ function toServicePrice(data: Record<string, unknown>): ServicePrice {
 }
 
 export const serviceRepository: ServiceRepository = {
+    async create(service) {
+        const {data, errors} = await amplifyClient.models.Service.create(service);
+        return toService(data as Record<string, unknown>);
+    },
+
+    async getById(id) {
+        const {data, errors} = await amplifyClient.models.Service.get({id});
+        return toService(data as Record<string, unknown>);
+    },
+
+    async delete(id) {
+        await amplifyClient.models.Service.delete({id});
+    },
+
     async list() {
         const {data, errors} = await amplifyClient.models.Service.list();
         if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
