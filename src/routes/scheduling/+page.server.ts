@@ -27,15 +27,14 @@ export const actions: Actions = {
             return fail(400, {message: 'Please complete all fields before submitting.'});
         }
 
-        // TODO: resolve Customer model vs Cognito — using sub as customerId for now
-        const customerId = locals.user!.sub;
+        const customerId = locals.user!.id;
+        const appointmentDate = new Date(dateString);
+        const [hour, minutes] = time.split(':');
+
+        appointmentDate.setHours(Number(hour));
+        appointmentDate.setMinutes(Number(minutes));
 
         try {
-            const appointmentDate = new Date(dateString);
-            const [hour, minutes] = time.split(':');
-            appointmentDate.setHours(Number(hour));
-            appointmentDate.setMinutes(Number(minutes));
-
             const vehicle = await repositories.vehicles.findOrCreate(year, make, model);
             const appointment = await repositories.appointments.create({
                 customerId,
@@ -43,10 +42,10 @@ export const actions: Actions = {
                 date: appointmentDate.toISOString()
             });
             await repositories.appointmentServices.createMany(appointment.id, serviceIds);
-
-            return {success: true};
-        } catch (error) {
+        } catch(error) {
             return fail(500, {message: error instanceof Error ? error.message : 'Booking failed. Please try again.'});
         }
+
+        return {success: true};
     }
 };

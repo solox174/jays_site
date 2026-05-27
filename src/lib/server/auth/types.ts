@@ -1,0 +1,29 @@
+import type {Cookies} from '@sveltejs/kit';
+
+export interface NewUser {
+    email: string;
+    firstName?: string | null;
+    lastName: string;
+    phoneNumber: string;
+}
+
+export interface SessionUser {
+    id: string;
+    email?: string;
+}
+
+export type SignupResult =
+    | { ok: true; userConfirmed: boolean; userSub: string }
+    | { ok: false }
+
+export type LoginResult =
+    | { ok: true; user: { id: string; email?: string; firstName?: string; lastName?: string; phoneNumber?: string } }
+    | { ok: false; challengeName?: string }
+
+export interface AuthService {
+    signup(user: NewUser, password: string): Promise<SignupResult>;
+    confirmSignup(username: string, code: string): Promise<void>;
+    login(username: string, password: string, cookies: Cookies): Promise<LoginResult>;
+    logout(cookies: Cookies): Promise<void>;
+    verifySession(sessionId?: string | null): Promise<SessionUser | null>;
+}

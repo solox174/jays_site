@@ -424,8 +424,13 @@ button:focus:not(:focus-visible) {
     font-weight: 500;
 }
 
-.footer-email {
+.footer-e {
     margin-left: 10px;
+    cursor: pointer;
+}
+
+.footer-e:hover {
+    text-decoration: underline;
 }
 
 .footer-copy {
@@ -447,12 +452,8 @@ button:focus:not(:focus-visible) {
     }
 
     .footer-bar i {
-        color: #aeaeae;
+        color: #ffffff;
         font-size: 1rem;
-    }
-
-    .footer-email {
-        margin-left: 0;
     }
 
     .footer-copy {

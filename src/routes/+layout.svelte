@@ -14,6 +14,10 @@
     let navBtnEl: HTMLElement | null = null;
     // svelte-ignore non_reactive_update
     let settingsEl: HTMLElement | null = null;
+    const ea = ['gmail', 'com', 'jaysautocarcare'];
+    const m2 = 'ai';
+    const e = `${ea[2]}@${ea[0]}.${ea[1]}`;
+    const se = () => window.location.href = `m${m2}lto:${e}`;
 
     function handleMouseMove(event: MouseEvent) {
         mouseX = event.clientX;
@@ -117,14 +121,18 @@
     </main>
 
     <div class="footer-bar">
-        <a class="footer-phone" href="tel:+14808195443" style="color: #aeaeae;" title="phone">
+        <a href="tel:+14808195443" style="color: #aeaeae;" title="phone">
             <i class="fa-solid fa-phone"></i>
             <span class="footer-contact-text" id="phone"></span>
         </a>
-        <a class="footer-email" href="mailto:jaysautocarcare@gmail.com" style="color: #aeaeae;" title="email">
+        <span onclick="{se}" style="color: #aeaeae; margin-left: 5px"
+              title="{e}"
+              role="button"
+              tabindex="0"
+              onkeyup="{void(0)}">
             <i class="fa-solid fa-envelope"></i>
-            <span class="footer-contact-text" id="email"></span>
-        </a>
+            {e}
+        </span>
         <span class="footer-copy" style="color: #aeaeae; font-size: 0.75rem">
 			<i class="fa-solid fa-copyright footer-copy-icon"></i>
 			<span class="footer-copy-text">© 2026 Fasthold Inc.</span>
@@ -182,10 +190,6 @@
 
     #phone::before {
         content: '(480) 819-5443';
-    }
-
-    #email::before {
-        content: 'jaysautocarcare@gmail.com';
     }
 
     /* The container */

@@ -37,7 +37,7 @@ export interface ServicePrice {
 }
 
 export interface CustomerRepository {
-    create(customer: Omit<Customer, 'id'>): Promise<Customer>;
+    create(customer: Customer): Promise<Customer>;
     getById(id: string): Promise<Customer | null>;
 }
 

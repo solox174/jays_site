@@ -1,6 +1,6 @@
 import type {Actions} from './$types';
-import type {Schema} from '../../../amplify/data/resource'
-import {signup, confirmSignup} from '$lib/server/auth';
+import {authService} from '$lib/server/auth';
+import {repositories} from '$lib/server/repository';
 
 export const actions: Actions = {
     createAccount: async ({request, cookies}) => {
@@ -16,19 +16,24 @@ export const actions: Actions = {
 
         if (password !== confirmPassword) return {errorText: 'Passwords do not match'};
 
-        const customer: Schema['Customer']['createType'] = {
+        const customer = {
             firstName,
             lastName,
             phoneNumber,
-            email,
-            password
-        }
+            email
+        };
         // TODO: enforce password complexity requirements in UI
-        const result = await signup(customer);
+        const result = await authService.signup(customer, password);
 
-        if (!result.ok) {
-            return {errorText:'Account creation failed'};
+        if (!result.ok || !result.userSub) {
+            return {errorText: 'Account creation failed'};
         }
+        try {
+            await repositories.customers.create({...customer, id: result.userSub});
+        } catch (error) {
+            console.error('Customer record creation failed, will upsert on login', error);
+        }
+
         return {
             state: 'captureCode',
             errorText
@@ -39,6 +44,6 @@ export const actions: Actions = {
         const code = String(form.get('confirmation-code') ?? '');
         const email = String(form.get('email') ?? '');
 
-        await confirmSignup(email, code);
+        await authService.confirmSignup(email, code);
     }
 }
