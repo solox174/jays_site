@@ -120,22 +120,23 @@
         {@render children()}
     </main>
 
-    <div class="footer-bar">
-        <a href="tel:+14808195443" style="color: #aeaeae;" title="phone">
-            <i class="fa-solid fa-phone"></i>
-            <span class="footer-contact-text" id="phone"></span>
+    <div id="footer-bar">
+        <a id="footer-tel" href="tel:+14808195443" title="phone">
+            <i class="fa-solid fa-phone footer-icon"></i>
+            <span id="footer-tel-text" class="footer-text"></span>
         </a>
-        <span onclick="{se}" style="color: #aeaeae; margin-left: 5px"
+        <span id="footer-e"
+              onclick="{se}" style="margin-left: 5px"
               title="{e}"
               role="button"
               tabindex="0"
               onkeyup="{void(0)}">
-            <i class="fa-solid fa-envelope"></i>
-            {e}
+            <i class="fa-solid fa-envelope footer-icon"></i>
+            <span id="footer-e-text" class="footer-text">{e}</span>
         </span>
-        <span class="footer-copy" style="color: #aeaeae; font-size: 0.75rem">
-			<i class="fa-solid fa-copyright footer-copy-icon"></i>
-			<span class="footer-copy-text">© 2026 Fasthold Inc.</span>
+        <span id="footer-copy" style="font-size: 0.75rem">
+			<i id="footer-copy-icon" class="fa-solid fa-copyright footer-icon"></i>
+			<span id="footer-copy-text" class="footer-text">2026 Fasthold Inc.</span>
 		</span>
     </div>
 </div>
@@ -188,11 +189,151 @@
         cursor: none;
     }
 
-    #phone::before {
+    .nav-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        background: var(--modal-bg);
+        border: 1px solid var(--modal-border);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-modal);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-dropdown a {
+        padding: 0.75rem 1.25rem;
+        font-size: 1.2rem;
+        border-bottom: 1px solid var(--modal-border);
+        background: var(--modal-item-bg);
+    }
+
+    .nav-dropdown a:hover {
+        background: var(--modal-item-bg-hover);
+        text-decoration: none;
+    }
+
+    .nav-dropdown a:last-child {
+        border-bottom: none;
+    }
+
+    .nav-mobile-trigger .nav-dropdown {
+        left: 0;
+        transform: none;
+    }
+
+    .nav-desktop a {
+        color: #d3d3d3;
+        transition: color 180ms ease;
+        font-weight: 500;
+    }
+
+    .nav-desktop a:hover {
+        color: white;
+        text-decoration: none;
+    }
+
+    .nav-desktop .active-nav {
+        color: white;
+        text-decoration: underline;
+        text-decoration-color: var(--brand-color);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 7px;
+    }
+
+    .nav-desktop {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        width: 500px;
+        font-size: 1.5rem;
+    }
+
+    .nav-settings {
+        position: relative;
+    }
+
+    .nav-mobile-trigger {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-top: 8px;
+    }
+
+    #footer-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--overlay-bg);
+        backdrop-filter: blur(4px);
+        padding: 5px 0;
+        text-align: center;
+        font-size: .9rem;
+        font-weight: 500;
+    }
+
+    #footer-e {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    #footer-e:hover {
+        text-decoration: underline;
+    }
+
+    #footer-copy {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .footer-icon {
+        color: white;
+    }
+
+    .footer-text {
+        color: #aeaeae;
+    }
+
+    @media (max-width: 640px) {
+        #footer-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        #footer-copy {
+            position: static;
+            font-size: inherit;
+            transform: none;
+        }
+
+        #footer-copy-icon {
+            display: inline;
+        }
+
+        #footer-e-text, #footer-copy-text, #footer-tel-text {
+            display: none;
+        }
+        .footer-icon {
+            color: #aeaeae;
+        }
+
+        .footer-text {
+            color: white;
+        }
+    }
+
+    #footer-tel-text::before {
         content: '(480) 819-5443';
     }
 
-    /* The container */
     .switch {
         position: relative;
         display: inline-block;
@@ -200,14 +341,12 @@
         height: 20px;
     }
 
-    /* Hide default HTML checkbox */
     .switch input {
         opacity: 0;
         width: 0;
         height: 0;
     }
 
-    /* The track (slider) */
     .slider {
         position: absolute;
         cursor: pointer;
@@ -220,7 +359,6 @@
         border-radius: 34px;
     }
 
-    /* The sliding knob */
     .slider:before {
         position: absolute;
         content: "";
@@ -233,7 +371,6 @@
         border-radius: 50%;
     }
 
-    /* When the checkbox is checked: change track color and move knob */
     input:checked + .slider {
         background-color: var(--btn-border);
     }
@@ -242,5 +379,27 @@
         transform: translateX(30px);
     }
 
+    @media (max-width: 640px) {
+        #hero {
+            margin-top: 10px;
+        }
 
+        .nav-desktop {
+            display: none;
+        }
+
+        .nav-mobile-trigger {
+            display: block;
+        }
+
+        .nav-settings, .nav-mobile-trigger {
+            margin-top: 20px !important;
+        }
+
+        .nav-settings .nav-dropdown {
+            left: auto;
+            right: 0;
+            transform: none;
+        }
+    }
 </style>
