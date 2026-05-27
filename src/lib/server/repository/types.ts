@@ -36,22 +36,22 @@ export interface ServicePrice {
     price: number;
 }
 
-export interface CustomerRepository {
-    create(customer: Customer): Promise<Customer>;
-    getById(id: string): Promise<Customer | null>;
+interface Repository<T>{
+    getById?(id: string): Promise<T | null>;
+    list?(): Promise<T[]>;
+    create?(obj: Omit<T, 'id'>): Promise<T>;
+    delete?(id: string): Promise<void>;
 }
 
-export interface AppointmentRepository {
-    list(): Promise<Appointment[]>;
-    create(appointment: Omit<Appointment, 'id'>): Promise<Appointment>;
-}
+export interface CustomerRepository extends Repository<Customer>{}
 
-export interface VehicleRepository {
+export interface AppointmentRepository extends Repository<Appointment> {}
+
+export interface VehicleRepository extends Repository<VehicleSpec> {
     findOrCreate(year: string, make: string, model: string): Promise<VehicleSpec>;
 }
 
-export interface ServiceRepository {
-    list(): Promise<Service[]>;
+export interface ServiceRepository extends Repository<Service> {
     listPrices(): Promise<ServicePrice[]>;
 }
 
