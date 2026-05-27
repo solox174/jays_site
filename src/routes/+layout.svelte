@@ -154,41 +154,8 @@
 {/if}
 
 <style>
-    :global(html) {
-        background-image: linear-gradient(rgba(150, 150, 150, 0.5), rgba(150, 150, 150, 0.5)),
-        url('$lib/assets/images/background-2.jpeg');
 
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-        background-attachment: fixed;
-        min-height: 100%;
-    }
-
-    .cursor-spinner {
-        position: fixed;
-        z-index: 9999;
-        pointer-events: none;
-        transform: translate(-50%, -50%);
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    .cursor-spinner.visible {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .busy-overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 9998;
-        background: var(--overlay-bg);
-        backdrop-filter: blur(2px);
-        pointer-events: auto;
-        cursor: none;
-    }
-
+    /** nav **/
     .nav-dropdown {
         position: absolute;
         top: calc(100% + 0.5rem);
@@ -264,6 +231,7 @@
         margin-top: 8px;
     }
 
+    /** footer **/
     #footer-bar {
         position: fixed;
         bottom: 0;
@@ -301,6 +269,11 @@
         color: #aeaeae;
     }
 
+    #footer-tel-text::before {
+        content: '(480) 819-5443';
+    }
+
+    /** mobile **/
     @media (max-width: 640px) {
         #footer-bar {
             display: flex;
@@ -328,12 +301,30 @@
         .footer-text {
             color: white;
         }
+        #hero {
+            margin-top: 10px;
+        }
+
+        .nav-desktop {
+            display: none;
+        }
+
+        .nav-mobile-trigger {
+            display: block;
+        }
+
+        .nav-settings, .nav-mobile-trigger {
+            margin-top: 20px !important;
+        }
+
+        .nav-settings .nav-dropdown {
+            left: auto;
+            right: 0;
+            transform: none;
+        }
     }
 
-    #footer-tel-text::before {
-        content: '(480) 819-5443';
-    }
-
+    /** light/dark toggle **/
     .switch {
         position: relative;
         display: inline-block;
@@ -378,28 +369,8 @@
     input:checked + .slider:before {
         transform: translateX(30px);
     }
-
-    @media (max-width: 640px) {
-        #hero {
-            margin-top: 10px;
-        }
-
-        .nav-desktop {
-            display: none;
-        }
-
-        .nav-mobile-trigger {
-            display: block;
-        }
-
-        .nav-settings, .nav-mobile-trigger {
-            margin-top: 20px !important;
-        }
-
-        .nav-settings .nav-dropdown {
-            left: auto;
-            right: 0;
-            transform: none;
-        }
+    
+    :root[data-theme="dark"] .slider:before {
+        background-color: white;
     }
 </style>
