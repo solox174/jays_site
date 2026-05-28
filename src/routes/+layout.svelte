@@ -1,7 +1,7 @@
 <script lang="ts">
     import './layout.css';
     import {page} from '$app/state';
-    import {isBusy} from '$lib/stores/ui';
+    import {isBusy} from '$lib/stores/ui.svelte';
     import {theme} from '$lib/stores/colorScheme.svelte';
     import logo from '$lib/assets/images/jays_auto.svg';
 
@@ -143,13 +143,13 @@
 
 <div aria-hidden="true"
      class="cursor-spinner"
-     class:visible={$isBusy}
+     class:visible={isBusy.state}
      style="position: fixed; z-index: 9999"
      style:left={`${mouseX}px`}
      style:top={`${mouseY}px`}>
     <i class="fa-solid fa-spinner fa-spin fa-3x"></i>
 </div>
-{#if $isBusy}
+{#if isBusy.state}
     <div class="busy-overlay" aria-hidden="true"></div>
 {/if}
 

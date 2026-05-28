@@ -11,7 +11,7 @@
 
     import 'air-datepicker/air-datepicker.css';
     import type {PageProps} from './$types';
-    import {isBusy} from '$lib/stores/ui';
+    import {isBusy} from '$lib/stores/ui.svelte';
 
     let {data, form}: PageProps = $props();
     // data is server-loaded and won't change reactively — safe to initialize state from it
@@ -168,7 +168,7 @@
     }
 
     function openServiceModal() {
-        if (!$isBusy && selectedModel) {
+        if (!isBusy.state && selectedModel) {
             isServiceModalOpen = true;
         }
     }
@@ -183,7 +183,7 @@
     }
 
     const handleEnhance: SubmitFunction = () => {
-        $isBusy = true;
+        isBusy.state = true;
         return async ({result, update}) => {
             if (result.type === 'success') {
                 selectedYear = '';
@@ -194,7 +194,7 @@
                 selectedTime = '';
                 models = [];
             }
-            $isBusy = false;
+            isBusy.state = false;
             await update();
         };
     };
