@@ -1,6 +1,8 @@
 import { a, type ClientSchema, defineData } from '@aws-amplify/backend';
 
 const schema = a.schema({
+    VehicleCategory: a.enum(['coupe', 'sedan', 'van', 'suv', 'jeep', 'truck']),
+
     Customer: a
         .model({
             firstName: a.string(),
