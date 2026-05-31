@@ -7,7 +7,6 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import {CognitoJwtVerifier} from 'aws-jwt-verify';
 import type {Cookies} from '@sveltejs/kit';
-import {amplifyClient} from '$lib/client/amplifyClient';
 import outputs from '../../../../../amplify_outputs.json';
 import type {AuthService, NewUser} from '../types';
 
@@ -16,30 +15,18 @@ const userPoolId = outputs.auth.user_pool_id;
 const clientId = outputs.auth.user_pool_client_id;
 
 const cognitoClient = new CognitoIdentityProviderClient({region});
-
-const accessVerifier = CognitoJwtVerifier.create({userPoolId, tokenUse: 'access', clientId});
 const idVerifier = CognitoJwtVerifier.create({userPoolId, tokenUse: 'id', clientId});
 
-const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const TOKEN_COOKIE = 'id_token';
 
-function setSessionCookie(cookies: Cookies, sessionId: string) {
-    cookies.set('session', sessionId, {
+function setTokenCookie(cookies: Cookies, token: string) {
+    cookies.set(TOKEN_COOKIE, token, {
         path: '/',
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
-        maxAge: SESSION_TTL_MS / 1000
+        maxAge: 60 * 60
     });
-}
-
-function clearSessionCookie(cookies: Cookies) {
-    cookies.delete('session', {path: '/'});
-}
-
-async function createSession(sub: string, email?: string): Promise<string> {
-    const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
-    const {data} = await amplifyClient.models.Session.create({sub, email, expiresAt});
-    return data!.id;
 }
 
 export const cognitoAuthService: AuthService = {
@@ -80,43 +67,39 @@ export const cognitoAuthService: AuthService = {
             AuthParameters: {USERNAME: username, PASSWORD: password}
         }));
 
-        if (!response.AuthenticationResult?.AccessToken || !response.AuthenticationResult?.IdToken) {
+        if (!response.AuthenticationResult?.IdToken) {
             return {ok: false, challengeName: response.ChallengeName};
         }
 
-        const [accessPayload, idPayload] = await Promise.all([
-            accessVerifier.verify(response.AuthenticationResult.AccessToken),
-            idVerifier.verify(response.AuthenticationResult.IdToken)
-        ]);
+        const idPayload = await idVerifier.verify(response.AuthenticationResult.IdToken);
+        setTokenCookie(cookies, response.AuthenticationResult.IdToken);
 
-        const email = typeof idPayload.email === 'string' ? idPayload.email : undefined;
-        const firstName = typeof idPayload.given_name === 'string' ? idPayload.given_name : undefined;
-        const lastName = typeof idPayload.family_name === 'string' ? idPayload.family_name : undefined;
-        const phoneNumber = typeof idPayload.phone_number === 'string' ? idPayload.phone_number : undefined;
-        const sessionId = await createSession(accessPayload.sub, email);
-        setSessionCookie(cookies, sessionId);
-
-        return {ok: true, user: {id: accessPayload.sub, email, firstName, lastName, phoneNumber}};
+        return {
+            ok: true,
+            user: {
+                id: idPayload.sub,
+                email: typeof idPayload.email === 'string' ? idPayload.email : undefined
+            }
+        };
     },
 
     async logout(cookies: Cookies) {
-        const sessionId = cookies.get('session');
-        if (sessionId) {
-            await amplifyClient.models.Session.delete({id: sessionId});
-        }
-        clearSessionCookie(cookies);
+        cookies.delete(TOKEN_COOKIE, {path: '/'});
     },
 
-    async verifySession(sessionId?: string | null) {
-        if (!sessionId) return null;
-        const {data} = await amplifyClient.models.Session.get({id: sessionId});
-        if (!data) return null;
+    async verifySession(cookies: Cookies) {
+        const token = cookies.get(TOKEN_COOKIE);
+        if (!token) return null;
 
-        if (new Date(data.expiresAt) < new Date()) {
-            await amplifyClient.models.Session.delete({id: sessionId});
+        try {
+            const payload = await idVerifier.verify(token);
+            return {
+                id: payload.sub,
+                email: typeof payload.email === 'string' ? payload.email : undefined
+            };
+        } catch {
+            cookies.delete(TOKEN_COOKIE, {path: '/'});
             return null;
         }
-
-        return {id: data.sub, email: data.email ?? undefined};
     }
 };

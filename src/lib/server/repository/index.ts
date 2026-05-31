@@ -5,11 +5,12 @@ import {appointmentRepository} from './amplify/appointmentRepository';
 import {vehicleRepository} from './amplify/vehicleRepository';
 import {serviceRepository} from './amplify/serviceRepository';
 import {appointmentServiceRepository} from './amplify/appointmentServiceRepository';
+import {withLogging} from './withLogging';
 
 export const repositories = {
-    customers: customerRepository,
-    appointments: appointmentRepository,
-    vehicles: vehicleRepository,
-    services: serviceRepository,
-    appointmentServices: appointmentServiceRepository
+    customers: withLogging(customerRepository, 'customerRepository'),
+    appointments: withLogging(appointmentRepository, 'appointmentRepository'),
+    vehicles: withLogging(vehicleRepository, 'vehicleRepository'),
+    services: withLogging(serviceRepository, 'serviceRepository'),
+    appointmentServices: withLogging(appointmentServiceRepository, 'appointmentServiceRepository')
 };

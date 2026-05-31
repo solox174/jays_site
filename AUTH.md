@@ -19,7 +19,7 @@ You've already built the create customer form, so you know the pattern. This is 
 
 **One new file:** `src/routes/login/+page.svelte`
 
-The route directory (`src/routes/login/`) and the server action (`+page.server.ts`) already exist. SvelteKit will pair your new `+page.svelte` with the existing `+page.server.ts` automatically — same pattern as every other route in this project.
+The route directory (`src/routes/login/`) and the server action (`+server.ts`) already exist. SvelteKit will pair your new `+page.svelte` with the existing `+server.ts` automatically — same pattern as every other route in this project.
 
 ### How the form should be wired up
 
@@ -81,7 +81,7 @@ Building the login page is what makes step 2 possible.
 ### Things to look at for reference
 
 - The create customer form you already built — the structure is the same
-- `+page.server.ts` in this directory — read what it sends back on success and failure so you know what to expect in the `form` prop
+- `+server.ts` in this directory — read what it sends back on success and failure so you know what to expect in the `form` prop
 - [SvelteKit Form Actions](https://svelte.dev/docs/kit/form-actions) — specifically the "Anatomy of an action" and "Validation errors" sections
 
 ---
@@ -92,9 +92,9 @@ The code here is a foundation, not a finished system. Here's what's missing befo
 
 ### Missing UI
 
-- **`src/routes/login/+page.svelte`** — The form action in `+page.server.ts` handles form submissions, but there's no HTML form yet. The login page is a dead end until this exists. (This is your current task.)
+- **`src/routes/login/+page.svelte`** — The form action in `+server.ts` handles form submissions, but there's no HTML form yet. The login page is a dead end until this exists. (This is your current task.)
 - **Signup wiring** — The `CreateAccount` component on `/scheduling` already has a form, but it submits to a stub action that does nothing. The `signup()` function in `auth.ts` is written and ready — it just needs a server action to call it.
-- **`src/routes/signup/confirm/+page.svelte` and `+page.server.ts`** — After signup, Cognito emails a 6-digit code. There needs to be a page where the user can enter it to activate their account.
+- **`src/routes/signup/confirm/+page.svelte` and `+server.ts`** — After signup, Cognito emails a 6-digit code. There needs to be a page where the user can enter it to activate their account.
 
 ### Missing Logic
 
@@ -175,7 +175,7 @@ Think of it like a coat check. They give you a ticket (the cookie). The ticket m
 In a SvelteKit app, some code runs **in the browser** and some runs **on the server**. This distinction is critical for security.
 
 - Code in `+page.svelte` — runs in the browser. Anyone can open DevTools and inspect it.
-- Code in `+page.server.ts`, `hooks.server.ts`, or `lib/server/` — runs only on the server. The browser never sees it.
+- Code in `+server.ts`, `hooks.server.ts`, or `lib/server/` — runs only on the server. The browser never sees it.
 
 This is why secrets (passwords, API keys, database credentials) must only ever exist in server code. If a secret ends up in client code, it's exposed to anyone who opens DevTools.
 
@@ -333,7 +333,7 @@ The session store right now is just a `Map` in memory. This works for developmen
 
 ---
 
-### `src/routes/login/+page.server.ts`
+### `src/routes/login/+server.ts`
 
 ```ts
 export const actions: Actions = {
