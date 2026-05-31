@@ -13,22 +13,22 @@ function toCustomer(data: Record<string, unknown>): Customer {
 
 export const customerRepository: CustomerRepository = {
     async getById(id) {
-        const {data, errors} =  await amplifyClient.models.Appointment.get({id});
-        return toCustomer(data as Record<string, unknown>);
+        const {data, errors} = await amplifyClient.models.Customer.get({id});
+        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        return data ? toCustomer(data as Record<string, unknown>) : null;
     },
 
     async delete(id) {
-        await amplifyClient.models.Appointment.delete({id});
+        await amplifyClient.models.Customer.delete({id});
     },
 
     async list() {
         const {data, errors} = await amplifyClient.models.Customer.list();
-        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Customers failed');
         return data.map(d => toCustomer(d as Record<string, unknown>));
     },
 
     async create(customer) {
-        // TODO: remove password from Customer schema — Cognito owns auth
         const {data, errors} = await amplifyClient.models.Customer.create({
             ...customer,
             password: 'managed-by-cognito'

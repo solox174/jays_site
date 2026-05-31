@@ -1,1 +1,2 @@
 - Always summarize intended changes before making them.
+- When adding code that is AWS specific make sure and implement it through an interface to allow for backend swaps

@@ -22,27 +22,31 @@ function toServicePrice(data: Record<string, unknown>): ServicePrice {
 export const serviceRepository: ServiceRepository = {
     async create(service) {
         const {data, errors} = await amplifyClient.models.Service.create(service);
+        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Service creation failed');
         return toService(data as Record<string, unknown>);
     },
 
     async getById(id) {
         const {data, errors} = await amplifyClient.models.Service.get({id});
-        return toService(data as Record<string, unknown>);
+        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Service failed');
+
+        return data ? toService(data as Record<string, unknown>) : null;
     },
 
     async delete(id) {
-        await amplifyClient.models.Service.delete({id});
+        const {errors} = await amplifyClient.models.Service.delete({id});
+        if (errors?.length) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Deleting Service failed');
     },
 
     async list() {
         const {data, errors} = await amplifyClient.models.Service.list();
-        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
-        return data.map(d => toService(d as Record<string, unknown>));
+        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Services failed');
+        return data?.map(d => toService(d as Record<string, unknown>));
     },
 
     async listPrices() {
         const {data, errors} = await amplifyClient.models.ServicePrice.list();
-        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Service prices failed');
         return data.map(d => toServicePrice(d as Record<string, unknown>));
     }
 };

@@ -1,1 +1,1 @@
-// TODO: fetch services same as in scheduling/+page.ts
+// TODO: fetch services same as in scheduling/+server.ts

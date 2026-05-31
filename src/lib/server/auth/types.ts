@@ -17,7 +17,7 @@ export type SignupResult =
     | { ok: false }
 
 export type LoginResult =
-    | { ok: true; user: { id: string; email?: string; firstName?: string; lastName?: string; phoneNumber?: string } }
+    | { ok: true; user: { id: string; email?: string } }
     | { ok: false; challengeName?: string }
 
 export interface AuthService {
@@ -25,5 +25,5 @@ export interface AuthService {
     confirmSignup(username: string, code: string): Promise<void>;
     login(username: string, password: string, cookies: Cookies): Promise<LoginResult>;
     logout(cookies: Cookies): Promise<void>;
-    verifySession(sessionId?: string | null): Promise<SessionUser | null>;
+    verifySession(cookies: Cookies): Promise<SessionUser | null>;
 }

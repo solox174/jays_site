@@ -4,7 +4,7 @@
     import AirDatepicker from 'air-datepicker';
     import {worseSelect} from 'worse-select';
     import localeEn from 'air-datepicker/locale/en';
-    import ServiceModal from '$lib/component/ServiceModal.svelte';
+    import type {Appointment, Service, ServicePrice} from '$lib/server/repository/types';
     import TimePickerModal from '$lib/component/TimePickerModal.svelte';
     import {enhance} from '$app/forms';
     import type {SubmitFunction} from '@sveltejs/kit';
@@ -12,15 +12,16 @@
     import 'air-datepicker/air-datepicker.css';
     import type {PageProps} from './$types';
     import {isBusy} from '$lib/stores/ui.svelte';
+    import ServiceModal from "$lib/component/ServiceModal.svelte";
 
     let {data, form}: PageProps = $props();
     // data is server-loaded and won't change reactively — safe to initialize state from it
     // svelte-ignore state_referenced_locally
-    let services = $state(data.services);
+    let services = $state(data.services as Service[]);
     // svelte-ignore state_referenced_locally
-    let appointments = $state(data.appointments);
+    let appointments = $state(data.appointments as Appointment[]);
     // svelte-ignore state_referenced_locally
-    let servicePrices = $state(data.servicePrices);
+    let servicePrices = $state(data.servicePrices as ServicePrice[]);
     let selectedServiceSummary = $derived(
         services.length ? services
             .filter((service) => selectedServiceIds.includes(service.id ?? ''))
@@ -105,6 +106,8 @@
 
     let isServiceModalOpen = $state(false);
     let showTimePicker = $state(false);
+    let confirmed = $state(false);
+    let confirmedDate = $state('');
 
     onMount(() => {
         worseSelect();
@@ -186,6 +189,7 @@
         isBusy.state = true;
         return async ({result, update}) => {
             if (result.type === 'success') {
+                confirmedDate = displayDate;
                 selectedYear = '';
                 selectedMake = '';
                 selectedModel = '';
@@ -193,6 +197,7 @@
                 appointmentDateString = '';
                 selectedTime = '';
                 models = [];
+                confirmed = true;
             }
             isBusy.state = false;
             await update();
@@ -213,6 +218,16 @@
     <title>Schedule</title>
 </svelte:head>
 
+{#if confirmed}
+    <div class="glass-panel">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0;">
+            <p style="font-size: 1.1rem;">Your appointment is confirmed for <strong>{confirmedDate}</strong>.</p>
+            <p style="font-size: 0.85rem; opacity: 0.7;">We'll see you then — you'll receive a confirmation email shortly.</p>
+        </div>
+    </div>
+{/if}
+
+{#if !confirmed}
 <form method="POST" use:enhance={handleEnhance}>
     <div class="glass-panel">
         <div style="display: flex; flex-direction: column">
@@ -328,6 +343,8 @@
         </div>
     </div>
 </form>
+
+{/if}
 
 {#if isServiceModalOpen}
     <ServiceModal
