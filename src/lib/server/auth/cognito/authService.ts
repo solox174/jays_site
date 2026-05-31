@@ -16,6 +16,7 @@ const clientId = outputs.auth.user_pool_client_id;
 
 const cognitoClient = new CognitoIdentityProviderClient({region});
 const idVerifier = CognitoJwtVerifier.create({userPoolId, tokenUse: 'id', clientId});
+idVerifier.hydrate().catch(() => {}); // pre-fetch JWKS so first verify() doesn't race
 
 const TOKEN_COOKIE = 'id_token';
 

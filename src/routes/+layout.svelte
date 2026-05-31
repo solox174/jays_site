@@ -87,17 +87,14 @@
                         {:else}
                             <a href="/login" onclick={() => settingsMenuOpen = false}>Log In</a>
                         {/if}
-                        <a style="display: flex; justify-content: space-between; align-items: center;" href="."
-                           onclick="{(e) => e.preventDefault()}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; font-size: 1.2rem; border-bottom: 1px solid var(--modal-border); background: var(--modal-item-bg);">
                             <span id="theme-toggle-label">{theme.current === 'dark' ? 'Light' : 'Dark'} Theme</span>
                             <!-- TODO: could be a Component. Low priority -->
-                            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-                            <!-- svelte-ignore a11y_click_events_have_key_events -->
-                            <label class="switch" onclick={(e) => e.stopPropagation()}>
+                            <label class="switch">
                                 <input type="checkbox" checked={theme.current === 'dark'} onchange={toggleTheme}>
                                 <span class="slider"></span>
                             </label>
-                        </a>
+                        </div>
                     </div>
                 {/if}
             </div>
