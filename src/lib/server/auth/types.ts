@@ -9,7 +9,7 @@ export interface NewUser {
 
 export interface SessionUser {
     id: string;
-    email?: string;
+    email: string;
 }
 
 export type SignupResult =

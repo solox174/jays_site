@@ -7,6 +7,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import {CognitoJwtVerifier} from 'aws-jwt-verify';
 import type {Cookies} from '@sveltejs/kit';
+import {error} from '@sveltejs/kit';
 import outputs from '../../../../../amplify_outputs.json';
 import type {AuthService, NewUser} from '../types';
 
@@ -92,11 +93,16 @@ export const cognitoAuthService: AuthService = {
         const token = cookies.get(TOKEN_COOKIE);
         if (!token) return null;
 
-        try {
-            const payload = await idVerifier.verify(token);
+      try {
+            const payload =   await idVerifier.verify(token);
+
+            if (typeof payload.email  !== 'string') {
+                error(500, 'There was a problem retrieving your account. Please try again later.')
+            }
+
             return {
                 id: payload.sub,
-                email: typeof payload.email === 'string' ? payload.email : undefined
+                email: payload.email as string
             };
         } catch {
             cookies.delete(TOKEN_COOKIE, {path: '/'});

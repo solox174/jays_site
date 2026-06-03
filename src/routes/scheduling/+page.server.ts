@@ -1,6 +1,8 @@
 import {error, fail} from '@sveltejs/kit';
 import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/repository';
+import {sendEmail} from "$lib/server/email";
+
 
 export const load: PageServerLoad = async () => {
     try {
@@ -43,6 +45,8 @@ export const actions: Actions = {
                 {customerId, vehicleId: vehicle.id, date: appointmentDate.toISOString()},
                 serviceIds
             );
+            await sendEmail(locals.user!.email);
+
         } catch (e) {
             return fail(500, {message: 'Booking failed. Please try again.'});
         }
