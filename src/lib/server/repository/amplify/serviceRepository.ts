@@ -33,6 +33,13 @@ export const serviceRepository: ServiceRepository = {
         return data ? toService(data as Record<string, unknown>) : null;
     },
 
+    async getByIds(serviceIds: string[]) {
+        const {data, errors} = await amplifyClient.models.Service.list();
+        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        return data.filter(d => serviceIds.includes(d.id))
+            .map(d => toService(d as Record<string, unknown>));
+    },
+
     async delete(id) {
         const {errors} = await amplifyClient.models.Service.delete({id});
         if (errors?.length) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Deleting Service failed');

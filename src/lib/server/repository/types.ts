@@ -61,6 +61,7 @@ export interface ServiceRepository extends Repository<Service> {
     //       change getById() so it calls getByIds by wrapping the single id in an array.
     //       Then implement in serviceRepository.ts
     //       this is called a "delegation pattern".
+    getByIds(serviceIds: string[]): Promise<Service[]>;
     listPrices(): Promise<ServicePrice[]>;
 }
 
