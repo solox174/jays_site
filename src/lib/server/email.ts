@@ -1,4 +1,4 @@
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 
 const sesClient = new SESClient({ region: 'us-east-1' });
 
@@ -18,11 +18,9 @@ export async function sendEmail(customerEmail: string): Promise<void> {
                     Data: "This is a test email from Jay's Auto Detailing!",
                     Charset: "UTF-8"
                 }
-
             }
         }
     }
     const command = new SendEmailCommand(input);
     await sesClient.send(command);
-
 }

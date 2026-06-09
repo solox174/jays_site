@@ -1,7 +1,7 @@
 import {fail, redirect} from '@sveltejs/kit';
 import type {Actions} from './$types';
 import {authService} from '$lib/server/auth';
-import {logger} from "$lib/server/logger";
+import {logger} from '$lib/server/logger';
 
 export const load = async ({url}) => {
     return {from: url.searchParams.get('from')};
