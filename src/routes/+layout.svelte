@@ -52,7 +52,7 @@
     <div>
         <div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
             <a href="/" title="home" style="margin-bottom:10px">
-                <img alt="logo" id="hero" src="{logo}" style="height: 180px; width: auto;"/>
+                <img alt="logo" id="hero" src="{logo}" style="height: var(--hero-height); width: auto;"/>
             </a>
             <!-- TODO: consider refactoring menu here and for mobile into a Component. Low priority  -->
             <div bind:this={navBtnEl} class="nav-mobile-trigger">
