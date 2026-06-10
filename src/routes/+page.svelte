@@ -1,62 +1,27 @@
 <script lang="ts">
     import working from '$lib/assets/images/working.jpeg';
+    import { pinnedFloatScroll } from '$lib/pinned-float-scroll';
 
-    const IMAGE_TOP = 87;    // visual top of image (px from scroll region top)
-    const TEXT_WRAP_TOP = 72; // where text starts wrapping (spacer base height)
-    let spacerEl: HTMLElement;
-
-    function attachListeners(el: HTMLElement) {
-        const contentEl = el.querySelector('#scroll-content') as HTMLElement;
-        let startY = 0;
-        let currentScrollY = 0;
-
-        function applyScroll() {
-            const maxScroll = Math.max(0, contentEl.scrollHeight - el.clientHeight);
-            currentScrollY = Math.max(0, Math.min(currentScrollY, maxScroll));
-            contentEl.style.transform = `translate3d(0, ${-currentScrollY}px, 0)`;
-            spacerEl.style.height = `${TEXT_WRAP_TOP + currentScrollY}px`;
-        }
-
-        const onWheel = (e: WheelEvent) => { e.preventDefault(); currentScrollY += e.deltaY; applyScroll(); };
-        const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY; };
-        const onTouchMove = (e: TouchEvent) => {
-            if (e.touches.length !== 1) return;
-            e.preventDefault();
-            currentScrollY += startY - e.touches[0].clientY;
-            startY = e.touches[0].clientY;
-            applyScroll();
-        };
-        const onResize = () => applyScroll();
-
-        requestAnimationFrame(applyScroll);
-        window.addEventListener('resize', onResize);
-        el.addEventListener('wheel', onWheel, { passive: false });
-        el.addEventListener('touchstart', onTouchStart, { passive: true });
-        el.addEventListener('touchmove', onTouchMove, { passive: false });
-
-        return {
-            destroy() {
-                window.removeEventListener('resize', onResize);
-                el.removeEventListener('wheel', onWheel);
-                el.removeEventListener('touchstart', onTouchStart);
-                el.removeEventListener('touchmove', onTouchMove);
-            }
-        };
+    function attach(viewport: HTMLElement) {
+        const pinned = viewport.querySelector('[data-pfs-pinned]') as HTMLElement;
+        const content = viewport.querySelector('[data-pfs-content]') as HTMLElement;
+        return pinnedFloatScroll(viewport, pinned, content, {
+            pinnedWidth: 'var(--cta-image-width)',
+            pinnedAspectRatio: '471/831',
+        });
     }
 </script>
 
 <div class="glass-panel"
-     style="display: flex; flex-direction: column; height: 100%;">
-    <div use:attachListeners
-         style="overflow: hidden; flex: 1 1 0; min-height: 0; touch-action: none; position: relative;">
-        <img alt="working"
+     style="display: flex; flex-direction: column">
+    <div use:attach
+         style="flex: 1 1 0; min-height: 0;">
+        <img data-pfs-pinned
+             alt="working"
              src={working}
-             style="position: absolute; top: {IMAGE_TOP}px; right: 0; width: var(--cta-image-width); aspect-ratio: 471 / 831; display: block; border-radius: var(--border-radius);"/>
+             style="width: var(--cta-image-width); aspect-ratio: 471 / 831; display: block; border-radius: var(--border-radius);"/>
 
-        <div id="scroll-content" style="will-change: transform;">
-            <div bind:this={spacerEl}
-                 style="float: right; width: 0;"></div>
-            <div style="float: right; clear: right; width: var(--cta-image-width); aspect-ratio: 471 / 831; visibility: hidden; margin-left: 12px;"></div>
+        <div data-pfs-content>
             <p>
                 Your car is a major investment. Daily driving takes a toll on its appearance and value. Standard car
                 washes often leave scratches and miss hidden dirt. We restore your vehicle to showroom condition. Our
@@ -77,3 +42,15 @@
         <button style="margin-top: 10px;">Results</button>
     </a>
 </div>
+
+<style>
+    .glass-panel {
+        height: 90%;
+    }
+    /** mobile **/
+    @media (max-width: 640px) {
+        .glass-panel {
+            height: 100%;
+        }
+    }
+</style>
