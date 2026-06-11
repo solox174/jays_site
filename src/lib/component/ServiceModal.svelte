@@ -116,7 +116,7 @@
             <button aria-label="Close service modal"
                     class="icon-button"
                     onclick={close}
-                    style="border-color: var(--btn-border); color: var(--btn-border)"
+                    style="border-color: var(--action-border); color: var(--action-border)"
                     type="button">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -211,7 +211,7 @@
         position: fixed;
         inset: 0;
         z-index: 1000;
-        background: var(--overlay-bg);
+        background: var(--overlay-backdrop);
         display: grid;
         place-items: center;
         padding: 1rem;
@@ -220,7 +220,7 @@
     .modal {
         width: min(500px, 100%);
         max-height: min(70vh, 720px);
-        background: var(--modal-bg);
+        background: var(--surface-overlay);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-dialog);
         display: flex;
@@ -239,12 +239,12 @@
 
     .header {
         align-items: flex-start;
-        border-bottom: 1px solid var(--modal-border);
+        border-bottom: 1px solid var(--overlay-border);
     }
 
     .footer {
         align-items: center;
-        border-top: 1px solid var(--modal-border);
+        border-top: 1px solid var(--overlay-border);
         margin-top: auto;
     }
 
@@ -293,15 +293,15 @@
         gap: 0.75rem;
         align-items: start;
         padding: 0.9rem;
-        border: 1px solid var(--modal-border);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
         cursor: pointer;
     }
 
     .service-item:hover {
-        background: var(--modal-item-bg-hover);
-        border-color: var(--modal-border);
+        background: var(--item-bg-hover);
+        border-color: var(--overlay-border);
     }
 
     .service-item:has(.service-control input[type="radio"]:checked) {
@@ -346,10 +346,10 @@
     }
 
     .empty-state {
-        border: 1px dashed var(--modal-border);
+        border: 1px dashed var(--overlay-border);
         border-radius: var(--border-radius);
         padding: 1rem;
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
     }
 
     .empty-state h3 {
@@ -362,10 +362,10 @@
     }
 
     .icon-button {
-        border: 1px solid var(--modal-border);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
         font: inherit;
-        background: var(--modal-bg);
+        background: var(--surface-overlay);
         width: 2.25rem;
         height: 2.25rem;
         padding: 0;

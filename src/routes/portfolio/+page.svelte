@@ -160,10 +160,10 @@
     .video-wrap {
         position: relative;
         height: 100%;
-        border: 1px solid var(--modal-border);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
         overflow: hidden;
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
         padding-top: 6px;
     }
 
@@ -208,8 +208,8 @@
         font-weight: 600;
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        background: color-mix(in srgb, var(--modal-bg) 70%, transparent);
-        border: 1px solid var(--modal-border);
+        background: color-mix(in srgb, var(--surface-overlay) 70%, transparent);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
     }
 
@@ -225,7 +225,7 @@
         border: none !important;
         box-shadow: none !important;
         box-sizing: border-box;
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
         cursor: pointer;
         appearance: none;
         -webkit-appearance: none; /* required to override browser default before custom styles apply */
@@ -280,7 +280,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: var(--btn-bg);
+        background: var(--action-bg);
         border: none;
         border-radius: 50%;
         box-shadow: none;
@@ -307,12 +307,12 @@
         border: none;
         border-radius: 50%;
         box-shadow: none;
-        background: var(--modal-border);
+        background: var(--overlay-border);
         cursor: pointer;
         transition: background 160ms ease;
     }
 
     .dot.active {
-        background: var(--btn-bg);
+        background: var(--action-bg);
     }
 </style>

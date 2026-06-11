@@ -193,7 +193,7 @@
             <button aria-label="Close time picker"
                     class="time-modal__close icon-button"
                     onclick={closeModal}
-                    style="border-color: var(--btn-border); color: var(--btn-border)"
+                    style="border-color: var(--action-border); color: var(--action-border)"
                     type="button">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -240,7 +240,7 @@
         align-items: center;
         justify-content: center;
         padding: 24px;
-        background: var(--overlay-bg);
+        background: var(--overlay-backdrop);
         backdrop-filter: blur(6px);
     }
 
@@ -251,8 +251,8 @@
         display: flex;
         flex-direction: column;
         border-radius: var(--border-radius);
-        background: var(--modal-bg);
-        border: 1px solid var(--modal-border);
+        background: var(--surface-overlay);
+        border: 1px solid var(--overlay-border);
         box-shadow: var(--shadow-modal);
     }
 
@@ -262,8 +262,8 @@
         justify-content: space-between;
         gap: 1rem;
         padding: 1rem;
-        border-bottom: 1px solid var(--modal-border);
-        background: var(--modal-bg);
+        border-bottom: 1px solid var(--overlay-border);
+        background: var(--surface-overlay);
     }
 
     .time-modal__title {
@@ -285,16 +285,16 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid var(--btn-border);
+        border: 1px solid var(--action-border);
         border-radius: var(--border-radius);
-        background: var(--modal-bg);
+        background: var(--surface-overlay);
         cursor: pointer;
         transition: all 160ms ease;
     }
 
     .time-modal__close:hover {
-        background: var(--modal-item-bg);
-        border-color: var(--btn-border);
+        background: var(--item-bg);
+        border-color: var(--action-border);
     }
 
     .time-modal__body {
@@ -316,9 +316,9 @@
         gap: 1rem;
         padding: 0.9rem;
         text-align: left;
-        border: 1px solid var(--modal-border);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
         cursor: pointer;
         transition: border-color 160ms ease,
         background 160ms ease,
@@ -326,25 +326,25 @@
     }
 
     .time-row:hover {
-        border-color: var(--modal-border);
-        background: var(--modal-item-bg-hover);
+        border-color: var(--overlay-border);
+        background: var(--item-bg-hover);
     }
 
     .time-row.selected {
-        border-color: var(--btn-bg);
-        background: var(--modal-item-bg-hover);
-        box-shadow: var(--shadow-row-selected);
+        border-color: var(--action-bg);
+        background: var(--item-bg-hover);
+        box-shadow: var(--item-shadow-selected);
     }
 
     .time-row.disabled {
         cursor: not-allowed;
-        border-color: var(--modal-border);
+        border-color: var(--overlay-border);
         box-shadow: none;
     }
 
     .time-row.disabled:hover {
-        border-color: var(--modal-border);
-        background: var(--modal-item-bg);
+        border-color: var(--overlay-border);
+        background: var(--item-bg);
     }
 
     .time-row__label {
@@ -360,17 +360,17 @@
 
     .time-modal__empty {
         padding: 20px;
-        border: 1px dashed var(--modal-border);
+        border: 1px dashed var(--overlay-border);
         border-radius: var(--border-radius);
-        background: var(--modal-item-bg);
+        background: var(--item-bg);
         font-size: 14px;
         line-height: 1.6;
     }
 
     .time-modal__footer {
         padding: 0.5rem;
-        border-top: 1px solid var(--modal-border);
-        background: var(--modal-bg);
+        border-top: 1px solid var(--overlay-border);
+        background: var(--surface-overlay);
     }
 
     @media (max-width: 640px) {

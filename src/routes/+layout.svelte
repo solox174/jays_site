@@ -87,7 +87,7 @@
                         {:else}
                             <a href="/login" onclick={() => settingsMenuOpen = false}>Log In</a>
                         {/if}
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; font-size: 1.2rem; border-bottom: 1px solid var(--modal-border); background: var(--modal-item-bg);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; font-size: 1.2rem; border-bottom: 1px solid var(--overlay-border); background: var(--item-bg);">
                             <span id="theme-toggle-label">{theme.current === 'dark' ? 'Light' : 'Dark'} Theme</span>
                             <!-- TODO: could be a Component. Low priority -->
                             <label class="switch">
@@ -159,8 +159,8 @@
         left: 50%;
         transform: translateX(-50%);
         width: 200px;
-        background: var(--modal-bg);
-        border: 1px solid var(--modal-border);
+        background: var(--surface-overlay);
+        border: 1px solid var(--overlay-border);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-modal);
         z-index: 100;
@@ -171,12 +171,12 @@
     .nav-dropdown a {
         padding: 0.75rem 1.25rem;
         font-size: 1.2rem;
-        border-bottom: 1px solid var(--modal-border);
-        background: var(--modal-item-bg);
+        border-bottom: 1px solid var(--item-border);
+        background: var(--item-bg);
     }
 
     .nav-dropdown a:hover {
-        background: var(--modal-item-bg-hover);
+        background: var(--item-bg-hover);
         text-decoration: none;
     }
 
@@ -234,7 +234,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: var(--overlay-bg);
+        background: var(--overlay-backdrop);
         backdrop-filter: blur(4px);
         padding: 5px 0;
         text-align: center;
@@ -360,7 +360,7 @@
     }
 
     input:checked + .slider {
-        background-color: var(--btn-border);
+        background-color: var(--action-border);
     }
 
     input:checked + .slider:before {

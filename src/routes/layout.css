@@ -23,37 +23,44 @@
     --font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
     Cantarell, 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
     --font-mono: 'Fira Mono', monospace;
+
     /* general */
     --border-radius: 0.25rem;
-    --overlay-bg: rgb(15 23 42 / 0.28);
-    --glass-color: rgb(255, 255, 255, 0.3);
+    --off-white: #F5F5F7;
     --label-color: #323232;
     --brand-color: #bd101a;
 
-    /* buttons */
-    --btn-bg: var(--brand-color);
-    --btn-bg-secondary: #ececec;
-    --btn-border: #717171;
-    --btn-text-color-disabled: #6c6c6c;
-    --btn-border-disabled: var(--btn-text-color-disabled);
-    --btn-bg-disabled: #c5c5c5;
+    /* overlays */
+    --surface-overlay: #ffffff;
+    --surface-overlay-glass: rgb(255, 255, 255, 0.3);
+    --overlay-backdrop: rgb(15 23 42 / 0.28);
 
-    /* input */
-    --input-bg: white;
-    --input-bg-disabled: #f3f4f6;
-    --input-border: #9ca3af;
+    /* accent-driven action tokens: primary actions and select active/selected
+       states share the brand accent for visual continuity with the hero */
+    --action-bg: var(--brand-color);
+    --action-bg-secondary: #ececec;
+    --action-border: #717171;
 
-    /* modal */
-    --modal-bg: #ffffff;
-    --modal-item-bg: #f3f4f6;
-    --modal-item-bg-hover: #e5e7eb;
-    --modal-border: #e5e7eb;
+    --action-bg-disabled: #c5c5c5;
+    --action-border-disabled: var(--action-text-disabled);
+    --action-text-disabled: #6c6c6c;
+
+    /* controls */
+    --control-bg: white;
+    --control-bg-disabled: #f3f4f6;
+    --control-border: #9ca3af;
+
+    /* items */
+    --item-bg: #f3f4f6;
+    --item-border: var(--overlay-border);
+    --item-bg-hover: #e5e7eb;
+    --overlay-border: #e5e7eb;
 
     /* shadows */
     --shadow-modal: 0 24px 64px rgba(15, 23, 42, 0.16);
     --shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.3);
-    --shadow-row-hover: 0 10px 24px rgba(17, 24, 39, 0.05);
-    --shadow-row-selected: 0 0 0 3px rgba(17, 24, 39, 0.06);
+    --item-shadow-hover: 0 10px 24px rgba(17, 24, 39, 0.05);
+    --item-shadow-selected: 0 0 0 3px rgba(17, 24, 39, 0.06);
 
     /* worse-select overrides */
     --ws-active-bg: color-mix(in srgb, var(--brand-color) 40%, transparent);
@@ -67,33 +74,37 @@
 /** dark mode css **/
 :root[data-theme="dark"] {
     color-scheme: dark;
-    --overlay-bg: rgb(28 28 28 / 0.75);
-    color: #F5F5F7;
+    color: var(--off-white);
     --label-color: #aaaaaa;
-    --glass-color: rgba(60, 60, 60, 0.3);
+
+    /* overlays */
+    --surface-overlay: #1c1c1c;
+    --overlay-border: #333333;
+    --surface-overlay-glass: rgba(60, 60, 60, 0.3);
+    --overlay-backdrop: rgb(28 28 28 / 0.75);
+
+    /* actions */
+    --action-bg-secondary: #737373;
+    --action-bg-disabled: #494949;
+    --action-border-disabled: var(--action-text-disabled);
+    --action-text-disabled: #939393;
 
     /* button */
-    --btn-bg-secondary: #737373;
-    --btn-text-color-disabled: #939393;
-    --btn-bg-disabled: #494949;
-    --btn-border-disabled: var(--btn-text-color-disabled);
 
-    /* input */
-    --input-bg: #1e1e1e;
-    --input-bg-disabled: #1e1e1e;
-    --input-border: #777777;
+    /* controls */
+    --control-bg: #1e1e1e;
+    --control-bg-disabled: #1e1e1e;
+    --control-border: #777777;
 
-    /* modal */
-    --modal-bg: #1c1c1c;
-    --modal-item-bg: #252525;
-    --modal-item-bg-hover: #2f2f2f;
-    --modal-border: #333333;
+    /* items */
+    --item-bg: #252525;
+    --item-bg-hover: #2f2f2f;
 
-    /* shadow */
+    /* shadows */
     --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.8);
     --shadow-dialog: 0 20px 60px rgb(0 0 0 / 0.7);
-    --shadow-row-hover: 0 10px 24px rgba(0, 0, 0, 0.4);
-    --shadow-row-selected: 0 0 0 3px rgba(255, 255, 255, 0.1);
+    --item-shadow-hover: 0 10px 24px rgba(0, 0, 0, 0.4);
+    --item-shadow-selected: 0 0 0 3px rgba(255, 255, 255, 0.1);
 
     /* worse-select dark overrides */
     --ws-dark-active-bg: color-mix(in srgb, var(--brand-color) 40%, transparent);
@@ -104,35 +115,35 @@
 }
 
 :root[data-theme="dark"] select, :root[data-theme="dark"] input:not([type='checkbox']):not([type='radio']) {
-    border: 1px solid var(--input-border);
+    border: 1px solid var(--control-border);
     box-shadow: none;
 }
 
 /** air date picker light mode **/
 .air-datepicker {
-    --adp-cell-background-color-selected: var(--btn-border);
+    --adp-cell-background-color-selected: var(--action-border);
     --adp-color-current-date: var(--brand-color);
 }
 
 /** air date picker dark mode **/
 :root[data-theme="dark"] .air-datepicker {
-    --adp-background-color: var(--modal-item-bg);
-    --adp-border-color: var(--modal-border);
+    --adp-background-color: var(--item-bg);
+    --adp-border-color: var(--overlay-border);
     --adp-border-radius: 8px;
 
-    --adp-cell-background-color-hover: var(--modal-item-bg-hover);
-    --adp-cell-background-color-selected: var(--btn-border);
+    --adp-cell-background-color-hover: var(--item-bg-hover);
+    --adp-cell-background-color-selected: var(--action-border);
     --adp-color-current-date: var(--brand-color);
-    --adp-cell-background-color-current-hover: var(--modal-item-bg-hover);
-    --adp-button-background-color-hover: var(--modal-item-bg-hover);
+    --adp-cell-background-color-current-hover: var(--item-bg-hover);
+    --adp-button-background-color-hover: var(--item-bg-hover);
 
     --adp-color: #d1d5db;
     --adp-color-secondary: var(--label-color);
-    --adp-color-disabled: var(--btn-text-color-disabled);
-    --adp-color-other-month: var(--input-border);
-    --adp-color-other-month-hover: var(--btn-text-color-disabled);
-    --adp-background-color-hover: var(--modal-item-bg-hover);
-    --adp-background-color-active: var(--modal-item-bg-hover);
+    --adp-color-disabled: var(--action-text-disabled);
+    --adp-color-other-month: var(--control-border);
+    --adp-color-other-month-hover: var(--action-text-disabled);
+    --adp-background-color-hover: var(--item-bg-hover);
+    --adp-background-color-active: var(--item-bg-hover);
     --adp-nav-arrow-color: var(--label-color);
 
     box-shadow: var(--shadow-dialog);
@@ -140,7 +151,7 @@
 
 :root[data-theme="dark"] .air-datepicker--pointer:after {
     background: var(--adp-background-color);
-    border-color: var(--modal-border);
+    border-color: var(--overlay-border);
 }
 
 html {
@@ -172,7 +183,7 @@ html {
     position: fixed;
     inset: 0;
     z-index: 9998;
-    background: var(--overlay-bg);
+    background: var(--overlay-backdrop);
     backdrop-filter: blur(2px);
     pointer-events: auto;
     cursor: none;
@@ -190,12 +201,13 @@ body {
 }
 
 a {
-    color: var(--brand-color);
+    color: inherit;
     text-decoration: none;
 }
 
 /** links **/
 a:hover {
+    text-decoration-color: var(--brand-color);
     text-decoration: underline;
 }
 
@@ -215,12 +227,12 @@ input:not([type='checkbox']):not([type='radio']):not([type='range']) {
     -moz-appearance: none;
     font: inherit;
     border-radius: var(--border-radius);
-    border: 1px solid var(--input-border);
+    border: 1px solid var(--control-border);
     outline: none;
     cursor: pointer;
     padding: 7px !important;
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
-    background: var(--input-bg);
+    background: var(--control-bg);
 }
 
 /** button **/
@@ -229,17 +241,17 @@ button:not(.worse-select-header) {
 }
 
 button.secondary {
-    background: var(--btn-bg-secondary);
+    background: var(--action-bg-secondary);
     border: solid 1px var(--brand-color);
 }
 
 button:not(.time-row):not(.worse-select-header):not(:disabled):not(.secondary):not(.icon-button):not(.bare-btn) {
-    background: var(--btn-bg);
+    background: var(--action-bg);
 }
 
 button {
     padding: 0.55rem 0.75rem;
-    border: 1px solid var(--btn-border);
+    border: 1px solid var(--action-border);
     border-radius: var(--border-radius);
     box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
     cursor: pointer;
@@ -251,11 +263,11 @@ button {
 }
 
 button:disabled {
-    background: var(--btn-bg-disabled);
+    background: var(--action-bg-disabled);
     cursor: not-allowed;
     box-shadow: none;
-    color: var(--btn-text-color-disabled);
-    border: 1px solid var(--btn-border-disabled);
+    color: var(--action-text-disabled);
+    border: 1px solid var(--action-border-disabled);
 }
 
 button:focus:not(:focus-visible) {
@@ -305,7 +317,7 @@ button:focus:not(:focus-visible) {
     flex: 1;
     height: 1px;
     margin-left: 12px;
-    background: var(--modal-border);
+    background: var(--overlay-border);
 }
 
 /** mobile **/
@@ -327,7 +339,7 @@ button:focus:not(:focus-visible) {
 }
 
 .glass-panel {
-    background: var(--glass-color);
+    background: var(--surface-overlay-glass);
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius);
     margin: 0 auto;

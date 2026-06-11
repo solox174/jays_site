@@ -76,10 +76,10 @@
 
 <style>
     :root {
-        --tab-border-color: color-mix(in srgb, var(--btn-text-color-disabled) 60%, #000);
+        --tab-border-color: color-mix(in srgb, var(--action-text-disabled) 60%, #000);
     }
     :root[data-theme="dark"] {
-        --tab-border-color: color-mix(in srgb, var(--btn-text-color-disabled) 60%, #fff);
+        --tab-border-color: color-mix(in srgb, var(--action-text-disabled) 60%, #fff);
     }
     /* Base Container */
     .tab-container {

@@ -433,7 +433,7 @@
     .order-summary {
         margin-top: 8px;
         font-size: 0.85rem;
-        border-top: 1px solid var(--modal-border, rgba(255, 255, 255, 0.15));
+        border-top: 1px solid var(--overlay-border, rgba(255, 255, 255, 0.15));
         padding-top: 8px;
     }
 
@@ -445,7 +445,7 @@
     }
 
     .summary-total {
-        border-top: 1px solid var(--modal-border, rgba(255, 255, 255, 0.15));
+        border-top: 1px solid var(--overlay-border, rgba(255, 255, 255, 0.15));
         margin-top: 4px;
         padding-top: 6px;
         opacity: 1;
@@ -466,8 +466,8 @@
         display: flex;
         align-items: center;
         padding: 0 0.4rem;
-        color: var(--input-border);
-        border-left: 1px solid var(--input-border);
+        color: var(--control-border);
+        border-left: 1px solid var(--control-border);
         pointer-events: none;
         font-size: .9rem;
     }
