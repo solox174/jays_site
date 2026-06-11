@@ -168,20 +168,18 @@
         flex-direction: column;
     }
 
-    .nav-dropdown a {
-        padding: 0.75rem 1.25rem;
+    .nav-dropdown a:not(:last-child) {
+        margin-bottom: 4px;
+    }
+    .nav-dropdown > * {
+        padding: 0.5rem 1.25rem;
         font-size: 1.2rem;
-        border-bottom: 1px solid var(--item-border);
         background: var(--item-bg);
     }
 
     .nav-dropdown a:hover {
         background: var(--item-bg-hover);
         text-decoration: none;
-    }
-
-    .nav-dropdown a:last-child {
-        border-bottom: none;
     }
 
     .nav-mobile-trigger .nav-dropdown {

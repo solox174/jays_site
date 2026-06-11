@@ -154,6 +154,11 @@
     border-color: var(--overlay-border);
 }
 
+:focus-visible {
+    outline: 2px solid var(--brand-color);
+    outline-offset: -2px;
+}
+
 html {
     background-image: linear-gradient(rgba(150, 150, 150, 0.5), rgba(150, 150, 150, 0.5)),
     url('$lib/assets/images/background-2.jpeg');
