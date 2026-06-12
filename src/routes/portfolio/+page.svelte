@@ -1,11 +1,13 @@
 <script lang="ts">
     import type {PageProps} from './$types';
+    import {onMount} from "svelte";
 
     let {data}: PageProps = $props();
     const {pairs} = data;
 
     let current = $state(0);
     let videoEls: (HTMLVideoElement | null)[] = [];
+    let carousel: HTMLDivElement;
     let videoStates = $state(pairs.map(() => ({paused: true, progress: 0})));
 
     function prev() {
@@ -49,6 +51,30 @@
         video.currentTime = (pct / 100) * video.duration;
         videoStates[i].progress = pct;
     }
+
+    function videoMax() {
+        carousel.requestFullscreen();
+    }
+
+    onMount(() => {
+     for(const video of videoEls) {
+         let lastTap = 0;
+         const doubleTapDelay = 300;
+         video?.addEventListener('touchend', async (event) => {
+             const now = Date.now();
+             const timeSinceLastTap = now - lastTap;
+
+             if (timeSinceLastTap > 0 && timeSinceLastTap < doubleTapDelay) {
+                 event.preventDefault();
+                 videoMax();
+                 lastTap = 0;
+                 return;
+             }
+
+             lastTap = now;
+         }, { passive: false });
+     }
+    });
 </script>
 
 <svelte:head>
@@ -57,70 +83,67 @@
 
 <svelte:window onkeydown={onKeydown}/>
 
-<div class="glass-panel" style="display: flex; flex-direction: column; height:0; flex-grow:1; padding: 20px 0 10px">
-<section class="showcase">
-    <div class="carousel" style="max-width: 500px">
-        <button aria-label="Previous" class="arrow" onclick={prev}>
-            <i class="fa-solid fa-chevron-left"></i>
-        </button>
+<div class="glass-panel" style="display: flex; flex-direction: column; height:0; flex-grow:1; padding: 40px 0">
+    <section class="showcase">
+        <div bind:this={carousel} class="carousel" style="max-width: 500px">
+            <button aria-label="Previous" class="arrow" onclick={prev}>
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
 
-        <div class="track-wrap">
-            <div class="track" style="transform: translateX(-{current * 100}%)">
-                {#each pairs as pair, i}
-                    <div class="slide">
-                        <div class="video-wrap">
-                            <video bind:this={videoEls[i]}
-                                   src={pair.video}
-                                   muted loop playsinline
-                                   onclick={() => togglePlay(i)}
-                                   onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
-                                   onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
-                                   ontimeupdate={e => onTimeUpdate(i, e)} >
-                            </video>
+            <div class="track-wrap">
+                <div class="track" style="transform: translateX(-{current * 100}%)">
+                    {#each pairs as pair, i}
+                        <div class="slide">
+                            <div class="video-wrap">
+                                <video bind:this={videoEls[i]}
+                                       src={pair.video}
+                                       muted loop playsinline
+                                       onclick={() => togglePlay(i)}
+                                       onmouseenter={e => { e.currentTarget.play(); videoStates[i].paused = false; }}
+                                       onmouseleave={e => { e.currentTarget.pause(); videoStates[i].paused = true; }}
+                                       ontimeupdate={e => onTimeUpdate(i, e)} >
+                                </video>
 
-                            <div class="play-icon" class:visible={videoStates[i].paused}>
-                                <i class="fa-solid fa-play"></i>
-                            </div>
+                                <div class="play-icon" class:visible={videoStates[i].paused}>
+                                    <i class="fa-solid fa-play"></i>
+                                </div>
 
-                            {#if pair.services}
+                                {#if pair.services}
                                 <span class="services-label">{pair.services}</span>
-                            {/if}
+                                {/if}
 
-                            <input type="range"
-                                   class="progress-bar"
-                                   min="0" max="100" step="0.1"
-                                   value={videoStates[i].progress}
-                                   oninput={e => onSeek(i, e)}
-                                   aria-label="Video progress" />
+                                <input type="range"
+                                       class="progress-bar"
+                                       min="0" max="100" step="0.1"
+                                       value={videoStates[i].progress}
+                                       oninput={e => onSeek(i, e)}
+                                       aria-label="Video progress" />
+                            </div>
                         </div>
-                    </div>
-                {/each}
+                        <i onclick="{videoMax}" class="fa-solid fa-up-right-and-down-left-from-center"
+                           style="position: absolute; bottom: 10px; right: 7px; font-size: 1.3rem"></i>
+                    {/each}
+                </div>
             </div>
+
+            <button aria-label="Next" class="arrow" onclick={next}>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
         </div>
 
-        <button aria-label="Next" class="arrow" onclick={next}>
-            <i class="fa-solid fa-chevron-right"></i>
-        </button>
-    </div>
-
-    <div class="dots">
-        {#each pairs as _, i}
-            <button
-                    class="dot"
-                    class:active={i === current}
-                    onclick={() => current = i}
-                    aria-label="Go to slide {i + 1}"
-            ></button>
-        {/each}
-    </div>
-</section>
+        <div class="dots">
+            {#each pairs as _, i}
+                <button class="dot"
+                        class:active={i === current}
+                        onclick={() => current = i}
+                        aria-label="Go to slide {i + 1}">
+                </button>
+            {/each}
+        </div>
+    </section>
 </div>
 
 <style>
-    :global(.section-title) {
-        color: rgba(220, 220, 220, 0.85);
-    }
-
     .showcase {
         max-width: 820px;
         flex: 1;
@@ -138,6 +161,10 @@
         display: flex;
         align-items: center;
         gap: 0.75rem;
+    }
+
+    .carousel:fullscreen {
+        height: 100vh;
     }
 
     .track-wrap {
@@ -222,7 +249,7 @@
         left: 0;
         width: 100%;
         height: 40px !important;
-        padding: 0 10px !important;
+        padding: 0 50px;
         margin: 0;
         border: none !important;
         box-shadow: none !important;
