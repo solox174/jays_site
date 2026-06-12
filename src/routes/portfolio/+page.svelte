@@ -57,6 +57,7 @@
 
 <svelte:window onkeydown={onKeydown}/>
 
+<div class="glass-panel" style="display: flex; flex-direction: column; height:0; flex-grow:1; padding: 20px 0 10px">
 <section class="showcase">
     <div class="carousel" style="max-width: 500px">
         <button aria-label="Previous" class="arrow" onclick={prev}>
@@ -113,6 +114,7 @@
         {/each}
     </div>
 </section>
+</div>
 
 <style>
     :global(.section-title) {
