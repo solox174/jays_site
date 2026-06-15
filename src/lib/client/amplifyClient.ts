@@ -2,14 +2,13 @@ import {Amplify} from 'aws-amplify';
 import outputs from '../../../amplify_outputs.json';
 import {generateClient} from 'aws-amplify/data';
 import type {Schema} from '../../../amplify/data/resource';
-import {logger} from '$lib/server/logger';
 
 Amplify.configure(outputs, {ssr: true});
 const client = generateClient<Schema>();
 
 // AOP (Aspect-Oriented Programming) proxy: intercepts every method call on the
-// Amplify client to centralize two cross-cutting concerns — error normalization
-// and logging — so repositories don't have to repeat try/catch boilerplate.
+// Amplify client to centralize a cross-cutting concern — error normalization
+// — so repositories don't have to repeat try/catch boilerplate.
 //
 // Amplify's generated client returns {data, errors} instead of throwing, so the
 // proxy converts that into a standard throw, letting callers use normal async/await.
@@ -25,14 +24,9 @@ export const amplifyClient = new Proxy(client, {
         if (typeof value !== 'function') return value;
 
         return async (...args: unknown[]) => {
-            try {
-                const {data, errors} = await (value as Function).apply(target, args);
-                if (errors?.length || !data) throw new Error(errors?.map((e: Error) => e.message).join(', ') ?? '');
-                return {data};
-            } catch (e) {
-                logger.error(`Amplify client call to ${String(prop)} failed: ${e}`);
-                throw e;
-            }
+            const {data, errors} = await (value as Function).apply(target, args);
+            if (errors?.length || !data) throw new Error(errors?.map((e: Error) => e.message).join(', ') ?? '');
+            return {data};
         };
     }
 });
