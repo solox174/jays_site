@@ -12,19 +12,16 @@ function toAppointment(data: Record<string, unknown>): Appointment {
 
 export const appointmentRepository: AppointmentRepository = {
     async getById(id) {
-        const {data, errors} = await amplifyClient.models.Appointment.get({id});
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Appointment failed');
+        const {data} = await amplifyClient.models.Appointment.get({id});
         return data ? toAppointment(data as Record<string, unknown>) : null;
     },
 
     async delete(id) {
-        const {errors} = await amplifyClient.models.Appointment.delete({id});
-        if (errors?.length) throw new Error(errors.map(e => e.message).join(', ') ?? 'Deleting Appointment failed');
+        await amplifyClient.models.Appointment.delete({id});
     },
 
     async list() {
-        const {data, errors} = await amplifyClient.models.Appointment.list();
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Appointments failed');
+        const {data} = await amplifyClient.models.Appointment.list();
         return data.map(appointment => toAppointment(appointment as Record<string, unknown>));
     },
 
@@ -33,18 +30,15 @@ export const appointmentRepository: AppointmentRepository = {
     },
 
     async createAppointment(appointment, serviceIds) {
-        const {data, errors} = await amplifyClient.models.Appointment.create(appointment);
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Appointment creation failed');
-
+        const {data} = await amplifyClient.models.Appointment.create(appointment);
         const savedAppointment = toAppointment(data as Record<string, unknown>);
-        const results = await Promise.all(
+        // AppointmentService records are independent of each other, so create them
+        // concurrently rather than sequentially.
+        await Promise.all(
             serviceIds.map(serviceId =>
                 amplifyClient.models.AppointmentService.create({appointmentId: savedAppointment.id, serviceId})
             )
         );
-        const allErrors = results.flatMap(r => r.errors ?? []);
-        if (allErrors.length) throw new Error(allErrors.map(e => e.message).join(', '));
-
         return savedAppointment;
     }
 };

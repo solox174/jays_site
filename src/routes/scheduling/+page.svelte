@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {onMount} from 'svelte';
+    import {onMount, tick} from 'svelte';
     import {nhtsaApi, type VehicleCategory} from '$lib/api/nhtsaApi';
     import AirDatepicker from 'air-datepicker';
     import {worseSelect} from 'worse-select';
@@ -108,6 +108,15 @@
     let showTimePicker = $state(false);
     let confirmed = $state(false);
     let confirmedDate = $state('');
+    let warningActive = $state(false);
+
+    async function triggerWarning() {
+        if (warningActive) {
+            warningActive = false;
+            await tick();
+        }
+        warningActive = true;
+    }
 
     onMount(() => {
         worseSelect();
@@ -209,7 +218,6 @@
             closeServiceModal();
         }
     }
-    var color = "#717171h";
 </script>
 
 <svelte:window onkeydown={handleWindowKeydown}/>
@@ -237,7 +245,7 @@
                     <label for="year">Year</label>
                     <select bind:value={selectedYear} id="year" name="year" onchange={handleYearChange}
                             style="background:red">
-                        <option value="">Select year</option>
+                        <option value="">select year</option>
                         {#each years as year}
                             <option value={year}>{year}</option>
                         {/each}
@@ -251,7 +259,7 @@
                             name="make"
                             onchange={handleMakeChange}>
                         <option value="">
-                            Select make
+                            select make
                         </option>
                         {#each makes as make}
                             <option value={make}>{make}</option>
@@ -265,7 +273,7 @@
                             id="model"
                             name="model">
                         <option value="">
-                            Select model
+                            select model
                         </option>
                         {#each models as model}
                             <option value={model}>{model}</option>
@@ -278,15 +286,22 @@
             <fieldset class="form-section scheduling-section">
                 <div class="dropdown">
                     <label for="service">Services</label>
-                    <input autocomplete="off"
-                           disabled={!selectedModel}
-                           id="service"
-                           onclick={openServiceModal}
-                           placeholder="{selectedModel ? '' : 'select vehicle first'}"
-                           readonly
-                           style="width:150px; text-align: {selectedModel ? 'left' : 'center'}"
-                           type="text"
-                           value={selectedServiceSummary}/>
+                    <span style="position: relative; display: inline-block;">
+                        <input autocomplete="off"
+                               disabled={!selectedModel}
+                               id="service"
+                               onclick={openServiceModal}
+                               placeholder="select service"
+                               readonly
+                               style="width:150px; text-align: {selectedServiceSummary ? 'left' : 'center'}"
+                               type="text"
+                               value={selectedServiceSummary}/>
+                        {#if !selectedModel}
+                            <span style="position: absolute; inset: 0; cursor: not-allowed;"
+                                  onclick={triggerWarning}
+                                  aria-hidden="true"></span>
+                        {/if}
+                    </span>
                 </div>
 
                 <div class="dropdown">
@@ -295,7 +310,7 @@
                         <i class="fa-regular fa-calendar"></i>
                         <input autocomplete="off"
                                id="calendar"
-                               placeholder="Select date"
+                               placeholder="select date"
                                style="width: 110px; padding-right: 1.75rem !important;"
                                type="text"
                                value={displayDate} />
@@ -333,12 +348,23 @@
                 <p style="color: red; text-align: center; margin: 8px 0 0; font-size: 0.85rem;">{form.message}</p>
             {/if}
 
-            <button disabled={!selectedTime || !appointmentDateString || !selectedModel || selectedServiceIds.length === 0}
-                    style="margin-top: 5px; align-self: center">
-                Schedule Appointment
-            </button>
+            <span style="position: relative; display: inline-block; align-self: center; margin-top: 5px;">
+                <button disabled={!!submitHint}>
+                    Schedule Appointment
+                </button>
+                {#if submitHint}
+                    <span style="position: absolute; inset: 0; cursor: not-allowed;"
+                          onclick={triggerWarning}
+                          aria-hidden="true"></span>
+                {/if}
+            </span>
             {#if submitHint}
-                <p class="submit-hint">{submitHint}</p>
+            <div id="next-hint">
+                <i class="fa-solid fa-triangle-exclamation warn-icon"
+                   class:warn-active={warningActive}
+                   onanimationend={() => warningActive = false}></i>
+                <span style="font-size: .9rem; margin:0; font-style: italic">{submitHint}</span>
+            </div>
             {/if}
         </div>
     </div>
@@ -372,6 +398,18 @@
 <style>
     select {
         display: none;
+    }
+
+    #next-hint {
+        display: flex;
+        align-items: center;
+        margin-top:10px;
+        padding: 3px 10px;
+        color: white;
+        flex-grow: 0;
+        flex-shrink:1;
+        flex-basis: auto;
+        align-self: center;
     }
 
     .form-section {
@@ -452,12 +490,30 @@
         font-size: 0.9rem;
     }
 
-    .submit-hint {
-        margin: 6px 0 0;
-        font-size: 0.75rem;
-        text-align: center;
-        opacity: 0.55;
+    @keyframes warn-flash {
+        0%   { opacity: 0; transform: scale(0.3); }
+        20%  { opacity: 1; transform: scale(1.3); }
+        40%  { opacity: 1; transform: scale(1.0); }
+        100% { opacity: 0; }
     }
+
+    .warn-icon {
+        display: inline-block;
+        max-width: 0;
+        overflow: hidden;
+        margin-right: 0;
+        opacity: 0;
+        color: var(--label-color);
+        transition: max-width 0.25s ease, margin-right 0.25s ease;
+    }
+
+    .warn-icon.warn-active {
+        max-width: 1.5em;
+        margin-right: 5px;
+        animation: warn-flash 1.8s ease forwards;
+        transition: none;
+    }
+
     .fa-calendar {
         position: absolute;
         right: 0;

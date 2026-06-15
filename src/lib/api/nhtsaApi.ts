@@ -54,6 +54,8 @@ const DETAILING_VEHICLE_TYPES = [
 ];
 
 function parseDescriptionToCategory(description: string): VehicleCategory | null {
+    // Pad with spaces so single-letter tokens like " C " (coupe) don't false-match
+    // substrings in longer words (e.g. "COUPE" would match "C" without padding).
     const d = ' ' + description.toUpperCase() + ' ';
     if (d.includes(' PU') || d.includes('PICKUP')) return 'truck';
     if (d.includes(' SUV ') || d.includes('SPORT UTILITY') || d.includes(' MPV ')) return 'suv';
@@ -127,6 +129,9 @@ export const nhtsaApi = {
         const srModels = await this.getSafetyRatingsModelsForMakeYear(year, make);
         const vpicModelLower = model.toLowerCase();
 
+        // VPIC and NHTSA Safety Ratings use different model name formats, so match
+        // by substring containment in either direction (e.g. "Camry" ↔ "Camry LE").
+        // The shortest match is chosen as the most generic base model.
         const candidates = srModels.filter(m => {
             const srModelLower = m.Model.toLowerCase();
             return srModelLower.includes(vpicModelLower) || vpicModelLower.includes(srModelLower);
@@ -142,6 +147,8 @@ export const nhtsaApi = {
         return parseDescriptionToCategory(variants[0].VehicleDescription);
     },
 
+    // Cascading fallback: try the NHTSA Safety Ratings API first (richer body-class
+    // data), then fall back to VPIC vehicle type on error or no match, then give up.
     async getVehicleCategory(make: string, model: string, year: string): Promise<VehicleCategory | null> {
         if (make.toUpperCase() === 'JEEP') return 'jeep';
 
@@ -166,6 +173,8 @@ export const nhtsaApi = {
     },
 
     async getMakeOptions(): Promise<string[]> {
+        // Map keyed by MakeId deduplicates makes that appear under multiple vehicle
+        // types (e.g. Ford appears under both "Passenger Car" and "Truck").
         const makeMap = new Map<number, string>();
 
         for (const vehicleType of DETAILING_VEHICLE_TYPES) {
