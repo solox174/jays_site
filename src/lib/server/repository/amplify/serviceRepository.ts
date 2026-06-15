@@ -21,39 +21,33 @@ function toServicePrice(data: Record<string, unknown>): ServicePrice {
 
 export const serviceRepository: ServiceRepository = {
     async create(service) {
-        const {data, errors} = await amplifyClient.models.Service.create(service);
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Service creation failed');
+        const {data} = await amplifyClient.models.Service.create(service);
         return toService(data as Record<string, unknown>);
     },
 
     async getById(id) {
-        const {data, errors} = await amplifyClient.models.Service.get({id});
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Service failed');
+        const {data} = await amplifyClient.models.Service.get({id});
 
         return data ? toService(data as Record<string, unknown>) : null;
     },
 
     async getByIds(serviceIds: string[]) {
-        const {data, errors} = await amplifyClient.models.Service.list();
-        if (errors?.length) throw new Error(errors.map(e => e.message).join(', '));
+        const {data} = await amplifyClient.models.Service.list();
         return data.filter(d => serviceIds.includes(d.id))
             .map(d => toService(d as Record<string, unknown>));
     },
 
     async delete(id) {
-        const {errors} = await amplifyClient.models.Service.delete({id});
-        if (errors?.length) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Deleting Service failed');
+        await amplifyClient.models.Service.delete({id});
     },
 
     async list() {
-        const {data, errors} = await amplifyClient.models.Service.list();
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Services failed');
+        const {data} = await amplifyClient.models.Service.list();
         return data?.map(d => toService(d as Record<string, unknown>));
     },
 
     async listPrices() {
-        const {data, errors} = await amplifyClient.models.ServicePrice.list();
-        if (errors?.length || !data) throw new Error(errors?.map(e => e.message).join(', ') ?? 'Getting Service prices failed');
+        const {data} = await amplifyClient.models.ServicePrice.list();
         return data.map(d => toServicePrice(d as Record<string, unknown>));
     }
 };

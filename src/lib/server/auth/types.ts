@@ -12,6 +12,8 @@ export interface SessionUser {
     email: string;
 }
 
+// Discriminated union on `ok`: callers narrow to the success or failure branch
+// with a single `if (result.ok)` check, and TypeScript enforces exhaustiveness.
 export type SignupResult =
     | { ok: true; userConfirmed: boolean; userSub: string }
     | { ok: false }

@@ -17,16 +17,18 @@ const clientId = outputs.auth.user_pool_client_id;
 
 const cognitoClient = new CognitoIdentityProviderClient({region});
 const idVerifier = CognitoJwtVerifier.create({userPoolId, tokenUse: 'id', clientId});
-idVerifier.hydrate().catch(() => {}); // pre-fetch JWKS so first verify() doesn't race
+// Pre-fetch the Cognito JWKS (public keys) at startup so the first call to
+// idVerifier.verify() doesn't block waiting for a network round-trip.
+idVerifier.hydrate().catch(() => {});
 
 const TOKEN_COOKIE = 'id_token';
 
 function setTokenCookie(cookies: Cookies, token: string) {
     cookies.set(TOKEN_COOKIE, token, {
         path: '/',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        httpOnly: true,  // blocks JS access, mitigates XSS token theft
+        secure: process.env.NODE_ENV === 'production',  // HTTPS-only in prod
+        sameSite: 'lax',  // CSRF protection while allowing top-level navigations
         maxAge: 60 * 60
     });
 }
@@ -105,6 +107,8 @@ export const cognitoAuthService: AuthService = {
                 email: payload.email as string
             };
         } catch {
+            // Expired or invalid token — clear the cookie and treat as logged out
+            // rather than surfacing a 500 to the user.
             cookies.delete(TOKEN_COOKIE, {path: '/'});
             return null;
         }

@@ -1,7 +1,10 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import {ServiceType} from '$lib/types';
+    import type {Service} from "$lib/server/repository/types";
 
+    let {data} = $props();
+    const services = data.services;
 
     const serviceTypes = Object.values(ServiceType);
 
@@ -58,17 +61,12 @@
         <div class="tab-content">
             {#each serviceTypes as serviceType, index}
                 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
+                {#each services.filter((service: Service) => service.serviceType === serviceType) as service}
                 <section class="tab-panel {index === 0 ? 'active' : ''}" id="panel-{index}" role="tabpanel" aria-labelledby="tab-{index}">
-                    <!-- TODO: put your code here for the name/description. But instead of using the pre-grouped services
-                               in the <script> section, do something like (with your html)
-                               {#each services.filter(service => service.serviceType === serviceType) as service}
-                                   {service.name}
-                                   {service.description}
-                               {/each}
-                    -->
-                    <h2>Panel {index+1}</h2>
-                    <p>This is the panel number {index+1}'s content.</p>
+                    <div>{service.name}</div>
+                    <div>{service.description}</div>
                 </section>
+                {/each}
             {/each}
         </div>
     </div>

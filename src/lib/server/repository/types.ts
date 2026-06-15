@@ -36,6 +36,9 @@ export interface ServicePrice {
     price: number;
 }
 
+// Repository pattern (DDD): abstracts the data store behind a domain-oriented
+// interface so the rest of the app has no dependency on Amplify or DynamoDB.
+// Swapping backends only requires new implementations in a sibling folder.
 interface Repository<T> {
     getById(id: string): Promise<T | null>;
     list(): Promise<T[] | null>;
