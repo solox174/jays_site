@@ -1,6 +1,7 @@
 <script lang="ts">
     import {onMount} from 'svelte';
     import type {Schema} from "../../../amplify/data/resource";
+    import {ServiceType} from "$lib/types";
 
     type Props = {
         services?: Schema['Service']['createType'][];
@@ -30,8 +31,8 @@
     let selectedBaseServiceId = $state('');
     let selectedAddonIds = $state<(string | undefined)[]>([]);
 
-    const visibleBaseServices = $derived(services.filter((service) => service.isExclusive));
-    const visibleAddonServices = $derived(services.filter((service) => !service.isExclusive));
+    const visibleBaseServices = $derived(services.filter((service) => service.serviceType !== ServiceType.TREATMENT));
+    const visibleAddonServices = $derived(services.filter((service) => service.serviceType === ServiceType.TREATMENT));
 
     const draftSelectedIds = $derived.by(() => {
         return [
@@ -42,10 +43,10 @@
 
     onMount(() => {
         const selectedBase = services.find(
-            (service) => selectedIds.includes(service.id ?? '') && service.isExclusive
+            (service) => selectedIds.includes(service.id ?? '') && service.serviceType !== ServiceType.TREATMENT
         );
         const selectedAddons = services.filter(
-            (service) => selectedIds.includes(service.id ?? '') && !service.isExclusive
+            (service) => selectedIds.includes(service.id ?? '') && service.serviceType === ServiceType.TREATMENT
         );
 
         selectedBaseServiceId = selectedBase?.id ?? '';

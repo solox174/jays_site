@@ -1,12 +1,13 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
-import type {Service, ServicePrice, ServiceRepository, VehicleCategory} from '../types';
+import {type Service, type ServicePrice, type ServiceRepository, type VehicleCategory} from '../types';
+import type {ServiceType} from "$lib/types";
 
 function toService(data: Record<string, unknown>): Service {
     return {
         id: data.id as string,
         name: data.name as string,
         description: data.description as string,
-        isExclusive: data.isExclusive as boolean
+        serviceType: data.serviceType as ServiceType
     };
 }
 
