@@ -1,5 +1,6 @@
-export type VehicleCategory = 'coupe' | 'sedan' | 'van' | 'suv' | 'jeep' | 'truck';
+import type {ServiceType} from "$lib/types";
 
+export type VehicleCategory = 'coupe' | 'sedan' | 'van' | 'suv' | 'jeep' | 'truck';
 export interface Customer {
     id: string;
     firstName?: string | null;
@@ -26,7 +27,7 @@ export interface Service {
     id: string;
     name: string;
     description: string;
-    isExclusive: boolean;
+    serviceType: ServiceType;
 }
 
 export interface ServicePrice {
