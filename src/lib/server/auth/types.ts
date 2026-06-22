@@ -19,7 +19,7 @@ export type SignupResult =
     | { ok: false }
 
 export type LoginResult =
-    | { ok: true; user: { id: string; email?: string } }
+    | { ok: true; user: { id: string; email?: string; firstName?: string; lastName?: string; phoneNumber?: string } }
     | { ok: false; challengeName?: string }
 
 export interface AuthService {

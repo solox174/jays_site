@@ -69,12 +69,12 @@ TODO: (Post MVP) Add UI for editing and adding services
             {#each serviceTypes as serviceType, index}
                 <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
                 <section class="tab-panel {index === 0 ? 'active' : ''}" id="panel-{index}" role="tabpanel" aria-labelledby="tab-{index}">
-                               {#each services.filter(service => service.serviceType === serviceType) as service}
-                                   <div class="service-item">
-                                   <h3 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px; padding-bottom: 3px;">{service.name}</h3>
-                                   <p style="color: var(--label-color); ;margin-top: 0;">{service.description}</p>
-                                   </div>
-                               {/each}
+                   {#each services.filter(service => service.serviceType === serviceType) as service}
+                       <div class="service-item">
+                       <h3 style="font-weight: bold; margin-top: 8px; margin-bottom: 4px; padding-bottom: 3px;">{service.name}</h3>
+                       <p style="color: var(--label-color); ;margin-top: 0;">{service.description}</p>
+                       </div>
+                   {/each}
                 </section>
             {/each}
         </div>

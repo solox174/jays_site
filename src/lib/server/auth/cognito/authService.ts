@@ -82,7 +82,10 @@ export const cognitoAuthService: AuthService = {
             ok: true,
             user: {
                 id: idPayload.sub,
-                email: typeof idPayload.email === 'string' ? idPayload.email : undefined
+                email: typeof idPayload.email === 'string' ? idPayload.email : undefined,
+                firstName: typeof idPayload.given_name === 'string' ? idPayload.given_name : undefined,
+                lastName: typeof idPayload.family_name === 'string' ? idPayload.family_name : undefined,
+                phoneNumber: typeof idPayload.phone_number === 'string' ? idPayload.phone_number : undefined,
             }
         };
     },

@@ -7,7 +7,6 @@
 </script>
 
 <div class="glass-panel">
-    {#if form?.errorText}{form.errorText}{/if}
     {#if createAccountState !== 'captureCode'}
     <form method="post" class="grid-container"
           use:enhance={() => {
@@ -47,13 +46,12 @@
     </form>
     {:else}
     <form method="post" action="?/confirmSignup" style="max-width: 400px; padding: 20px; margin: 0 auto; text-align: justify">
-        <label for="confirmation-code">Confirm Your Email</label>
         <p>Thank you for signing up with Jay's Auto Detailing! Almost there — just one more step before we let you in! We've sent a confirmation code to your email. Please enter it below to verify your account.</p>
-        <label for="confirmation-code" style="text-align: center; display: block">Confirmation Code:</label>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px">
             <input id="confirmation-code" name="confirmation-code" required type="password" style="width: 150px"/>
             <input name="email" bind:value={email} type="hidden"/>
-            <button type="submit">Verify Code</button>
+            {#if form?.errorText}<div style="text-align: center">{form.errorText}</div>{/if}
+            <button type="submit">Verify</button>
         </div>
     </form>
     {/if}

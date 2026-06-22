@@ -2,7 +2,6 @@ import type {Actions} from './$types';
 import {authService} from '$lib/server/auth';
 import {fail, redirect} from "@sveltejs/kit";
 import {logger} from "$lib/server/logger";
-import {repositories} from '$lib/server/repository';
 
 export const actions: Actions = {
     createAccount: async ({request, cookies}) => {
@@ -23,7 +22,6 @@ export const actions: Actions = {
         try {
             const result = await authService.signup(customer, password);
             if (!result.ok || !result.userSub) throw new Error('Account creation failed');
-            await repositories.customers.create(customer);
         } catch (e) {
             const errorText = e instanceof Error ? e.message : 'Unknown error';
             logger.error(`Signup failed: ${errorText}`);

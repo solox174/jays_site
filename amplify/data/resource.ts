@@ -13,7 +13,7 @@ const schema = a.schema({
             password: a.string().required(),
             appointments: a.hasMany('Appointment', 'customerId')
         })
-        .authorization((allow) => [allow.publicApiKey().to(['read'])]),
+        .authorization((allow) => [allow.publicApiKey()]),
 
     VehicleSpec: a
         .model({
