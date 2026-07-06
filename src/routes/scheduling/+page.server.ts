@@ -1,7 +1,7 @@
 import {error, fail} from '@sveltejs/kit';
 import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/repository';
-import {appointmentConfirmationEmail} from "$lib/server/email";
+import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/email';
 
 
 export const load: PageServerLoad = async () => {
@@ -17,8 +17,7 @@ export const load: PageServerLoad = async () => {
     }
 };
 
-// TODO: use `@aws-sdk/client-ses` to send email with appointment details to Jay and confirmation email to customer
-// TODO: ADD appointment confirmation message to confirm appointment "Your appointment is confirmed for May 20th at 10AM"
+
 export const actions: Actions = {
     default: async ({request, locals}) => {
         const form = await request.formData();
@@ -41,11 +40,12 @@ export const actions: Actions = {
 
         try {
             const vehicle = await repositories.vehicles.findOrCreate(year, make, model);
-            await repositories.appointments.createAppointment(
+            const  savedAppointment = await repositories.appointments.createAppointment(
                 {customerId, vehicleId: vehicle.id, date: appointmentDate.toISOString()},
                 serviceIds
             );
-            await appointmentConfirmationEmail(locals.user!.email);
+            await appointmentConfirmationEmail(locals.user!.email, savedAppointment.id);
+            await appointmentNotificationEmail('JaysEmail@email.com', savedAppointment.id);
 
         } catch (e) {
             return fail(500, {message: 'Booking failed. Please try again.'});

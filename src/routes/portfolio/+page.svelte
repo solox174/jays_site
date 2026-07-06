@@ -3,6 +3,7 @@
     import {onMount} from "svelte";
 
     let {data}: PageProps = $props();
+    // svelte-ignore state_referenced_locally
     const {pairs} = data;
 
     let current = $state(0);
@@ -120,7 +121,8 @@
                                        aria-label="Video progress" />
                             </div>
                         </div>
-                        <i onclick="{videoMax}" class="fa-solid fa-up-right-and-down-left-from-center"
+                        <!-- svelte-ignore a11y_click_events_have_key_events -->
+                        <i onclick="{videoMax}" role="button" tabindex="0" class="fa-solid fa-up-right-and-down-left-from-center"
                            style="position: absolute; bottom: 10px; right: 7px; font-size: 1.3rem"></i>
                     {/each}
                 </div>
@@ -261,7 +263,7 @@
         border-radius: 0 !important;
     }
 
-    /* TODO:
+    /*
         No CSS standard yet for range track/thumb — ::slider-track / ::slider-thumb are proposed
         but unshipped. Recheck ~2027.
         -webkit- covers Chrome + Safari: Chrome's Blink engine is a 2013 fork of WebKit and still

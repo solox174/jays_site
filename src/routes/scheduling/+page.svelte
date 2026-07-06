@@ -341,7 +341,6 @@
                     </div>
                 </div>
             {:else if safetyKey && !bodyClassLoading && !bodyClass}
-                <!-- TODO: when sending email to owner, must specify owner needs to contact customer -->
                 <div style="padding: 10px 0 4px; font-size: 0.85rem; opacity: 0.7">
                     Special vehicle type — we'll follow up with pricing after you book.
                 </div>

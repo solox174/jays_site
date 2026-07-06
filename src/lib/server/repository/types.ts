@@ -53,6 +53,7 @@ export interface CustomerRepository extends Repository<Customer>{
 
 export interface AppointmentRepository extends Repository<Appointment> {
     createAppointment(appointment: Omit<Appointment, 'id'>, appointmentServices: string[]): Promise<Appointment>;
+    getServices(appointmentId: string): Promise<Service[]>;
 }
 
 export interface VehicleRepository extends Repository<VehicleSpec> {
@@ -60,11 +61,6 @@ export interface VehicleRepository extends Repository<VehicleSpec> {
 }
 
 export interface ServiceRepository extends Repository<Service> {
-
-    // TODO: (NEXT) add method `async getByIds(serviceIds: string[])` and query by ids
-    //       change getById() so it calls getByIds by wrapping the single id in an array.
-    //       Then implement in serviceRepository.ts
-    //       this is called a "delegation pattern".
     getByIds(serviceIds: string[]): Promise<Service[]>;
     listPrices(): Promise<ServicePrice[]>;
 }

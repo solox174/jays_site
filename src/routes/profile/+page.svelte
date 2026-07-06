@@ -1,3 +1,3 @@
 <!--
-TODO: Add form for users to edit contact information and manage password
+TODO: (post MVP)  Add form for users to edit contact information and manage password
 -->

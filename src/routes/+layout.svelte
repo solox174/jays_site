@@ -54,7 +54,6 @@
             <a href="/" title="home" style="margin-bottom:10px">
                 <img alt="logo" id="hero" src="{logo}" style="height: var(--hero-height); width: auto;"/>
             </a>
-            <!-- TODO: consider refactoring menu here and for mobile into a Component. Low priority  -->
             <div bind:this={navBtnEl} class="nav-mobile-trigger">
                 <button aria-expanded={mobileMenuOpen} aria-label="Menu" class="bare-btn" style="padding-left: 0">
                     <i class="fa-solid fa-bars"></i>
@@ -89,7 +88,7 @@
                         {/if}
                         <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.25rem; font-size: 1.2rem; border-bottom: 1px solid var(--overlay-border); background: var(--item-bg);">
                             <span id="theme-toggle-label">{theme.current === 'dark' ? 'Light' : 'Dark'} Theme</span>
-                            <!-- TODO: could be a Component. Low priority -->
+
                             <label class="switch">
                                 <input type="checkbox" checked={theme.current === 'dark'} onchange={toggleTheme}>
                                 <span class="slider"></span>

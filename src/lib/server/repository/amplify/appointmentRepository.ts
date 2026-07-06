@@ -1,5 +1,6 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
 import type {Appointment, AppointmentRepository} from '../types';
+import {toService} from "$lib/server/repository/amplify/serviceRepository";
 
 function toAppointment(data: Record<string, unknown>): Appointment {
     return {
@@ -11,8 +12,10 @@ function toAppointment(data: Record<string, unknown>): Appointment {
 }
 
 export const appointmentRepository: AppointmentRepository = {
-    async getById(id) {
-        const {data} = await amplifyClient.models.Appointment.get({id});
+    async getById(id, eagerFetch) {
+        const ss = eagerFetch ? { selectionSet: ['id', 'date', 'customer.*', 'vehicle.*', 'appointmentServices.*', 'appointmentServices.service.*'] as const }: undefined
+
+        const {data} = await amplifyClient.models.Appointment.get({id}, ss);
         return data ? toAppointment(data as Record<string, unknown>) : null;
     },
 
@@ -40,5 +43,16 @@ export const appointmentRepository: AppointmentRepository = {
             )
         );
         return savedAppointment;
+    },
+
+    async getServices(appointmentId: string) {
+        const id = appointmentId;
+        const { data: appointmentServices } = await amplifyClient.models.AppointmentService.list({
+            filter: { appointmentId: { eq: id } }
+        });
+        const serviceIds = appointmentServices?.map(appointmentService => appointmentService.serviceId)
+        const {data: services} = await amplifyClient.models.Service.list();
+        return services.filter( service => serviceIds.includes(service.id))
+            .map(d => toService(d as Record<string, unknown>));
     }
 };
