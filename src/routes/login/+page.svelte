@@ -1,10 +1,13 @@
 <script lang="ts">
-    import {isBusy} from "$lib/stores/ui.svelte";
     import { page } from '$app/state';
 
     let {data, form} = $props();
     let firstLogin = $derived(page.url.searchParams.get('firstLogin'));
 </script>
+
+<svelte:head>
+    <title>Login</title>
+</svelte:head>
 
 <div class="glass-panel">
     <div style="text-align: center; font-size: 0.9rem; font-weight: bold; margin-bottom: 20px">

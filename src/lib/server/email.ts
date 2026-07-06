@@ -6,16 +6,16 @@ import {vehicleRepository} from '$lib/server/repository/amplify/vehicleRepositor
 const sesClient = new SESClient({ region: 'us-east-1' });
 
 async function getAppointmentEmailData(appointmentId: string) {
-    const appointment = await appointmentRepository.getById(appointmentId, true);
+    const appointment = await appointmentRepository.getById(appointmentId);
 
     let customer;
     if (appointment?.customerId) {
-        customer = await customerRepository.getById(appointment?.customerId, false);
+        customer = await customerRepository.getById(appointment?.customerId);
     }
 
     let vehicle;
     if (appointment?.vehicleId) {
-        vehicle = await vehicleRepository.getById(appointment?.vehicleId, false);
+        vehicle = await vehicleRepository.getById(appointment?.vehicleId);
     }
 
     const services = await appointmentRepository.getServices(appointmentId);
@@ -25,9 +25,7 @@ async function getAppointmentEmailData(appointmentId: string) {
         timeStyle: 'short',
     }) : '';
 
-    const servicesText = services
-        .map(s => s.name)
-        .join('\n');
+    const servicesText = services.map(s => s.name).join('\n');
 
     return { appointment, customer, vehicle, services, formattedDate, servicesText };
 }
@@ -57,7 +55,6 @@ Appointment Time: ${formattedDate}
 }
 
 export async function appointmentConfirmationEmail(email: string, appointmentId: string): Promise<void> {
-    // TODO: (email notifications) Email should contain selected services and price.
     const { appointment, customer, vehicle, formattedDate, servicesText } = await getAppointmentEmailData(appointmentId);
     if (appointment) {
 

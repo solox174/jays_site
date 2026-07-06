@@ -6,11 +6,15 @@
     let email = $state('');
 </script>
 
+<svelte:head>
+    <title>Create Account</title>
+</svelte:head>
+
 <div class="glass-panel">
     {#if createAccountState !== 'captureCode'}
     <form method="post" class="grid-container"
           use:enhance={() => {
-              return async ({ result, update }) => {
+              return async ({update}) => {
                   await update({ reset: false });
               };
           }}

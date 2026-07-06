@@ -1,7 +1,7 @@
 import {error, fail} from '@sveltejs/kit';
 import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/repository';
-import {appointmentConfirmationEmail, appointmentNotificationEmail} from "$lib/server/email";
+import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/email';
 
 
 export const load: PageServerLoad = async () => {

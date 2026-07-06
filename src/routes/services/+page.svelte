@@ -50,6 +50,10 @@ TODO: (Post MVP) Add UI for editing and adding services
     });
 </script>
 
+<svelte:head>
+    <title>Services</title>
+</svelte:head>
+
 <div class="glass-panel">
     <div class="tab-container">
         <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
