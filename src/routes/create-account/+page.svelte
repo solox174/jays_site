@@ -11,6 +11,11 @@
 </svelte:head>
 
 <div class="glass-panel">
+    <div style="text-align: center; color: red; var(--brand-color): 1.1rem; font-weight: bold; margin: 20px 0">
+        {#if form?.errorText}
+            {form.errorText}
+        {/if}
+    </div>
     {#if createAccountState !== 'captureCode'}
     <form method="post" class="grid-container"
           use:enhance={() => {

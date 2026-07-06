@@ -14,23 +14,26 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4                    # develop, provides the script
+
+      - uses: actions/checkout@v4                    # main, receives the commit
+        with:
+          ref: main
+          path: main-checkout
 
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Rebuild vehicle data into main checkout
+        working-directory: main-checkout
+        run: node ../scripts/buildVehicleData.ts
 
-      - name: Rebuild vehicle data
-        run: npm run build:vehicle-data
-
-      - name: Commit updated data
+      - name: Commit and push to main
+        working-directory: main-checkout
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add static/vehicle-data/
           git diff --staged --quiet || git commit -m "chore: update vehicle data for $(date +%Y)"
-          git push
+          git push origin main

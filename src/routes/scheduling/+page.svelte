@@ -163,11 +163,13 @@
         selectedMake = '';
         selectedModel = '';
         models = [];
+        selectedServiceIds = [];
     }
 
     async function handleMakeChange() {
         selectedModel = '';
         models = [];
+        selectedServiceIds = [];
 
         if (!selectedMake) return;
 
@@ -177,6 +179,12 @@
         } catch (error) {
             console.error(error instanceof Error ? error.message : 'Failed to load vehicle models.');
         }
+    }
+
+    function handleModelChange() {
+        selectedServiceIds = [];
+        bodyClass = null;
+        bodyClassLoading = !!selectedModel;
     }
 
     function openServiceModal() {
@@ -271,7 +279,8 @@
                     <label for="model">Model</label>
                     <select bind:value={selectedModel}
                             id="model"
-                            name="model">
+                            name="model"
+                            onchange={handleModelChange}>
                         <option value="">
                             select model
                         </option>
