@@ -4,7 +4,7 @@ import {fail, redirect} from "@sveltejs/kit";
 import {logger} from "$lib/server/logger";
 
 export const actions: Actions = {
-    createAccount: async ({request, cookies}) => {
+    createAccount: async ({request}) => {
         const form = await request.formData();
         const email = String(form.get('email') ?? '');
         const firstName = String(form.get('first-name') ?? '');
@@ -18,7 +18,7 @@ export const actions: Actions = {
 
         const customer = {firstName, lastName, phoneNumber, email};
 
-        // TODO: enforce password complexity requirements in UI
+        // TODO:(Chris) enforce password complexity requirements in UI
         try {
             const result = await authService.signup(customer, password);
             if (!result.ok || !result.userSub) throw new Error('Account creation failed');

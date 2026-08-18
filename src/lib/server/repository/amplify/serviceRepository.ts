@@ -2,7 +2,7 @@ import {amplifyClient} from '$lib/client/amplifyClient';
 import {type Service, type ServicePrice, type ServiceRepository, type VehicleCategory} from '../types';
 import type {ServiceType} from "$lib/types";
 
-function toService(data: Record<string, unknown>): Service {
+export function toService(data: Record<string, unknown>): Service {
     return {
         id: data.id as string,
         name: data.name as string,
@@ -27,9 +27,9 @@ export const serviceRepository: ServiceRepository = {
     },
 
     async getById(id) {
-        const {data} = await amplifyClient.models.Service.get({id});
-
-        return data ? toService(data as Record<string, unknown>) : null;
+        const ids = [id]
+        const servicesPromise = this.getByIds(ids);
+        return (await servicesPromise)?.[0];
     },
 
     async getByIds(serviceIds: string[]) {
