@@ -68,7 +68,7 @@
             {/each}
         </div>
 
-        <p class="google-attribution" style="text-align: center; margin-top: auto">
+        <p class="google-attribution" style="text-align: center; margin-top: auto; padding-top:7px">
             <i class="fa-brands fa-google"></i> Reviews provided by Google
         </p>
     {:else}
