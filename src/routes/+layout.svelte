@@ -122,7 +122,7 @@
             <span id="footer-tel-text" class="footer-text"></span>
         </a>
         <span id="footer-e"
-              onclick="{se}" style="margin-left: 5px"
+              onclick="{se}"
               title="{e}"
               role="button"
               tabindex="0"
@@ -130,7 +130,7 @@
             <i class="fa-solid fa-envelope footer-icon"></i>
             <span id="footer-e-text" class="footer-text">{e}</span>
         </span>
-        <span id="footer-copy" style="font-size: 0.75rem">
+        <span id="footer-copy">
 			<i id="footer-copy-icon" class="fa-solid fa-copyright footer-icon"></i>
 			<span id="footer-copy-text" class="footer-text">2026 Fasthold Inc.</span>
 		</span>
@@ -240,7 +240,7 @@
     }
 
     #footer-e {
-        margin-left: 10px;
+        margin-left: 1rem;
         cursor: pointer;
     }
 
@@ -253,6 +253,7 @@
         right: 16px;
         top: 50%;
         transform: translateY(-50%);
+        font-size: .8em;
     }
 
     .footer-icon {
@@ -267,8 +268,10 @@
         content: '(480) 819-5443';
     }
 
-    /** mobile: narrow viewports OR touch devices (phones, tablets, foldables) **/
-    @media (max-width: 640px), (hover: none) and (pointer: coarse) {
+    /** mobile: narrow viewports OR touch devices (phones, tablets, foldables).
+        any-pointer: coarse (not pointer/hover) so Samsung Internet on foldables,
+        which misreports the primary pointer as fine, still counts as touch. **/
+    @media (max-width: 640px), (any-pointer: coarse) {
         #footer-bar {
             display: flex;
             justify-content: space-around;
@@ -277,8 +280,8 @@
 
         #footer-copy {
             position: static;
-            font-size: inherit;
             transform: none;
+            font-size: .07em;
         }
 
         #footer-copy-icon {

@@ -325,8 +325,10 @@ button:focus:not(:focus-visible) {
     background: var(--overlay-border);
 }
 
-/** mobile: narrow viewports OR touch devices (phones, tablets, foldables) **/
-@media (max-width: 640px), (hover: none) and (pointer: coarse) {
+/** mobile: narrow viewports OR touch devices (phones, tablets, foldables).
+   any-pointer: coarse (not pointer/hover) so Samsung Internet on foldables,
+   which misreports the primary pointer as fine, still counts as touch. */
+@media (max-width: 640px), (any-pointer: coarse) {
     :root {
         --hero-height: 140px;
         --cta-image-width: 140px;
