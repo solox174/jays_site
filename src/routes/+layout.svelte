@@ -240,7 +240,7 @@
     }
 
     #footer-e {
-        margin-left: 1rem;
+        margin-left: 30px;
         cursor: pointer;
     }
 
@@ -253,7 +253,7 @@
         right: 16px;
         top: 50%;
         transform: translateY(-50%);
-        font-size: .8em;
+        font-size: .7em;
     }
 
     .footer-icon {
@@ -281,7 +281,6 @@
         #footer-copy {
             position: static;
             transform: none;
-            font-size: .7em;
         }
 
         #footer-copy-icon {
