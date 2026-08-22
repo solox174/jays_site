@@ -22,7 +22,14 @@ export function withCache(provider: ReviewsProvider, cacheStore: ReviewsCacheSto
             }
 
             const isFresh = entry !== null && Date.now() - entry.fetchedAt < CACHE_TTL_MS;
-            if (isFresh && entry?.data) return entry.data;
+            if (isFresh && entry?.data) {
+                logger.info('Reviews cache hit — serving cached data');
+                return entry.data;
+            }
+
+            logger.info(
+                `Reviews cache miss (entry ${entry ? 'present but stale/empty' : 'missing'}) — calling provider`
+            );
 
             // Stale, missing, or first run: claim the refresh slot immediately by
             // stamping the timestamp before calling Google. Any request that reads the
@@ -47,6 +54,11 @@ export function withCache(provider: ReviewsProvider, cacheStore: ReviewsCacheSto
             }
 
             // Google call failed — serve stale cached data rather than nothing.
+            if (entry?.data) {
+                logger.warn('Provider returned nothing — falling back to stale cached data');
+            } else {
+                logger.warn('Provider returned nothing and no cached data is available — showing empty state');
+            }
             return entry?.data ?? null;
         }
     };

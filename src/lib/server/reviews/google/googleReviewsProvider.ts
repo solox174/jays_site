@@ -37,7 +37,15 @@ function toReview(r: GoogleReview): Review {
 
 export const googleReviewsProvider: ReviewsProvider = {
     async getPlaceReviews(): Promise<PlaceReviews | null> {
-        if (!reviewsConfigured()) return null;
+        if (!reviewsConfigured()) {
+            // Never log the key/id values themselves — just whether each is present.
+            logger.warn(
+                `Google reviews not configured — apiKey present: ${Boolean(reviewsConfig.apiKey)}, placeId present: ${Boolean(reviewsConfig.placeId)}`
+            );
+            return null;
+        }
+
+        logger.info(`Fetching Google Place Details for placeId=${reviewsConfig.placeId}`);
 
         const response = await fetch(`${PLACE_DETAILS_URL}/${reviewsConfig.placeId}`, {
             headers: {
@@ -52,6 +60,10 @@ export const googleReviewsProvider: ReviewsProvider = {
         }
 
         const data: PlaceDetailsResponse = await response.json();
+
+        logger.info(
+            `Google Place Details fetched: rating=${data.rating}, userRatingCount=${data.userRatingCount}, reviews=${data.reviews?.length ?? 0}`
+        );
 
         return {
             rating: data.rating ?? 0,
