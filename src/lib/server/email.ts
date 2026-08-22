@@ -84,7 +84,7 @@ Jay's Auto Detailing
 
 export async function sendEmail(email: string, body: string, subject: string): Promise<void> {
     const input = {
-        Source:"thatslowaudi@gmail.com",
+        Source:"appointments@jaysautosdetailing.com",
         Destination: {
             ToAddresses:[email],
         },

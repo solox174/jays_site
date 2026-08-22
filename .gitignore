@@ -17,4 +17,4 @@ vite.config.ts.timestamp-*
 /.idea/
 /.amplify/
 
-amplify_outputs.json
+amplify_outputs.json.claude

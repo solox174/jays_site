@@ -29,7 +29,7 @@ function makeProxy<T extends object>(target: T): T {
             if (typeof value === 'function') {
                 return async (...args: unknown[]) => {
                     const {data, errors} = await (value as Function).apply(target, args);
-                    if (errors?.length || !data) throw new Error(errors?.map((e: Error) => e.message).join(', ') ?? '');
+                    if (errors?.length) throw new Error(errors.map((e: Error) => e.message).join(', '));
                     return {data};
                 };
             }
