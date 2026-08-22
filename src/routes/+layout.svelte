@@ -281,7 +281,7 @@
         #footer-copy {
             position: static;
             transform: none;
-            font-size: .07em;
+            font-size: .7em;
         }
 
         #footer-copy-icon {
