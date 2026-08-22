@@ -16,6 +16,7 @@ vite.config.ts.timestamp-*
 .npmrc
 /.idea/
 /.amplify/
+*.local
 
 amplify_outputs.json
 

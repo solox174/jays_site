@@ -60,14 +60,14 @@
                 </button>
                 {#if mobileMenuOpen}
                     <div class="nav-dropdown">
-                        <a class:active-nav="{page.url.pathname === '/'}" href="/"
-                           onclick={() => mobileMenuOpen = false}>Home</a>
                         <a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling"
                            onclick={() => mobileMenuOpen = false}>Scheduling</a>
                         <a class:active-nav="{page.url.pathname === '/services'}" href="/services"
                            onclick={() => mobileMenuOpen = false}>Services</a>
                         <a class:active-nav="{page.url.pathname === '/portfolio'}" href="/portfolio"
                            onclick={() => mobileMenuOpen = false}>Portfolio</a>
+                        <a class:active-nav="{page.url.pathname === '/reviews'}" href="/reviews"
+                           onclick={() => mobileMenuOpen = false}>Reviews</a>
                     </div>
                 {/if}
             </div>
@@ -101,10 +101,10 @@
         {#if page.url.pathname !== '/login' && page.url.pathname !== '/create-account'}
             <nav>
                 <div class="nav-desktop">
-                    <a class:active-nav="{page.url.pathname === '/'}" href="/">Home</a>
                     <a class:active-nav="{page.url.pathname === '/scheduling'}" href="/scheduling">Scheduling</a>
                     <a class:active-nav="{page.url.pathname === '/services'}" href="/services">Services</a>
                     <a class:active-nav="{page.url.pathname === '/portfolio'}" href="/portfolio">Portfolio</a>
+                    <a class:active-nav="{page.url.pathname === '/reviews'}" href="/reviews">Reviews</a>
                 </div>
 
             </nav>

@@ -70,6 +70,17 @@ const schema = a.schema({
             expiresAt: a.datetime().required(),
         })
         .authorization((allow) => [allow.publicApiKey()]),
+
+    // Single-row cache of the last successful Google Places API response, shared across
+    // all server instances (a per-process in-memory cache wouldn't be, under serverless
+    // SSR) so the paid Places API is called at most once per TTL window regardless of
+    // traffic. See $lib/server/reviews/withCache.ts.
+    GoogleReviewsCache: a
+        .model({
+            payload: a.string().required(),
+            fetchedAt: a.datetime().required(),
+        })
+        .authorization((allow) => [allow.publicApiKey()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
