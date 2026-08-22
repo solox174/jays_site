@@ -325,8 +325,8 @@ button:focus:not(:focus-visible) {
     background: var(--overlay-border);
 }
 
-/** mobile **/
-@media (max-width: 640px) {
+/** mobile: narrow viewports OR touch devices (phones, tablets, foldables) **/
+@media (max-width: 640px), (hover: none) and (pointer: coarse) {
     :root {
         --hero-height: 140px;
         --cta-image-width: 140px;

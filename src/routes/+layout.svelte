@@ -267,8 +267,8 @@
         content: '(480) 819-5443';
     }
 
-    /** mobile **/
-    @media (max-width: 640px) {
+    /** mobile: narrow viewports OR touch devices (phones, tablets, foldables) **/
+    @media (max-width: 640px), (hover: none) and (pointer: coarse) {
         #footer-bar {
             display: flex;
             justify-content: space-around;
