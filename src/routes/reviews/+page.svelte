@@ -23,9 +23,11 @@
             <div class="rating-summary">
                 <span class="rating-number">{placeReviews.rating.toFixed(1)}</span>
                 <div class="stars" aria-label="{placeReviews.rating} out of 5 stars">
+                   <div style="height: 100%">
                     {#each [1, 2, 3, 4, 5] as position}
                         <i class={starClass(position, placeReviews.rating)}></i>
                     {/each}
+                   </div>
                 </div>
                 <span class="rating-count">({placeReviews.userRatingCount} reviews)</span>
             </div>
@@ -106,16 +108,18 @@
     }
 
     .rating-number {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 600;
     }
 
     .stars {
         color: var(--brand-color);
-        font-size: 1.1rem;
+        font-size: .9rem;
+        display: flex;
     }
 
     .stars.small {
+        margin-top: 2px;
         font-size: 0.8rem;
     }
 
