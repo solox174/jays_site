@@ -49,6 +49,7 @@ interface Repository<T> {
 
 export interface CustomerRepository extends Repository<Customer>{
     create(obj: Omit<Customer, 'id'> & { id?: string }): Promise<Customer>;
+    update(id: string, updates: Partial<Omit<Customer, 'id'>>): Promise<Customer>;
 }
 
 export interface AppointmentRepository extends Repository<Appointment> {

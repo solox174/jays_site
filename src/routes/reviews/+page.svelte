@@ -17,8 +17,6 @@
 
 <div class="glass-panel reviews-page" style="height: 100%; display: flex; flex-direction: column;">
     <div class="reviews-header">
-        <h1>Customer Reviews</h1>
-
         {#if placeReviews}
             <div class="rating-summary">
                 <span class="rating-number">{placeReviews.rating.toFixed(1)}</span>
@@ -95,10 +93,6 @@
         margin-bottom: 1.5rem;
     }
 
-    .reviews-header h1 {
-        margin-bottom: 0.5rem;
-    }
-
     .rating-summary {
         display: flex;
         align-items: center;
@@ -108,13 +102,13 @@
     }
 
     .rating-number {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         font-weight: 600;
     }
 
     .stars {
         color: var(--brand-color);
-        font-size: .9rem;
+        font-size: 1.1rem;
         display: flex;
     }
 
@@ -133,6 +127,7 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 0.75rem;
+        margin-top: 20px;
     }
 
     .btn-primary {

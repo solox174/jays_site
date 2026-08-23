@@ -1,8 +1,10 @@
 import {
     AuthFlowType,
+    ChangePasswordCommand,
     CognitoIdentityProviderClient,
     ConfirmSignUpCommand,
     InitiateAuthCommand,
+    NotAuthorizedException,
     SignUpCommand
 } from '@aws-sdk/client-cognito-identity-provider';
 import {CognitoJwtVerifier} from 'aws-jwt-verify';
@@ -22,9 +24,10 @@ const idVerifier = CognitoJwtVerifier.create({userPoolId, tokenUse: 'id', client
 idVerifier.hydrate().catch(() => {});
 
 const TOKEN_COOKIE = 'id_token';
+const ACCESS_TOKEN_COOKIE = 'access_token';
 
-function setTokenCookie(cookies: Cookies, token: string) {
-    cookies.set(TOKEN_COOKIE, token, {
+function setSessionCookie(cookies: Cookies, name: string, token: string) {
+    cookies.set(name, token, {
         path: '/',
         httpOnly: true,  // blocks JS access, mitigates XSS token theft
         secure: process.env.NODE_ENV === 'production',  // HTTPS-only in prod
@@ -76,7 +79,10 @@ export const cognitoAuthService: AuthService = {
         }
 
         const idPayload = await idVerifier.verify(response.AuthenticationResult.IdToken);
-        setTokenCookie(cookies, response.AuthenticationResult.IdToken);
+        setSessionCookie(cookies, TOKEN_COOKIE, response.AuthenticationResult.IdToken);
+        if (response.AuthenticationResult.AccessToken) {
+            setSessionCookie(cookies, ACCESS_TOKEN_COOKIE, response.AuthenticationResult.AccessToken);
+        }
 
         return {
             ok: true,
@@ -92,6 +98,7 @@ export const cognitoAuthService: AuthService = {
 
     async logout(cookies: Cookies) {
         cookies.delete(TOKEN_COOKIE, {path: '/'});
+        cookies.delete(ACCESS_TOKEN_COOKIE, {path: '/'});
     },
 
     async verifySession(cookies: Cookies) {
@@ -114,6 +121,24 @@ export const cognitoAuthService: AuthService = {
             // rather than surfacing a 500 to the user.
             cookies.delete(TOKEN_COOKIE, {path: '/'});
             return null;
+        }
+    },
+
+    async changePassword(accessToken: string, oldPassword: string, newPassword: string) {
+        try {
+            await cognitoClient.send(new ChangePasswordCommand({
+                AccessToken: accessToken,
+                PreviousPassword: oldPassword,
+                ProposedPassword: newPassword
+            }));
+            return {ok: true};
+        } catch (e) {
+            // Wrong current password — a normal, expected user error, not worth
+            // logging as a server failure.
+            const errorText = e instanceof NotAuthorizedException
+                ? 'Current password is incorrect'
+                : e instanceof Error ? e.message : 'Failed to change password';
+            return {ok: false, errorText};
         }
     }
 };

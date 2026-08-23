@@ -32,5 +32,10 @@ export const customerRepository: CustomerRepository = {
             password: 'managed-by-cognito'
         });
         return toCustomer(data as Record<string, unknown>);
+    },
+
+    async update(id, updates) {
+        const {data} = await amplifyClient.models.Customer.update({id, ...updates});
+        return toCustomer(data as Record<string, unknown>);
     }
 };

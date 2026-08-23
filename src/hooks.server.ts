@@ -1,7 +1,7 @@
 import {type Handle, redirect} from '@sveltejs/kit';
 import {authService} from '$lib/server/auth';
 
-const PROTECTED = ['/scheduling', '/account', '/admin'];
+const PROTECTED = ['/scheduling', '/account', '/admin', '/profile'];
 
 // SvelteKit server hook: runs on every request before route handlers and load
 // functions. Attaches the authenticated user to event.locals so any server
@@ -10,6 +10,7 @@ export const handle: Handle = async ({event, resolve}) => {
     event.locals.user = await authService.verifySession(event.cookies);
 
     event.locals.token = event.locals.user ? event.cookies.get('id_token') : undefined;
+    event.locals.accessToken = event.locals.user ? event.cookies.get('access_token') : undefined;
 
     // Redirect unauthenticated users to /login with a `from` param so they can
     // be sent back to the originally requested page after signing in.

@@ -3,6 +3,7 @@ declare global {
         interface Locals {
             user: { id: string; email: string } | null;
             token?: string;
+            accessToken?: string;
         }
     }
 }
