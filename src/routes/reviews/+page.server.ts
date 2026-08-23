@@ -1,7 +1,7 @@
 import type {PageServerLoad} from './$types';
 import {reviewsProvider} from '$lib/server/reviews';
 import {reviewsConfig} from '$lib/server/reviews/config';
-import {GOOGLE_MAPS_LISTING_URL, googleWriteReviewUrl} from '$lib/googleBusiness';
+import {GOOGLE_MAPS_LISTING_URL, googleReviewsListUrl, googleWriteReviewUrl} from '$lib/googleBusiness';
 
 export const load: PageServerLoad = async () => {
     const placeReviews = await reviewsProvider.getPlaceReviews();
@@ -11,6 +11,8 @@ export const load: PageServerLoad = async () => {
         writeReviewUrl: reviewsConfig.placeId
             ? googleWriteReviewUrl(reviewsConfig.placeId)
             : GOOGLE_MAPS_LISTING_URL,
-        listingUrl: GOOGLE_MAPS_LISTING_URL
+        listingUrl: reviewsConfig.placeId
+            ? googleReviewsListUrl(reviewsConfig.placeId)
+            : GOOGLE_MAPS_LISTING_URL
     };
 };

@@ -7,3 +7,8 @@ export const GOOGLE_MAPS_LISTING_URL = 'https://share.google/gq37l83AjcjP511tI';
 export function googleWriteReviewUrl(placeId: string): string {
     return `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}`;
 }
+
+// Deep-links straight to the full reviews list instead of the general listing page.
+export function googleReviewsListUrl(placeId: string): string {
+    return `https://search.google.com/local/reviews?placeid=${encodeURIComponent(placeId)}`;
+}
