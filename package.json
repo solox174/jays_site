@@ -39,15 +39,17 @@
 		"@aws-amplify/backend": "^1.23.0",
 		"@aws-sdk/client-cognito-identity-provider": "^3.1064.0",
 		"@aws-sdk/client-dynamodb": "^3.1064.0",
-		"@aws-sdk/client-ses": "^3.1064.0",
+		"@aws-sdk/client-ses": "^3.1118.0",
 		"@aws-sdk/lib-dynamodb": "^3.1064.0",
 		"@fortawesome/fontawesome-free": "^7.2.0",
+		"@neondatabase/serverless": "^1.1.0",
 		"@sveltejs/enhanced-img": "^0.10.4",
 		"air-datepicker": "^3.6.0",
 		"amplify-adapter": "^1.2.3",
 		"aws-amplify": "^6.16.3",
 		"aws-jwt-verify": "^5.1.1",
 		"pino": "^10.3.1",
+		"resend": "^6.22.1",
 		"worse-select": "^0.5.2"
 	}
 }
