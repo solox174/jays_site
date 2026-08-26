@@ -1,6 +1,6 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
 import type {Appointment, AppointmentRepository} from '../types';
-import {toService} from "$lib/server/repository/amplify/serviceRepository";
+import {toService} from "./serviceRepository";
 
 function toAppointment(data: Record<string, unknown>): Appointment {
     return {

@@ -5,6 +5,7 @@ import {
     ConfirmSignUpCommand,
     InitiateAuthCommand,
     NotAuthorizedException,
+    ResendConfirmationCodeCommand,
     SignUpCommand
 } from '@aws-sdk/client-cognito-identity-provider';
 import {CognitoJwtVerifier} from 'aws-jwt-verify';
@@ -64,6 +65,13 @@ export const cognitoAuthService: AuthService = {
             ClientId: clientId,
             Username: username,
             ConfirmationCode: code
+        }));
+    },
+
+    async resendConfirmationCode(username: string) {
+        await cognitoClient.send(new ResendConfirmationCodeCommand({
+            ClientId: clientId,
+            Username: username
         }));
     },
 

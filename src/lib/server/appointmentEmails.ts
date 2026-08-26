@@ -1,5 +1,5 @@
 import {emailService} from '$lib/server/email';
-import {repositories} from '$lib/server/repository';
+import {repositories} from '$lib/server/storage';
 
 async function getAppointmentEmailData(appointmentId: string) {
     const appointment = await repositories.appointments.getById(appointmentId);

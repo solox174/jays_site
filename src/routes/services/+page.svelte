@@ -4,7 +4,7 @@ TODO: (Post MVP) Add UI for editing and adding services
 -->
 <script lang="ts">
     import type {PageProps} from "./$types";
-    import type {Service} from "$lib/server/repository/types";
+    import type {Service} from "$lib/server/storage/types";
     import {ServiceType} from "$lib/types";
     import {onMount} from "svelte";
 

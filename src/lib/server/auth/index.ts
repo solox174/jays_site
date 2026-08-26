@@ -1,6 +1,8 @@
-// To swap auth providers: replace this import with a different implementation
-// (e.g. './supabase/authService') — no other files need to change.
 import {cognitoAuthService} from './cognito/authService';
+import {postgresAuthService} from './postgres/authService';
+import {detectPlatform} from '$lib/server/platform';
 import type {AuthService} from './types';
 
-export const authService: AuthService = cognitoAuthService;
+// Picked per-platform rather than a single hardcoded import — see platform.ts. To add
+// a third provider: implement AuthService in a sibling folder and add it here.
+export const authService: AuthService = detectPlatform() === 'vercel' ? postgresAuthService : cognitoAuthService;

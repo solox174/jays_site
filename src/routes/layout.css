@@ -288,6 +288,7 @@ button:focus:not(:focus-visible) {
     padding: 0.25rem 0.75rem;
     opacity: 0.55;
     transition: opacity 180ms ease;
+    color: inherit;
 }
 
 .bare-btn:hover {

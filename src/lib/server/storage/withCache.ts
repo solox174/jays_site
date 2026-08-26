@@ -1,12 +1,13 @@
 import {logger} from '$lib/server/logger';
-import type {CachedReviewsEntry, PlaceReviews, ReviewsCacheStore, ReviewsProvider} from './types';
+import type {CachedReviewsEntry, ReviewsCacheStore} from './types';
+import type {PlaceReviews, ReviewsProvider} from '$lib/server/api/types';
 
 // Caps calls to the paid Google API at roughly once per day, regardless of traffic.
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
-// AOP proxy (same rationale as repository/withLogging.ts): caching is a cross-cutting
-// concern applied at the assembly point, so googleReviewsProvider stays focused on
-// talking to Google and doesn't need to know a cache exists.
+// AOP proxy (same rationale as withLogging.ts): caching is a cross-cutting concern
+// applied at the assembly point, so googleReviewsProvider stays focused on talking to
+// Google and doesn't need to know a cache exists.
 //
 // A cache failure (store unreachable, table not deployed yet, etc.) degrades to calling
 // the provider directly rather than breaking the page — it just means Google gets billed

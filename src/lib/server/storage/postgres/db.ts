@@ -1,8 +1,8 @@
 import {neon, type NeonQueryFunction} from '@neondatabase/serverless';
 
 // Plain process.env, not $env/static|dynamic/private — see platform.ts. Also lazy: this
-// module gets imported unconditionally by repository/index.ts (both platform branches
-// are statically imported so the selector can choose between them), so validating
+// module gets imported unconditionally by storage/index.ts (both platform branches are
+// statically imported so the selector can choose between them), so validating
 // DATABASE_URL eagerly at import time would crash an AWS-platform deployment that never
 // configured Postgres at all, even though it'd never actually call these repositories.
 // Only throw once a query is actually attempted.

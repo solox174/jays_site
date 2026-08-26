@@ -3,6 +3,7 @@ node_modules
 # Output
 .svelte-kit
 build
+.vercel
 
 # OS
 .DS_Store
@@ -21,3 +22,4 @@ vite.config.ts.timestamp-*
 amplify_outputs.json
 
 .claude
+/amplify_outputs.json.bak

@@ -1,7 +1,7 @@
 import {logger} from '$lib/server/logger';
 
 // AOP proxy that adds error logging as a cross-cutting concern to any repository
-// without modifying the repository itself. Applied at the assembly point (repository/index.ts)
+// without modifying the repository itself. Applied at the assembly point (storage/index.ts)
 // so individual repositories stay focused on data access only.
 export function withLogging<T extends object>(repo: T, name: string): T {
     return new Proxy(repo, {

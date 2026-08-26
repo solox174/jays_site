@@ -4,7 +4,7 @@
     import AirDatepicker from 'air-datepicker';
     import {worseSelect} from 'worse-select';
     import localeEn from 'air-datepicker/locale/en';
-    import type {Appointment, Service, ServicePrice} from '$lib/server/repository/types';
+    import type {Appointment, Service, ServicePrice} from '$lib/server/storage/types';
     import TimePickerModal from '$lib/component/TimePickerModal.svelte';
     import {enhance} from '$app/forms';
     import type {SubmitFunction} from '@sveltejs/kit';

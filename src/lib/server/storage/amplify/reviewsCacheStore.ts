@@ -1,5 +1,6 @@
 import {amplifyClient} from '$lib/client/amplifyClient';
-import type {CachedReviewsEntry, PlaceReviews, ReviewsCacheStore} from '../types';
+import type {CachedReviewsEntry, ReviewsCacheStore} from '../types';
+import type {PlaceReviews} from '$lib/server/api/types';
 
 // Single fixed row — there's only ever one business's reviews to cache.
 const CACHE_ID = 'google-reviews';

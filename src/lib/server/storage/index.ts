@@ -6,11 +6,13 @@ import {appointmentRepository as amplifyAppointmentRepository} from './amplify/a
 import {vehicleRepository as amplifyVehicleRepository} from './amplify/vehicleRepository';
 import {serviceRepository as amplifyServiceRepository} from './amplify/serviceRepository';
 import {appointmentServiceRepository as amplifyAppointmentServiceRepository} from './amplify/appointmentServiceRepository';
+import {dynamoDbReviewsCacheStore} from './amplify/reviewsCacheStore';
 import {postgresCustomerRepository} from './postgres/customerRepository';
 import {postgresAppointmentRepository} from './postgres/appointmentRepository';
 import {postgresVehicleRepository} from './postgres/vehicleRepository';
 import {postgresServiceRepository} from './postgres/serviceRepository';
 import {postgresAppointmentServiceRepository} from './postgres/appointmentServiceRepository';
+import {postgresReviewsCacheStore} from './postgres/reviewsCacheStore';
 import {withLogging} from './withLogging';
 import {detectPlatform} from '$lib/server/platform';
 
@@ -22,18 +24,20 @@ const impl = platform === 'vercel'
         appointments: postgresAppointmentRepository,
         vehicles: postgresVehicleRepository,
         services: postgresServiceRepository,
-        appointmentServices: postgresAppointmentServiceRepository
+        appointmentServices: postgresAppointmentServiceRepository,
+        reviewsCache: postgresReviewsCacheStore
     }
     : {
         customers: amplifyCustomerRepository,
         appointments: amplifyAppointmentRepository,
         vehicles: amplifyVehicleRepository,
         services: amplifyServiceRepository,
-        appointmentServices: amplifyAppointmentServiceRepository
+        appointmentServices: amplifyAppointmentServiceRepository,
+        reviewsCache: dynamoDbReviewsCacheStore
     };
 
 // Logging is applied here rather than inside each repository so the repos stay
-// focused on data access. This is the single assembly point for the repository layer.
+// focused on data access only. This is the single assembly point for the storage layer.
 export const repositories = {
     customers: withLogging(impl.customers, 'customerRepository'),
     appointments: withLogging(impl.appointments, 'appointmentRepository'),
@@ -41,3 +45,9 @@ export const repositories = {
     services: withLogging(impl.services, 'serviceRepository'),
     appointmentServices: withLogging(impl.appointmentServices, 'appointmentServiceRepository')
 };
+
+// Not a DomainRepository (see storage/types.ts) — kept as a separate export rather than
+// folded into `repositories` above, since it isn't the same kind of thing. Not wrapped
+// in withLogging either: withCache.ts (applied in reviews/index.ts) already logs its own
+// cache-layer failures with more specific context.
+export const reviewsCacheStore = impl.reviewsCache;

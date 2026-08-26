@@ -1,13 +1,14 @@
 import {logger} from '$lib/server/logger';
-import {reviewsConfig, reviewsConfigured} from '../config';
-import type {PlaceReviews, Review, ReviewsProvider} from '../types';
+import {reviewsConfig, reviewsConfigured} from '$lib/server/reviews/config';
+import type {PlaceReviews, Review, ReviewsProvider} from './types';
 
 // Places API (New) Place Details: https://developers.google.com/maps/documentation/places/web-service/place-details
 const PLACE_DETAILS_URL = 'https://places.googleapis.com/v1/places';
 const FIELD_MASK = 'rating,userRatingCount,reviews,googleMapsUri';
 
-// Response caching (Place Details is billed per call) lives in withCache.ts, applied at
-// the assembly point in index.ts — this provider only knows how to talk to Google.
+// Response caching (Place Details is billed per call) lives in storage/withCache.ts,
+// applied at the assembly point in reviews/index.ts — this provider only knows how to
+// talk to Google.
 
 type GoogleReview = {
     rating: number;

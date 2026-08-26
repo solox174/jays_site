@@ -4,6 +4,20 @@
     let {form} = $props();
     let createAccountState = $derived(form?.state);
     let email = $state('');
+
+    // Client-side only — just stops impatient double-clicking, not abuse (that'd need
+    // a server-side check in authService.resendConfirmationCode).
+    let resendCooldown = $state(0);
+
+    function startResendCooldown() {
+        resendCooldown = 120;
+    }
+
+    $effect(() => {
+        if (resendCooldown <= 0) return;
+        const timer = setTimeout(() => resendCooldown -= 1, 1000);
+        return () => clearTimeout(timer);
+    });
 </script>
 
 <svelte:head>
@@ -54,13 +68,24 @@
         </div>
     </form>
     {:else}
-    <form method="post" action="?/confirmSignup" style="max-width: 400px; padding: 20px; margin: 0 auto; text-align: justify">
+    <form method="post" action="?/confirmSignup"
+          use:enhance={() => {
+              return async ({update}) => {
+                  await update({reset: false});
+              };
+          }}
+          style="max-width: 400px; padding: 20px; margin: 0 auto; text-align: justify">
         <p>Thank you for signing up with Jay's Auto Detailing! Almost there — just one more step before we let you in! We've sent a confirmation code to your email. Please enter it below to verify your account.</p>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px">
-            <input id="confirmation-code" name="confirmation-code" required type="password" style="width: 150px"/>
+            <input id="confirmation-code" name="confirmation-code" required type="text" style="width: 150px"/>
             <input name="email" bind:value={email} type="hidden"/>
             {#if form?.errorText}<div style="text-align: center">{form.errorText}</div>{/if}
+            {#if form?.resent}<div style="text-align: center">A new code has been sent.</div>{/if}
             <button type="submit">Verify</button>
+            <button type="submit" formaction="?/resendCode" class="bare-btn resend-link"
+                    disabled={resendCooldown > 0} onclick={startResendCooldown}>
+                    {resendCooldown > 0 ? `Wait ${resendCooldown}s` : 'Resend code'}
+            </button>
         </div>
     </form>
     {/if}
@@ -69,6 +94,31 @@
 <style>
     label {
         font-weight: 500;
+    }
+
+    /* .bare-btn (global) already strips background/border/shadow and sets cursor —
+       this just overrides its icon-button sizing for a small underlined text link.
+       Also overrides its 0.55 opacity (meant for icon buttons) back to 1 — stacked on
+       top of var(--label-color), that extra dimming made the text nearly illegible
+       against the glass-panel background at rest. */
+    .resend-link {
+        opacity: 0.8;
+        padding: 5px;
+        color: canvasText;
+        font-size: 0.8rem;
+        text-transform: none;
+        text-decoration: underline;
+    }
+
+    .resend-link:hover {
+        opacity: 1;
+    }
+
+    .resend-link:disabled {
+        opacity: 0.8;
+        background:none;
+        border: none;
+        text-decoration: none;
     }
 
     input {

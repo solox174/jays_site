@@ -45,5 +45,20 @@ export const actions: Actions = {
         }
 
         redirect(301, '/login?firstLogin=true');
+    },
+
+    resendCode: async ({request}) => {
+        const form = await request.formData();
+        const email = String(form.get('email') ?? '');
+
+        try {
+            await authService.resendConfirmationCode(email);
+        } catch (e) {
+            const errorText = e instanceof Error ? e.message : 'Unknown error';
+            logger.error(`Resend confirmation code failed: ${errorText}`);
+            return fail(400, {errorText, state: 'captureCode'});
+        }
+
+        return {state: 'captureCode', resent: true};
     }
 };

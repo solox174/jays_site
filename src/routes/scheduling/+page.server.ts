@@ -1,6 +1,6 @@
 import {error, fail} from '@sveltejs/kit';
 import type {Actions, PageServerLoad} from './$types';
-import {repositories} from '$lib/server/repository';
+import {repositories} from '$lib/server/storage';
 import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/appointmentEmails';
 
 
