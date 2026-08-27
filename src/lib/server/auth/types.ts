@@ -16,7 +16,7 @@ export interface SessionUser {
 // with a single `if (result.ok)` check, and TypeScript enforces exhaustiveness.
 export type SignupResult =
     | { ok: true; userConfirmed: boolean; userSub: string }
-    | { ok: false }
+    | { ok: false; errorText?: string }
 
 export type LoginResult =
     | { ok: true; user: { id: string; email?: string; firstName?: string; lastName?: string; phoneNumber?: string } }

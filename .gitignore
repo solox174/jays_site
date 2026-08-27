@@ -23,3 +23,4 @@ amplify_outputs.json
 
 .claude
 /amplify_outputs.json.bak
+.env*

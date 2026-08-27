@@ -5,9 +5,9 @@ import type {EmailService} from '../types';
 const sesClient = new SESClient({region: 'us-east-1'});
 
 export const sesEmailService: EmailService = {
-    async send(to: string, subject: string, body: string): Promise<void> {
+    async send(to: string, subject: string, body: string, from?: string): Promise<void> {
         await sesClient.send(new SendEmailCommand({
-            Source: emailConfig.fromAddress,
+            Source: from ?? emailConfig.fromAddress,
             Destination: {ToAddresses: [to]},
             Message: {
                 Subject: {Data: subject, Charset: 'UTF-8'},

@@ -2,6 +2,7 @@ import type {Cookies} from '@sveltejs/kit';
 import {randomBytes} from 'node:crypto';
 import {sql} from '$lib/server/storage/postgres/db';
 import {emailService} from '$lib/server/email';
+import {emailConfig} from '$lib/server/email/config';
 import {logger} from '$lib/server/logger';
 import {hashPassword, verifyPassword} from './password';
 import type {AuthService, NewUser} from '../types';
@@ -80,7 +81,8 @@ async function issueVerificationCode(customerId: string, email: string): Promise
     await emailService.send(
         email,
         'Verify your Jays Auto Detailing account',
-        `Your confirmation code is: ${code}\n\nThis code expires in 15 minutes.`
+        `Your confirmation code is: ${code}\n\nThis code expires in 15 minutes.`,
+        emailConfig.confirmationFromAddress
     );
 }
 
@@ -100,7 +102,7 @@ export const postgresAuthService: AuthService = {
             WHERE c.email = ${user.email}`;
 
         if (existing[0]) {
-            if (existing[0].verified) return {ok: false};
+            if (existing[0].verified) return {ok: false, errorText: 'An account with this email already exists.'};
 
             const customerId = existing[0].id as string;
             await sql`

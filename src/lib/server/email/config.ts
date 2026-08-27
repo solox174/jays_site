@@ -3,5 +3,6 @@
 // and platform.ts for why: this module is imported unconditionally by both provider
 // implementations regardless of which one is actually selected).
 export const emailConfig = {
-    fromAddress: 'appointments@jaysautosdetailing.com'
+    fromAddress: 'appointments@jaysautosdetailing.com',
+    confirmationFromAddress: 'no-reply@jaysautosdetailing.com'
 };

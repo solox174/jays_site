@@ -22,9 +22,9 @@ function getClient(): Resend {
 }
 
 export const resendEmailService: EmailService = {
-    async send(to: string, subject: string, body: string): Promise<void> {
+    async send(to: string, subject: string, body: string, from?: string): Promise<void> {
         const {error} = await getClient().emails.send({
-            from: emailConfig.fromAddress,
+            from: from ?? emailConfig.fromAddress,
             to,
             subject,
             text: body

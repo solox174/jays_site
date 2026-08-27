@@ -21,7 +21,8 @@ export const actions: Actions = {
         // TODO:(Chris) enforce password complexity requirements in UI
         try {
             const result = await authService.signup(customer, password);
-            if (!result.ok || !result.userSub) throw new Error('Account creation failed');
+            if (!result.ok) throw new Error(result.errorText ?? 'Account creation failed');
+            if (!result.userSub) throw new Error('Account creation failed');
         } catch (e) {
             const errorText = e instanceof Error ? e.message : 'Unknown error';
             logger.error(`Signup failed: ${errorText}`);
