@@ -77,3 +77,11 @@ create table if not exists sessions (
     customer_id text not null references customers(id) on delete cascade,
     expires_at timestamptz not null
 );
+
+-- Expired-row cleanup: tried pg_cron (it lists as available via pg_available_extensions
+-- on this Neon project), but actually enabling it requires creating the extension from
+-- Neon's separate `postgres` system database, which the neondb_owner role isn't
+-- permitted to do — "permission denied to create extension pg_cron", confirmed by
+-- hand. Possibly resolvable via Neon's dashboard/support, but not from plain SQL with
+-- this role. Cleanup is instead a probabilistic sweep in application code — see
+-- getSessionCustomerId() in auth/postgres/authService.ts.

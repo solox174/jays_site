@@ -2,6 +2,7 @@ import type {Cookies} from '@sveltejs/kit';
 import {randomBytes} from 'node:crypto';
 import {sql} from '$lib/server/storage/postgres/db';
 import {emailService} from '$lib/server/email';
+import {logger} from '$lib/server/logger';
 import {hashPassword, verifyPassword} from './password';
 import type {AuthService, NewUser} from '../types';
 
@@ -38,9 +39,30 @@ async function createSession(customerId: string): Promise<string> {
     return token;
 }
 
+// Expired rows are never deleted by a logout (that only removes its own row) — pg_cron
+// would be the clean answer (runs on a real schedule, zero request latency) but isn't
+// usable here: it's listed as available on this Neon project, but actually creating it
+// requires access to Neon's separate `postgres` system database that the neondb_owner
+// role doesn't have ("permission denied to create extension pg_cron", confirmed by
+// hand — see storage/postgres/schema.sql). So instead: a small, self-balancing chance
+// on each lookup to also sweep every expired row, piggybacking on request traffic that
+// already exists rather than adding new infrastructure.
+const SESSION_CLEANUP_PROBABILITY = 0.01;
+
 // Opaque DB-verified session lookup — the Postgres-native alternative to Cognito's JWT
 // signature verification. One extra query per authenticated request, no signing secret.
 async function getSessionCustomerId(token: string): Promise<string | null> {
+    if (Math.random() < SESSION_CLEANUP_PROBABILITY) {
+        // Awaited, not fire-and-forget: on Vercel's serverless runtime an un-awaited
+        // promise can get cut off once the response is sent, so this can't be a
+        // best-effort background task — it has to actually finish here.
+        try {
+            await sql`DELETE FROM sessions WHERE expires_at < now()`;
+        } catch (e) {
+            logger.error(`Session cleanup sweep failed: ${e}`);
+        }
+    }
+
     const rows = await sql`SELECT customer_id FROM sessions WHERE token = ${token} AND expires_at > now()`;
     return rows[0] ? (rows[0].customer_id as string) : null;
 }
@@ -66,6 +88,30 @@ export const postgresAuthService: AuthService = {
     async signup(user: NewUser, password: string) {
         const passwordHash = await hashPassword(password);
 
+        // Resumable signup: an unconfirmed row for this email already existing isn't a
+        // hard failure — it's most likely a previous attempt where the confirmation
+        // email never got sent (Resend/domain issue) or a double-submitted form, not a
+        // real "this email is taken." Reuse the row, refresh it with what was just
+        // submitted, and issue a fresh code rather than failing on the unique
+        // constraint. A *confirmed* existing account is still a real conflict.
+        const existing = await sql`
+            SELECT c.id, v.verified FROM customers c
+            LEFT JOIN email_verifications v ON v.customer_id = c.id
+            WHERE c.email = ${user.email}`;
+
+        if (existing[0]) {
+            if (existing[0].verified) return {ok: false};
+
+            const customerId = existing[0].id as string;
+            await sql`
+                UPDATE customers
+                SET first_name = ${user.firstName ?? null}, last_name = ${user.lastName},
+                    phone_number = ${user.phoneNumber}, password = ${passwordHash}
+                WHERE id = ${customerId}`;
+            await issueVerificationCode(customerId, user.email);
+            return {ok: true, userConfirmed: false, userSub: customerId};
+        }
+
         let customerId: string;
         try {
             const rows = await sql`
@@ -73,8 +119,8 @@ export const postgresAuthService: AuthService = {
                 VALUES (${user.firstName ?? null}, ${user.lastName}, ${user.phoneNumber}, ${user.email}, ${passwordHash})
                 RETURNING id`;
             customerId = rows[0].id as string;
-        } catch {
-            // Most likely the email unique constraint — an account already exists.
+        } catch (e) {
+            logger.error(`Customer insert failed during signup: ${e}`);
             return {ok: false};
         }
 
