@@ -3,7 +3,7 @@ import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/storage';
 import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/appointmentEmails';
 import {logger} from '$lib/server/logger';
-import {zonedTimeToUtc} from '$lib/shared/businessTime';
+import {zonedTimeToUtc, parseCalendarDay} from '$lib/shared/businessTime';
 
 
 export const load: PageServerLoad = async () => {
@@ -30,7 +30,8 @@ export const actions: Actions = {
         const time = String(form.get('time') ?? '');
         const serviceIds = form.getAll('serviceId').map(String).filter(Boolean);
 
-        if (!year || !make || !model || !dateString || !time || !serviceIds.length) {
+        const pickedDay = parseCalendarDay(dateString);
+        if (!year || !make || !model || !pickedDay || !time || !serviceIds.length) {
             return fail(400, {message: 'Please complete all fields before submitting.'});
         }
 
@@ -40,12 +41,11 @@ export const actions: Actions = {
         // that mismatch is exactly what let overlapping appointments through
         // unblocked in production. zonedTimeToUtc anchors the picked wall-clock time
         // to the business's actual timezone regardless of where this code runs.
-        const pickedDay = new Date(dateString);
         const [hour, minutes] = time.split(':').map(Number);
         const appointmentDate = zonedTimeToUtc(
-            pickedDay.getUTCFullYear(),
-            pickedDay.getUTCMonth(),
-            pickedDay.getUTCDate(),
+            pickedDay.year,
+            pickedDay.month,
+            pickedDay.day,
             hour,
             minutes
         );

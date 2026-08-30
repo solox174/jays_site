@@ -13,7 +13,7 @@
     import type {PageProps} from './$types';
     import {isBusy} from '$lib/stores/ui.svelte';
     import ServiceModal from "$lib/component/ServiceModal.svelte";
-    import {getZonedParts} from '$lib/shared/businessTime';
+    import {getZonedParts, parseCalendarDay} from '$lib/shared/businessTime';
 
     let {data, form}: PageProps = $props();
     // data is server-loaded and won't change reactively — safe to initialize state from it
@@ -42,9 +42,13 @@
     let selectedTime = $state('');
     let displayDate = $derived((() => {
         if (!appointmentDateString) return '';
-        const date = new Date(appointmentDateString);
-        const month = date.toLocaleString('en-US', {month: 'short'});
-        const day = date.getDate();
+        // appointmentDateString is a plain "YYYY-MM-DD" (see businessTime.ts's
+        // parseCalendarDay) — parsed directly as numbers, never through a real Date +
+        // timezone reinterpretation, which can silently shift it onto the previous day.
+        const parsed = parseCalendarDay(appointmentDateString);
+        if (!parsed) return '';
+        const month = new Date(Date.UTC(2000, parsed.month, 1)).toLocaleString('en-US', {month: 'short', timeZone: 'UTC'});
+        const day = parsed.day;
         const v = day % 100;
         const suffix = (v >= 11 && v <= 13) ? 'th' : (['th', 'st', 'nd', 'rd'][day % 10] ?? 'th');
         const dateStr = `${month} ${day}${suffix}`;
@@ -155,7 +159,11 @@
             onSelect({date, datepicker}) {
                 if (date instanceof Date) {
                     showTimePicker = true;
-                    appointmentDateString = date.toISOString();
+                    // Plain "YYYY-MM-DD" from the widget's own local Y/M/D, not
+                    // .toISOString() — that converts through the browser's own
+                    // timezone, which can land on the previous calendar day once this
+                    // value is later reinterpreted against the business's timezone.
+                    appointmentDateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
                     datepicker.hide();
                 }
             }

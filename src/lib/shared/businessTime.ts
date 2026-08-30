@@ -16,21 +16,12 @@
 // to interpret appointment dates correctly regardless of the browser's own timezone),
 // and a timezone name isn't sensitive. Configurable per deployment — this project is a
 // reusable template (see docs) — set PUBLIC_BUSINESS_TIMEZONE to whatever IANA zone the
-// next business using this template operates in; zonedTimeToUtc below handles real DST
-// zones correctly too, not just Phoenix's fixed offset.
+// next business using this template operates in; TZDate handles real DST zones
+// correctly (via @date-fns/tz, not hand-rolled), not just Phoenix's fixed offset.
 import {PUBLIC_BUSINESS_TIMEZONE} from '$env/static/public';
+import {TZDate} from '@date-fns/tz';
 
 export const BUSINESS_TIMEZONE = PUBLIC_BUSINESS_TIMEZONE;
-
-const partsFormatter = new Intl.DateTimeFormat('en-US', {
-    timeZone: BUSINESS_TIMEZONE,
-    hourCycle: 'h23',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-});
 
 export type ZonedParts = {
     year: number;
@@ -44,30 +35,44 @@ export type ZonedParts = {
 // instant? Use this instead of date.getFullYear()/getHours()/etc, which read whichever
 // machine happens to be running the code, not the business's timezone.
 export function getZonedParts(date: Date): ZonedParts {
-    const parts = Object.fromEntries(partsFormatter.formatToParts(date).map(p => [p.type, p.value]));
+    const zoned = new TZDate(date, BUSINESS_TIMEZONE);
     return {
-        year: Number(parts.year),
-        month: Number(parts.month) - 1,
-        day: Number(parts.day),
-        hour: Number(parts.hour),
-        minute: Number(parts.minute)
+        year: zoned.getFullYear(),
+        month: zoned.getMonth(),
+        day: zoned.getDate(),
+        hour: zoned.getHours(),
+        minute: zoned.getMinutes()
     };
 }
 
 // Given wall-clock components as they'd read on a clock in BUSINESS_TIMEZONE, return the
-// UTC instant they correspond to. Works correctly for any IANA zone (handles DST via the
-// real tz database), not just Phoenix's fixed offset — reusable if this template is ever
+// UTC instant they correspond to. Handles DST correctly (via @date-fns/tz's real tz
+// database), not just Phoenix's fixed offset — reusable if this template is ever
 // deployed for a business somewhere that does observe DST.
 export function zonedTimeToUtc(year: number, month: number, day: number, hour: number, minute: number): Date {
-    const utcGuess = Date.UTC(year, month, day, hour, minute);
-    const asReadInZone = getZonedParts(new Date(utcGuess));
-    const offset = utcGuess - Date.UTC(asReadInZone.year, asReadInZone.month, asReadInZone.day, asReadInZone.hour, asReadInZone.minute);
-    return new Date(utcGuess + offset);
+    return new Date(new TZDate(year, month, day, hour, minute, BUSINESS_TIMEZONE).getTime());
 }
 
-// Do these two UTC instants fall on the same calendar day in BUSINESS_TIMEZONE?
-export function isSameBusinessDay(a: Date, b: Date): boolean {
-    const pa = getZonedParts(a);
-    const pb = getZonedParts(b);
-    return pa.year === pb.year && pa.month === pb.month && pa.day === pb.day;
+export type CalendarDay = {
+    year: number;
+    month: number; // 0-indexed, matching Date's own convention
+    day: number;
+};
+
+// A calendar day the customer picked (e.g. from a date picker) is a plain, timezone-free
+// concept — "August 31st" — until it's combined with a time via zonedTimeToUtc. Round-
+// tripping it through a real Date instant + timezone reinterpretation first (e.g.
+// `new Date(y,m,d).toISOString()` then reading it back with getZonedParts) can shift it
+// onto the *previous* calendar day if the browser's own timezone sits far enough ahead
+// of BUSINESS_TIMEZONE (exactly what broke booked-slot blocking for anyone testing this
+// app from outside Phoenix). Always transmit/parse a picked day as a plain "YYYY-MM-DD"
+// string via this function instead — it never touches Date or Intl at all.
+export function parseCalendarDay(value: string): CalendarDay | null {
+    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+    if (!match) return null;
+    return {year: Number(match[1]), month: Number(match[2]) - 1, day: Number(match[3])};
+}
+
+export function isSameCalendarDay(a: CalendarDay, b: CalendarDay): boolean {
+    return a.year === b.year && a.month === b.month && a.day === b.day;
 }

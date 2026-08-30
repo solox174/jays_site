@@ -1,6 +1,6 @@
 <script lang="ts">
     import type {Schema} from "../../../amplify/data/resource";
-    import {getZonedParts, isSameBusinessDay} from '$lib/shared/businessTime';
+    import {getZonedParts, parseCalendarDay, isSameCalendarDay} from '$lib/shared/businessTime';
 
     type TimeSlot = {
         value: string;
@@ -9,7 +9,9 @@
     };
 
     type Props = {
-        selectedDate: string | Date;
+        // Plain "YYYY-MM-DD" — see businessTime.ts's parseCalendarDay for why this must
+        // never be a real Date/ISO-with-time-and-Z value.
+        selectedDate: string;
         businessStartTime: string;
         businessCloseTime: string;
         appointmentDurationHours: number;
@@ -32,10 +34,6 @@
 
     const SLOT_MINUTES = 30;
 
-    function toDate(value: string | Date): Date {
-        return value instanceof Date ? value : new Date(value);
-    }
-
     function ordinalSuffix(n: number): string {
         const v = n % 100;
         if (v >= 11 && v <= 13) return 'th';
@@ -51,12 +49,11 @@
         }
     }
 
-    function formatSelectedDate(value: string | Date): string {
-        const date = toDate(value);
-        if (Number.isNaN(date.getTime())) return 'Invalid date';
-        const {month: monthIndex, day} = getZonedParts(date);
-        const month = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString('en-US', {month: 'long', timeZone: 'UTC'});
-        return `${month} ${day}${ordinalSuffix(day)}`;
+    function formatSelectedDate(value: string): string {
+        const parsed = parseCalendarDay(value);
+        if (!parsed) return 'Invalid date';
+        const month = new Date(Date.UTC(2000, parsed.month, 1)).toLocaleString('en-US', {month: 'long', timeZone: 'UTC'});
+        return `${month} ${parsed.day}${ordinalSuffix(parsed.day)}`;
     }
 
     function timeStringToMinutes(time: string): number {
@@ -78,15 +75,9 @@
         return `${hours12}:${String(minutes).padStart(2, '0')} ${suffix}`;
     }
 
-    function getMinutesFromDate(date: Date): number {
-        const {hour, minute} = getZonedParts(date);
-        return hour * 60 + minute;
-    }
-
     function buildTimeSlots(): TimeSlot[] {
-        const day = toDate(selectedDate);
-
-        if (Number.isNaN(day.getTime())) return [];
+        const day = parseCalendarDay(selectedDate);
+        if (!day) return [];
 
         const businessOpenMinutes = timeStringToMinutes(businessStartTime);
         const businessCloseMinutes = timeStringToMinutes(businessCloseTime);
@@ -95,12 +86,14 @@
         const blockedHalfHours = new Set<number>();
 
         for (const appointment of existingAppointments) {
-            const appointmentDate = toDate(appointment.date);
+            const appointmentDate = new Date(appointment.date);
 
             if (Number.isNaN(appointmentDate.getTime())) continue;
-            if (!isSameBusinessDay(appointmentDate, day)) continue;
 
-            const appointmentStartMinutes = getMinutesFromDate(appointmentDate);
+            const appointmentZoned = getZonedParts(appointmentDate);
+            if (!isSameCalendarDay(appointmentZoned, day)) continue;
+
+            const appointmentStartMinutes = appointmentZoned.hour * 60 + appointmentZoned.minute;
             const appointmentEndMinutes =
                 appointmentStartMinutes + appointmentDurationMinutes;
 

@@ -1,6 +1,7 @@
 import {sesEmailService} from './ses/emailService';
 import {resendEmailService} from './resend/emailService';
 import {detectPlatform} from '$lib/server/platform';
+import {withSuppression} from './withSuppression';
 import type {EmailService} from './types';
 
 // Picked per-platform rather than a single hardcoded import — see platform.ts. To add
@@ -17,5 +18,5 @@ const implementations: Record<ReturnType<typeof detectPlatform>, EmailService> =
 // recipients) pending a still-unresolved AWS support request. AWS's free tier is
 // preferred over Resend long-term, so once SES is unblocked, revert to
 // `implementations[detectPlatform()]` below rather than deleting it.
-export const emailService: EmailService = resendEmailService;
-// export const emailService: EmailService = implementations[detectPlatform()];
+export const emailService: EmailService = withSuppression(resendEmailService);
+// export const emailService: EmailService = withSuppression(implementations[detectPlatform()]);
