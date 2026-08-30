@@ -1,5 +1,6 @@
 import {emailService} from '$lib/server/email';
 import {repositories} from '$lib/server/storage';
+import {env} from '$env/dynamic/private';
 
 async function getAppointmentEmailData(appointmentId: string) {
     const appointment = await repositories.appointments.getById(appointmentId);
@@ -68,7 +69,7 @@ Vehicle: ${vehicle?.year} ${vehicle?.make} ${vehicle?.model}
 Services:
 ${servicesText}
 
-If you have any questions or need to reschedule, feel free to reach out.
+If you have any questions or need to reschedule, feel free to reach out at ${env.JAYS_NUMBER}.
 
 We'll see you soon!
 Jay's Auto Detailing
