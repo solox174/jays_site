@@ -3,6 +3,7 @@ import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/storage';
 import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/appointmentEmails';
 import {logger} from '$lib/server/logger';
+import {zonedTimeToUtc} from '$lib/shared/businessTime';
 
 
 export const load: PageServerLoad = async () => {
@@ -34,10 +35,20 @@ export const actions: Actions = {
         }
 
         const customerId = locals.user!.id;
-        const appointmentDate = new Date(dateString);
-        const [hour, minutes] = time.split(':');
-        appointmentDate.setHours(Number(hour));
-        appointmentDate.setMinutes(Number(minutes));
+        // setHours/setMinutes would set the hour in whatever timezone this process
+        // happens to run in (UTC on the Lambda, the developer's own zone locally) —
+        // that mismatch is exactly what let overlapping appointments through
+        // unblocked in production. zonedTimeToUtc anchors the picked wall-clock time
+        // to the business's actual timezone regardless of where this code runs.
+        const pickedDay = new Date(dateString);
+        const [hour, minutes] = time.split(':').map(Number);
+        const appointmentDate = zonedTimeToUtc(
+            pickedDay.getUTCFullYear(),
+            pickedDay.getUTCMonth(),
+            pickedDay.getUTCDate(),
+            hour,
+            minutes
+        );
 
         try {
             const vehicle = await repositories.vehicles.findOrCreate(year, make, model);

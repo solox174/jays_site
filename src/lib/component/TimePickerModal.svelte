@@ -1,5 +1,6 @@
 <script lang="ts">
     import type {Schema} from "../../../amplify/data/resource";
+    import {getZonedParts, isSameBusinessDay} from '$lib/shared/businessTime';
 
     type TimeSlot = {
         value: string;
@@ -53,8 +54,8 @@
     function formatSelectedDate(value: string | Date): string {
         const date = toDate(value);
         if (Number.isNaN(date.getTime())) return 'Invalid date';
-        const month = date.toLocaleString('en-US', {month: 'long'});
-        const day = date.getDate();
+        const {month: monthIndex, day} = getZonedParts(date);
+        const month = new Date(Date.UTC(2000, monthIndex, 1)).toLocaleString('en-US', {month: 'long', timeZone: 'UTC'});
         return `${month} ${day}${ordinalSuffix(day)}`;
     }
 
@@ -77,16 +78,9 @@
         return `${hours12}:${String(minutes).padStart(2, '0')} ${suffix}`;
     }
 
-    function isSameLocalDay(a: Date, b: Date): boolean {
-        return (
-            a.getFullYear() === b.getFullYear() &&
-            a.getMonth() === b.getMonth() &&
-            a.getDate() === b.getDate()
-        );
-    }
-
     function getMinutesFromDate(date: Date): number {
-        return date.getHours() * 60 + date.getMinutes();
+        const {hour, minute} = getZonedParts(date);
+        return hour * 60 + minute;
     }
 
     function buildTimeSlots(): TimeSlot[] {
@@ -104,7 +98,7 @@
             const appointmentDate = toDate(appointment.date);
 
             if (Number.isNaN(appointmentDate.getTime())) continue;
-            if (!isSameLocalDay(appointmentDate, day)) continue;
+            if (!isSameBusinessDay(appointmentDate, day)) continue;
 
             const appointmentStartMinutes = getMinutesFromDate(appointmentDate);
             const appointmentEndMinutes =

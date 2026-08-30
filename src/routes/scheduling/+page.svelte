@@ -13,13 +13,18 @@
     import type {PageProps} from './$types';
     import {isBusy} from '$lib/stores/ui.svelte';
     import ServiceModal from "$lib/component/ServiceModal.svelte";
+    import {getZonedParts} from '$lib/shared/businessTime';
 
     let {data, form}: PageProps = $props();
     // data is server-loaded and won't change reactively — safe to initialize state from it
     // svelte-ignore state_referenced_locally
     let services = $state(data.services as Service[]);
-    // svelte-ignore state_referenced_locally
-    let appointments = $state(data.appointments as Appointment[]);
+    // Reactive (not $state like services/servicePrices above): after a successful
+    // booking, handleEnhance's update() re-runs load() and refreshes data.appointments,
+    // and TimePickerModal needs to see that new appointment on the very next booking in
+    // the same session — a one-time $state snapshot would go stale after the first
+    // booking and never block an overlapping slot again until a hard reload.
+    let appointments = $derived(data.appointments as Appointment[]);
     // svelte-ignore state_referenced_locally
     let servicePrices = $state(data.servicePrices as ServicePrice[]);
     let selectedServiceSummary = $derived(
@@ -125,10 +130,12 @@
         const BUSINESS_DAY_CAPACITY = 8;
         const appointmentCounts = new Map<string, number>();
         for (const appointment of appointments) {
-            const localDate = new Date(appointment.date);
-            const localDateYMD = `${localDate.getFullYear()}${localDate.getMonth()}${localDate.getDate()}`;
-            const count = appointmentCounts.get(localDateYMD) ?? 0;
-            appointmentCounts.set(localDateYMD, count + 1);
+            // Grouped by the business's own calendar day, not whatever day this
+            // instant happens to fall on in the browser's local timezone.
+            const {year, month, day} = getZonedParts(new Date(appointment.date));
+            const businessYMD = `${year}${month}${day}`;
+            const count = appointmentCounts.get(businessYMD) ?? 0;
+            appointmentCounts.set(businessYMD, count + 1);
         }
 
         new AirDatepicker('#calendar', {

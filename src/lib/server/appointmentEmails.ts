@@ -1,5 +1,6 @@
 import {emailService} from '$lib/server/email';
 import {repositories} from '$lib/server/storage';
+import {BUSINESS_TIMEZONE} from '$lib/shared/businessTime';
 
 async function getAppointmentEmailData(appointmentId: string) {
     const appointment = await repositories.appointments.getById(appointmentId);
@@ -16,9 +17,12 @@ async function getAppointmentEmailData(appointmentId: string) {
 
     const services = await repositories.appointments.getServices(appointmentId);
 
+    // Without an explicit timeZone this reads whatever zone the Lambda happens to run
+    // in (UTC), not the business's — the same class of bug fixed in scheduling.
     const formattedDate = appointment ? new Date(appointment.date).toLocaleString('en-US', {
         dateStyle: 'long',
         timeStyle: 'short',
+        timeZone: BUSINESS_TIMEZONE,
     }) : '';
 
     const servicesText = services.map(s => s.name).join('\n');
