@@ -60,7 +60,7 @@ async function getSessionCustomerId(token: string): Promise<string | null> {
         try {
             await sql`DELETE FROM sessions WHERE expires_at < now()`;
         } catch (e) {
-            logger.error(`Session cleanup sweep failed: ${e}`);
+            logger.error({err: e}, 'Session cleanup sweep failed');
         }
     }
 
@@ -122,7 +122,7 @@ export const postgresAuthService: AuthService = {
                 RETURNING id`;
             customerId = rows[0].id as string;
         } catch (e) {
-            logger.error(`Customer insert failed during signup: ${e}`);
+            logger.error({err: e}, 'Customer insert failed during signup');
             return {ok: false};
         }
 

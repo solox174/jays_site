@@ -38,11 +38,11 @@ export const actions: Actions = {
                     });
                 }
             } catch (e) {
-                logger.error(`Failed to find-or-create customer on login: ${e}`);
+                logger.error({err: e}, 'Failed to find-or-create customer on login');
             }
         } catch (error) {
             errorText = error instanceof Error ? error.message : 'Login failed';
-            logger.error(errorText);
+            logger.error({err: error}, 'Login failed');
             return fail(400, {errorText});
         }
 

@@ -12,7 +12,7 @@ export function withLogging<T extends object>(repo: T, name: string): T {
                 try {
                     return await (value as Function).apply(target, args);
                 } catch (e) {
-                    logger.error(`${name}.${String(prop)} failed: ${e}`);
+                    logger.error({err: e}, `${name}.${String(prop)} failed`);
                     throw e;
                 }
             };

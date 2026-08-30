@@ -25,7 +25,7 @@ export const actions: Actions = {
             if (!result.userSub) throw new Error('Account creation failed');
         } catch (e) {
             const errorText = e instanceof Error ? e.message : 'Unknown error';
-            logger.error(`Signup failed: ${errorText}`);
+            logger.error({err: e}, 'Signup failed');
             return fail(400, {errorText});
         }
 
@@ -41,7 +41,7 @@ export const actions: Actions = {
             await authService.confirmSignup(email, code);
         } catch (e) {
             const errorText = e instanceof Error ? e.message : 'Unknown error';
-            logger.error(`Confirmation failed: ${errorText}`);
+            logger.error({err: e}, 'Confirmation failed');
             return fail(400, {errorText});
         }
 
@@ -56,7 +56,7 @@ export const actions: Actions = {
             await authService.resendConfirmationCode(email);
         } catch (e) {
             const errorText = e instanceof Error ? e.message : 'Unknown error';
-            logger.error(`Resend confirmation code failed: ${errorText}`);
+            logger.error({err: e}, 'Resend confirmation code failed');
             return fail(400, {errorText, state: 'captureCode'});
         }
 

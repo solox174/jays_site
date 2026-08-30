@@ -18,7 +18,7 @@ export const reviewsProvider: ReviewsProvider = {
         try {
             return await cachedProvider.getPlaceReviews();
         } catch (e) {
-            logger.error(`reviewsProvider.getPlaceReviews failed: ${e}`);
+            logger.error({err: e}, 'reviewsProvider.getPlaceReviews failed');
             return null;
         }
     }

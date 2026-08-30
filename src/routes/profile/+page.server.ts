@@ -26,7 +26,7 @@ export const actions: Actions = {
         try {
             await repositories.customers.update(locals.user!.id, {phoneNumber});
         } catch (e) {
-            logger.error(`Failed to update phone number: ${e}`);
+            logger.error({err: e}, 'Failed to update phone number');
             return fail(500, {form: 'phone' as const, errorText: 'Failed to update phone number'});
         }
 

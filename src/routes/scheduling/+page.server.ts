@@ -2,6 +2,7 @@ import {error, fail} from '@sveltejs/kit';
 import type {Actions, PageServerLoad} from './$types';
 import {repositories} from '$lib/server/storage';
 import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/appointmentEmails';
+import {logger} from '$lib/server/logger';
 
 
 export const load: PageServerLoad = async () => {
@@ -48,6 +49,7 @@ export const actions: Actions = {
             await appointmentNotificationEmail('JaysEmail@email.com', savedAppointment.id);
 
         } catch (e) {
+            logger.error({err: e}, 'Booking failed');
             return fail(500, {message: 'Booking failed. Please try again.'});
         }
 

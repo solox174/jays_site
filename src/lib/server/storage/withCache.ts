@@ -19,7 +19,7 @@ export function withCache(provider: ReviewsProvider, cacheStore: ReviewsCacheSto
             try {
                 entry = await cacheStore.get();
             } catch (e) {
-                logger.error(`ReviewsCacheStore.get failed: ${e}`);
+                logger.error({err: e}, 'ReviewsCacheStore.get failed');
             }
 
             const isFresh = entry !== null && Date.now() - entry.fetchedAt < CACHE_TTL_MS;
@@ -40,7 +40,7 @@ export function withCache(provider: ReviewsProvider, cacheStore: ReviewsCacheSto
             try {
                 await cacheStore.touch();
             } catch (e) {
-                logger.error(`ReviewsCacheStore.touch failed: ${e}`);
+                logger.error({err: e}, 'ReviewsCacheStore.touch failed');
             }
 
             const fresh = await provider.getPlaceReviews();
@@ -49,7 +49,7 @@ export function withCache(provider: ReviewsProvider, cacheStore: ReviewsCacheSto
                 try {
                     await cacheStore.set(fresh);
                 } catch (e) {
-                    logger.error(`ReviewsCacheStore.set failed: ${e}`);
+                    logger.error({err: e}, 'ReviewsCacheStore.set failed');
                 }
                 return fresh;
             }
