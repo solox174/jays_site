@@ -13,6 +13,7 @@ frontend:
     build:
       commands:
         - 'npm run build'
+        - 'node scripts/writeRuntimeEnv.js build/compute/default/.env'
         - 'cd build/compute/default'
         - 'npm install --omit=dev'
   artifacts:
