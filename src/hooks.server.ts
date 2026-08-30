@@ -51,9 +51,22 @@ export const handle: Handle = async ({event, resolve}) => {
 
     // Redirect unauthenticated users to /login with a `from` param so they can
     // be sent back to the originally requested page after signing in.
-    if (!event.locals.user && PROTECTED.some(p => event.url.pathname.startsWith(p))) {
+    const isProtected = PROTECTED.some(p => event.url.pathname.startsWith(p));
+    if (!event.locals.user && isProtected) {
         redirect(303, '/login?from=' + event.url.pathname);
     }
 
-    return resolve(event);
+    const response = await resolve(event);
+
+    // SvelteKit sets no Cache-Control on dynamic page responses by default, and this
+    // app sits behind CloudFront (Amplify Hosting's CDN). Without an explicit no-store,
+    // CloudFront can cache a protected route's per-user rendered HTML and serve that
+    // same stale snapshot to later requests — surfaced as newly booked appointments not
+    // showing as blocked (the DB write is fine; the cached page just predates it), and
+    // more seriously, a risk of one customer's private page being served to another.
+    if (isProtected) {
+        response.headers.set('cache-control', 'private, no-store');
+    }
+
+    return response;
 };
