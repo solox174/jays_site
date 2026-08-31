@@ -16,6 +16,13 @@ create table if not exists customers (
 -- matters when auth/postgres/authService.ts is the active implementation).
 alter table customers add constraint customers_email_unique unique (email);
 
+-- Toggled directly via the Neon SQL console — no in-app role-management UI. See
+-- src/routes/admin/+layout.server.ts for how this gates /admin/*. A separate ALTER
+-- rather than a column in the CREATE TABLE above, since create table if not exists is a
+-- no-op against an already-migrated database and wouldn't add this column retroactively.
+alter table customers add column if not exists role text not null default 'customer';
+alter table customers add constraint customers_role_check check (role in ('customer', 'admin'));
+
 create table if not exists vehicle_specs (
     id text primary key default gen_random_uuid()::text,
     year text not null,
@@ -36,6 +43,10 @@ create table if not exists service_prices (
     vehicle_category text not null,
     price double precision not null
 );
+
+-- One price per (service, vehicle category) — lets upsertPrice() use ON CONFLICT
+-- instead of a manual check-then-write. See postgres/serviceRepository.ts.
+alter table service_prices add constraint service_prices_unique_service_category unique (service_id, vehicle_category);
 
 create table if not exists appointments (
     id text primary key default gen_random_uuid()::text,

@@ -57,7 +57,7 @@ export const actions: Actions = {
                 serviceIds
             );
             await appointmentConfirmationEmail(locals.user!.email, savedAppointment.id);
-            await appointmentNotificationEmail('JaysEmail@email.com', savedAppointment.id);
+            await appointmentNotificationEmail(process.env.BUSINESS_OWNER_EMAIL ?? '', savedAppointment.id);
 
         } catch (e) {
             logger.error({err: e}, 'Booking failed');

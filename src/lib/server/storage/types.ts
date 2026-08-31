@@ -2,12 +2,16 @@ import type {ServiceType} from "$lib/types";
 import type {PlaceReviews} from "$lib/server/api/types";
 
 export type VehicleCategory = 'coupe' | 'sedan' | 'van' | 'suv' | 'jeep' | 'truck';
+// Not a boolean: same implementation cost today, avoids a real migration if a third
+// role type is ever needed (this is a reusable template — see project intent docs).
+export type UserRole = 'customer' | 'admin';
 export interface Customer {
     id: string;
     firstName?: string | null;
     lastName: string;
     phoneNumber: string;
     email: string;
+    role: UserRole;
 }
 
 export interface Appointment {
@@ -53,7 +57,10 @@ interface DomainRepository<T> {
 }
 
 export interface CustomerRepository extends DomainRepository<Customer>{
-    create(obj: Omit<Customer, 'id'> & { id?: string }): Promise<Customer>;
+    // role omitted: every new customer starts as 'customer', set by the implementation
+    // itself — not something callers (signup, deferred first-login creation) should
+    // need to know or pass. Use update() to change it later.
+    create(obj: Omit<Customer, 'id' | 'role'> & { id?: string }): Promise<Customer>;
     update(id: string, updates: Partial<Omit<Customer, 'id'>>): Promise<Customer>;
 }
 
@@ -68,7 +75,11 @@ export interface VehicleRepository extends DomainRepository<VehicleSpec> {
 
 export interface ServiceRepository extends DomainRepository<Service> {
     getByIds(serviceIds: string[]): Promise<Service[]>;
+    update(id: string, updates: Partial<Omit<Service, 'id'>>): Promise<Service>;
     listPrices(): Promise<ServicePrice[]>;
+    // Updates the existing ServicePrice row for this (serviceId, vehicleCategory) pair,
+    // or creates one if none exists yet.
+    upsertPrice(serviceId: string, vehicleCategory: VehicleCategory, price: number): Promise<ServicePrice>;
 }
 
 export interface AppointmentServiceRepository {

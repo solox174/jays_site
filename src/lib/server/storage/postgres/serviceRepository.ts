@@ -45,6 +45,24 @@ export const postgresServiceRepository: ServiceRepository = {
         return toService(rows[0]);
     },
 
+    async update(id, updates) {
+        const current = await this.getById(id);
+        if (!current) throw new Error(`Service ${id} not found`);
+        const merged = {...current, ...updates};
+
+        const rows = await sql`
+            UPDATE services
+            SET name = ${merged.name},
+                description = ${merged.description},
+                service_type = ${merged.serviceType}
+            WHERE id = ${id}
+            RETURNING *`;
+
+        return toService(rows[0]);
+    },
+
+    // service_prices.service_id has ON DELETE CASCADE (schema.sql) — no explicit
+    // price cleanup needed here, unlike the Amplify implementation.
     async delete(id) {
         await sql`DELETE FROM services WHERE id = ${id}`;
     },
@@ -52,5 +70,15 @@ export const postgresServiceRepository: ServiceRepository = {
     async listPrices() {
         const rows = await sql`SELECT * FROM service_prices`;
         return rows.map(toServicePrice);
+    },
+
+    async upsertPrice(serviceId, vehicleCategory, price) {
+        const rows = await sql`
+            INSERT INTO service_prices (service_id, vehicle_category, price)
+            VALUES (${serviceId}, ${vehicleCategory}, ${price})
+            ON CONFLICT (service_id, vehicle_category)
+            DO UPDATE SET price = excluded.price
+            RETURNING *`;
+        return toServicePrice(rows[0]);
     }
 };

@@ -72,7 +72,7 @@ Vehicle: ${vehicle?.year} ${vehicle?.make} ${vehicle?.model}
 Services:
 ${servicesText}
 
-If you have any questions or need to reschedule, feel free to reach out at ${process.env.JAYS_NUMBER}.
+If you have any questions or need to reschedule, feel free to reach out at ${process.env.BUSINESS_OWNER_PHONE}.
 
 We'll see you soon!
 Jay's Auto Detailing

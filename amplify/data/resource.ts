@@ -3,6 +3,9 @@ import { a, type ClientSchema, defineData } from '@aws-amplify/backend';
 const schema = a.schema({
     VehicleCategory: a.enum(['coupe', 'sedan', 'van', 'suv', 'jeep', 'truck']),
     ServiceType: a.enum(['FULL', 'INTERIOR', 'TREATMENT']),
+    // Not a boolean: same cost today, avoids a real migration if a third role type is
+    // ever needed (this app is a reusable template — see docs/project_intent).
+    UserRole: a.enum(['customer', 'admin']),
 
     Customer: a
         .model({
@@ -11,6 +14,12 @@ const schema = a.schema({
             phoneNumber: a.phone().required(),
             email: a.email().required(),
             password: a.string().required(),
+            // Toggled directly in the Amplify Data console — no in-app role-management
+            // UI. See src/routes/admin/+layout.server.ts for how this gates /admin/*.
+            // Optional, not required+default: RefType (enum refs) has no .default() —
+            // customerRepository.ts's toCustomer() treats a missing role as 'customer'
+            // uniformly for both pre-existing rows and newly created ones.
+            role: a.ref('UserRole'),
             appointments: a.hasMany('Appointment', 'customerId')
         })
         .authorization((allow) => [allow.publicApiKey()]),

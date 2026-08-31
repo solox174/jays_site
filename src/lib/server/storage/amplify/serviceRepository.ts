@@ -38,7 +38,19 @@ export const serviceRepository: ServiceRepository = {
             .map(d => toService(d as Record<string, unknown>));
     },
 
+    async update(id, updates) {
+        const {data} = await amplifyClient.models.Service.update({id, ...updates});
+        return toService(data as Record<string, unknown>);
+    },
+
     async delete(id) {
+        // DynamoDB doesn't cascade-delete on its own (unlike Postgres's ON DELETE
+        // CASCADE for service_prices — see postgres/schema.sql) — do it explicitly so
+        // both platforms behave the same way and don't leave orphaned price rows.
+        const {data: prices} = await amplifyClient.models.ServicePrice.list({
+            filter: {serviceId: {eq: id}}
+        });
+        await Promise.all(prices.map(price => amplifyClient.models.ServicePrice.delete({id: price.id})));
         await amplifyClient.models.Service.delete({id});
     },
 
@@ -50,5 +62,17 @@ export const serviceRepository: ServiceRepository = {
     async listPrices() {
         const {data} = await amplifyClient.models.ServicePrice.list();
         return data.map(d => toServicePrice(d as Record<string, unknown>));
+    },
+
+    async upsertPrice(serviceId, vehicleCategory, price) {
+        const {data: existing} = await amplifyClient.models.ServicePrice.list({
+            filter: {serviceId: {eq: serviceId}, vehicleCategory: {eq: vehicleCategory}}
+        });
+
+        const {data} = existing[0]
+            ? await amplifyClient.models.ServicePrice.update({id: existing[0].id, price})
+            : await amplifyClient.models.ServicePrice.create({serviceId, vehicleCategory, price});
+
+        return toServicePrice(data as Record<string, unknown>);
     }
 };

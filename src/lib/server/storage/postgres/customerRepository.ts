@@ -1,5 +1,5 @@
 import {sql} from './db';
-import type {Customer, CustomerRepository} from '../types';
+import type {Customer, CustomerRepository, UserRole} from '../types';
 
 function toCustomer(row: Record<string, unknown>): Customer {
     return {
@@ -7,7 +7,8 @@ function toCustomer(row: Record<string, unknown>): Customer {
         firstName: row.first_name as string | null,
         lastName: row.last_name as string,
         phoneNumber: row.phone_number as string,
-        email: row.email as string
+        email: row.email as string,
+        role: (row.role as UserRole | undefined) ?? 'customer'
     };
 }
 
@@ -50,7 +51,8 @@ export const postgresCustomerRepository: CustomerRepository = {
             SET first_name = ${merged.firstName ?? null},
                 last_name = ${merged.lastName},
                 phone_number = ${merged.phoneNumber},
-                email = ${merged.email}
+                email = ${merged.email},
+                role = ${merged.role}
             WHERE id = ${id}
             RETURNING *`;
 

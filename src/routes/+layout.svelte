@@ -82,7 +82,9 @@
                     <div class="nav-dropdown" style="width: 250px">
                         {#if data.loggedIn}
                             <a href="/profile" onclick={() => settingsMenuOpen = false}>Edit Profile</a>
-                            <a href="/logout" onclick={() => settingsMenuOpen = false}>Logout</a>
+                            {#if data.isAdmin}
+                                <a href="/admin/services" onclick={() => settingsMenuOpen = false}>Edit Services</a>
+                            {/if}
                         {:else}
                             <a href="/login" onclick={() => settingsMenuOpen = false}>Log In</a>
                         {/if}
@@ -94,6 +96,9 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
+                        {#if data.loggedIn}
+                            <a href="/logout" onclick={() => settingsMenuOpen = false}>Logout</a>
+                        {/if}
                     </div>
                 {/if}
             </div>
