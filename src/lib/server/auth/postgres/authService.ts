@@ -6,6 +6,7 @@ import {emailConfig} from '$lib/server/email/config';
 import {logger} from '$lib/server/logger';
 import {hashPassword, verifyPassword} from './password';
 import type {AuthService, NewUser} from '../types';
+import {PUBLIC_BUSINESS_NAME} from '$env/static/public';
 
 const TOKEN_COOKIE = 'id_token';
 const ACCESS_TOKEN_COOKIE = 'access_token';
@@ -80,7 +81,7 @@ async function issueVerificationCode(customerId: string, email: string): Promise
 
     await emailService.send(
         email,
-        'Verify your Jays Auto Detailing account',
+        `Verify your ${PUBLIC_BUSINESS_NAME} account`,
         `Your confirmation code is: ${code}\n\nThis code expires in 15 minutes.`,
         emailConfig.confirmationFromAddress
     );

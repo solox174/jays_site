@@ -161,7 +161,7 @@
 
 html {
     background-image: linear-gradient(rgba(150, 150, 150, 0.5), rgba(150, 150, 150, 0.5)),
-    url('$lib/assets/images/background-2.jpeg');
+    url('$lib/assets/images/background.jpeg');
 
     background-repeat: no-repeat;
     background-size: cover;

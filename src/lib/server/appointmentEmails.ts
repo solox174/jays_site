@@ -1,6 +1,7 @@
 import {emailService} from '$lib/server/email';
 import {repositories} from '$lib/server/storage';
 import {BUSINESS_TIMEZONE} from '$lib/shared/businessTime';
+import {PUBLIC_BUSINESS_NAME, PUBLIC_BUSINESS_OWNER_PHONE} from '$env/static/public';
 
 async function getAppointmentEmailData(appointmentId: string) {
     const appointment = await repositories.appointments.getById(appointmentId);
@@ -61,7 +62,7 @@ export async function appointmentConfirmationEmail(email: string, appointmentId:
         const body = `
 Hi ${customer?.firstName},
 
-Thanks for booking with Jay's Auto Detailing! Your appointment has been confirmed.
+Thanks for booking with ${PUBLIC_BUSINESS_NAME}! Your appointment has been confirmed.
 
 Here are your appointment details:
 
@@ -72,12 +73,12 @@ Vehicle: ${vehicle?.year} ${vehicle?.make} ${vehicle?.model}
 Services:
 ${servicesText}
 
-If you have any questions or need to reschedule, feel free to reach out at ${process.env.BUSINESS_OWNER_PHONE}.
+If you have any questions or need to reschedule, feel free to reach out at ${PUBLIC_BUSINESS_OWNER_PHONE}.
 
 We'll see you soon!
-Jay's Auto Detailing
+${PUBLIC_BUSINESS_NAME}
 `;
-        const subject = 'Your appointment is confirmed - Jays Auto Detailing';
+        const subject = `Your appointment is confirmed - ${PUBLIC_BUSINESS_NAME}`;
         return sendEmail(email, body, subject);
     }
 }

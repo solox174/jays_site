@@ -3,7 +3,14 @@
     import {page} from '$app/state';
     import {isBusy} from '$lib/stores/ui.svelte';
     import {theme} from '$lib/stores/colorScheme.svelte';
-    import logo from '$lib/assets/images/jays_auto.svg';
+    import logo from '$lib/assets/images/hero.svg';
+    import {PUBLIC_BUSINESS_OWNER_PHONE} from '$env/static/public';
+
+    // tel: hrefs need bare digits — PUBLIC_BUSINESS_OWNER_PHONE is stored human-readable
+    // (e.g. "(632) 633-2358") for display, matching how phone numbers are entered
+    // elsewhere (scheduling/create-account forms use the same +1-and-strip-non-digits
+    // convention).
+    const footerTelHref = `tel:+1${PUBLIC_BUSINESS_OWNER_PHONE.replace(/\D/g, '')}`;
 
     let {children, data} = $props();
     let mouseX = $state(0);
@@ -48,7 +55,7 @@
 </script>
 
 <svelte:window onclick={handleWindowClick} onmousemove={handleMouseMove}/>
-<div style="display: flex; flex-direction: column; height: 100dvh">
+<div style="display: flex; flex-direction: column; height: 100ddvh">
     <div>
         <div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
             <a href="/" title="home" style="margin-bottom:10px">
@@ -122,9 +129,9 @@
     </main>
 
     <div id="footer-bar">
-        <a id="footer-tel" href="tel:+14808195443" title="phone">
+        <a id="footer-tel" href={footerTelHref} title="phone">
             <i class="fa-solid fa-phone footer-icon"></i>
-            <span id="footer-tel-text" class="footer-text"></span>
+            <span id="footer-tel-text" class="footer-text">{PUBLIC_BUSINESS_OWNER_PHONE}</span>
         </a>
         <span id="footer-e"
               onclick="{se}"
@@ -267,10 +274,6 @@
 
     .footer-text {
         color: #aeaeae;
-    }
-
-    #footer-tel-text::before {
-        content: '(480) 819-5443';
     }
 
     /** mobile: narrow viewports OR touch devices (phones, tablets, foldables).

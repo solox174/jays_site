@@ -166,7 +166,7 @@
     }
 
     .carousel:fullscreen {
-        height: 100vh;
+        height: 100dvh;
     }
 
     .track-wrap {

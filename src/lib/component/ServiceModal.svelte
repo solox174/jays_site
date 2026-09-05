@@ -220,7 +220,7 @@
 
     .modal {
         width: min(500px, 100%);
-        max-height: min(70vh, 720px);
+        max-height: min(70dvh, 720px);
         background: var(--surface-overlay);
         border-radius: var(--border-radius);
         box-shadow: var(--shadow-dialog);

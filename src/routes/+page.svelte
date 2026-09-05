@@ -1,6 +1,7 @@
 <script lang="ts">
     import working from '$lib/assets/images/working.jpeg';
     import { pinnedFloatScroll } from '$lib/pinned-float-scroll';
+    import { homeContent } from '$lib/content/home';
 
     function attach(viewport: HTMLElement) {
         const pinned = viewport.querySelector('[data-pfs-pinned]') as HTMLElement;
@@ -23,19 +24,15 @@
 
         <div data-pfs-content>
             <p>
-                Your car is a major investment. Daily driving takes a toll on its appearance and value. Standard car
-                washes often leave scratches and miss hidden dirt. We restore your vehicle to showroom condition. Our
-                professional detailing preserves your paint, deep-cleans your interior, and protects your investment.
+                {homeContent.valueProp}
                 <br/><br/>
-                Experienced Professionals: Trained detailers who treat your car like their own. Premium Products: We use
-                only high-end, eco-friendly cleaning formulas. Attention to Detail: No crevice, vent, or seam is left
-                untouched. Convenient Scheduling: Flexible booking times to fit your busy lifestyle.
+                {homeContent.highlights}
             </p>
         </div>
     </div>
 
     <div style="margin-top: 20px">
-        A few examples of the finishes we deliver across a range of vehicle conditions.
+        {homeContent.resultsBlurb}
     </div>
 
     <a href="/portfolio">

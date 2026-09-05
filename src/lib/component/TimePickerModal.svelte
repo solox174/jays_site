@@ -233,7 +233,7 @@
 
     .time-modal {
         width: min(500px, 100%);
-        max-height: min(70vh, 720px);
+        max-height: min(70dvh, 720px);
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -368,7 +368,7 @@
 
         .time-modal {
             width: 100%;
-            max-height: 74vh;
+            max-height: 74dvh;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
         }

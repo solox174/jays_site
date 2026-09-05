@@ -6,6 +6,14 @@ import {logger} from "$lib/server/logger";
 export const actions: Actions = {
     createAccount: async ({request}) => {
         const form = await request.formData();
+
+        // Honeypot (see +page.svelte) — real users never see or fill this field. Pretend
+        // success rather than reveal detection, so it doesn't invite adaptation, and
+        // skip the real Cognito signup call entirely so bot traffic doesn't cost anything.
+        if (String(form.get('website') ?? '').trim()) {
+            return {state: 'captureCode'};
+        }
+
         const email = String(form.get('email') ?? '');
         const firstName = String(form.get('first-name') ?? '');
         const lastName = String(form.get('last-name') ?? '');

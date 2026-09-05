@@ -1,5 +1,6 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
+    import {PUBLIC_BUSINESS_NAME} from '$env/static/public';
 
     let {form} = $props();
     let createAccountState = $derived(form?.state);
@@ -39,6 +40,14 @@
           }}
           action="?/createAccount"
           style="max-width: 350px; padding: 5px; margin: 0 auto">
+        <!-- Honeypot: invisible to real users (CSS-hidden, not type="hidden" — bots
+             that specifically skip hidden inputs still often fill this). Checked
+             server-side in the createAccount action. -->
+        <div aria-hidden="true" class="honeypot">
+            <label for="website">Website</label>
+            <input autocomplete="off" id="website" name="website" tabindex="-1" type="text"/>
+        </div>
+
         <div class="grid-item" style="display: flex; flex-direction: column">
             <label for="first-name">First Name:</label>
             <input id="first-name" name="first-name" required type="text"/>
@@ -75,7 +84,7 @@
               };
           }}
           style="max-width: 400px; padding: 20px; margin: 0 auto; text-align: justify">
-        <p>Thank you for signing up with Jay's Auto Detailing! Almost there — just one more step before we let you in! We've sent a confirmation code to your email. Please enter it below to verify your account.</p>
+        <p>Thank you for signing up with {PUBLIC_BUSINESS_NAME}! Almost there — just one more step before we let you in! We've sent a confirmation code to your email. Please enter it below to verify your account.</p>
         <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 10px">
             <input id="confirmation-code" name="confirmation-code" required type="text" style="width: 150px"/>
             <input name="email" bind:value={email} type="hidden"/>
@@ -94,6 +103,14 @@
 <style>
     label {
         font-weight: 500;
+    }
+
+    .honeypot {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
     }
 
     /* .bare-btn (global) already strips background/border/shadow and sets cursor —

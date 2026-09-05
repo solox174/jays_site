@@ -4,6 +4,7 @@ import {repositories} from '$lib/server/storage';
 import {appointmentConfirmationEmail, appointmentNotificationEmail} from '$lib/server/appointmentEmails';
 import {logger} from '$lib/server/logger';
 import {zonedTimeToUtc, parseCalendarDay} from '$lib/shared/businessTime';
+import {BUSINESS_OWNER_EMAIL} from '$env/static/private';
 
 
 export const load: PageServerLoad = async () => {
@@ -57,7 +58,7 @@ export const actions: Actions = {
                 serviceIds
             );
             await appointmentConfirmationEmail(locals.user!.email, savedAppointment.id);
-            await appointmentNotificationEmail(process.env.BUSINESS_OWNER_EMAIL ?? '', savedAppointment.id);
+            await appointmentNotificationEmail(BUSINESS_OWNER_EMAIL, savedAppointment.id);
 
         } catch (e) {
             logger.error({err: e}, 'Booking failed');
