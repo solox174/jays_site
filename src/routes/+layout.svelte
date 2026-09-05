@@ -55,7 +55,7 @@
 </script>
 
 <svelte:window onclick={handleWindowClick} onmousemove={handleMouseMove}/>
-<div style="display: flex; flex-direction: column; height: 100ddvh">
+<div style="display: flex; flex-direction: column; height: 100dvh">
     <div>
         <div style="position: relative; display: flex; justify-content: center; padding: 16px 0">
             <a href="/" title="home" style="margin-bottom:10px">
