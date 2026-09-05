@@ -20,7 +20,7 @@
         <img data-pfs-pinned
              alt="working"
              src={working}
-             style="width: var(--cta-image-width); aspect-ratio: 471 / 831; display: block; border-radius: var(--border-radius);"/>
+             style="aspect-ratio: 471 / 831; display: block; border-radius: var(--border-radius);"/>
 
         <div data-pfs-content>
             <p>

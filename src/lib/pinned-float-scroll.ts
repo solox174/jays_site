@@ -149,6 +149,8 @@ export function pinnedFloatScroll(
     const BASE_GAP = 12;
     const totalGap = Math.max(0, BASE_GAP + gapAdjust);
     const imageTop = options.imageTop ?? textWrapTop + totalGap;
+    const [ratioW, ratioH] = pinnedAspectRatio.split('/').map(Number);
+    const aspectRatio = ratioW / ratioH;
 
     // Reset block-level margins inside content so they don't create unexpected
     // dead space that misaligns the ghost float with the visible text boundary.
@@ -230,9 +232,28 @@ export function pinnedFloatScroll(
         spacer.style.height = `${textWrapTop + currentScrollY}px`;
     }
 
+    // Shrinks the pinned element (and its ghost) to fit the viewport's actual
+    // available height, so short viewports get a smaller image instead of one
+    // that overflows the clipped viewport. Reset to the intended CSS width
+    // before each measurement so a previous shrink never becomes the new
+    // baseline — same reasoning as maxScroll not recalculating on itself.
+    function applySize(): void {
+        pinned.style.width = pinnedWidth;
+        ghost.style.width = pinnedWidth;
+        const intendedWidth = pinned.getBoundingClientRect().width;
+
+        const availableHeight = Math.max(0, viewport.clientHeight - imageTop - totalGap);
+        const maxWidthForHeight = availableHeight * aspectRatio;
+
+        const effectiveWidth = Math.min(intendedWidth, maxWidthForHeight);
+        pinned.style.width = `${effectiveWidth}px`;
+        ghost.style.width = `${effectiveWidth}px`;
+    }
+
     // maxScroll is calculated only on mount and resize — never inside scroll
     // handlers — to avoid a layout-reflow feedback loop at the scroll boundary.
     function recalc(): void {
+        applySize();
         maxScroll = Math.max(0, content.scrollHeight - viewport.clientHeight);
         applyScroll();
     }
